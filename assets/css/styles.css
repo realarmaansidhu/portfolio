@@ -1,0 +1,21 @@
+*
+{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+.line-mf {
+  content: '';
+  display: block;
+  width: 60px; /* Adjust as per the desired length */
+  height: 3px; /* Thickness of the underline */
+  background-color: #2e6be5; /* Blue color for the underline */
+  margin: 10px auto 0; /* Adjust spacing above and below the line */
+  border-radius: 2px; /* Smooth edges for the underline */
+}
