@@ -47,15 +47,15 @@
                 <img src="assets/images/maple-leaf.gif" class="w-6 h-6 animate-pulse">
                 <span class="text-white text-xl font-bold tracking-widest">ARMAAN SIDHU</span>
             </a>
-            <div class="hidden md:flex space-x-1">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#experience" class="nav-link">Experience</a>
-                <a href="#education" class="nav-link">Education</a>
-                <a href="#publications" class="nav-link">Publications</a>
-                <a href="#networking" class="nav-link">Networking</a>
-                <a href="#awards" class="nav-link">Awards</a>
-                <a href="#contact" class="nav-link">Contact</a>
+            <div class="hidden md:flex space-x-1 items-center">
+                <a href="#home" class="nav-link" data-translate="nav_home">Home</a>
+                <a href="#about" class="nav-link" data-translate="nav_about">About</a>
+                <a href="#experience" class="nav-link" data-translate="nav_experience">Experience</a>
+                <a href="#publications" class="nav-link" data-translate="nav_publications">Publications</a>
+                <a href="#networking" class="nav-link" data-translate="nav_networking">Networking</a>
+                <a href="#certifications" class="nav-link" data-translate="nav_certifications">Certifications</a>
+                <a href="#awards" class="nav-link" data-translate="nav_awards">Awards</a>
+                <a href="#contact" class="nav-link" data-translate="nav_contact">Contact</a>
             </div>
             <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
                 <i class="fas fa-bars text-xl"></i>
@@ -64,14 +64,14 @@
         <!-- Mobile Menu -->
         <div class="md:hidden hidden transition-all duration-300 ease-in-out" id="mobile-menu">
             <div class="px-4 pt-2 pb-4 space-y-3 bg-black bg-opacity-90">
-                <a href="#home" class="block nav-link">Home</a>
-                <a href="#about" class="block nav-link">About</a>
-                <a href="#experience" class="block nav-link">Experience</a>
-                <a href="#education" class="block nav-link">Education</a>
-                <a href="#publications" class="block nav-link">Publications</a>
-                <a href="#networking" class="block nav-link">Networking</a>
-                <a href="#awards" class="block nav-link">Awards</a>
-                <a href="#contact" class="block nav-link">Contact</a>
+                <a href="#home" class="block nav-link" data-translate="nav_home">Home</a>
+                <a href="#about" class="block nav-link" data-translate="nav_about">About</a>
+                <a href="#experience" class="block nav-link" data-translate="nav_experience">Experience</a>
+                <a href="#education" class="block nav-link" data-translate="nav_education">Education</a>
+                <a href="#publications" class="block nav-link" data-translate="nav_publications">Publications</a>
+                <a href="#networking" class="block nav-link" data-translate="nav_networking">Networking</a>
+                <a href="#awards" class="block nav-link" data-translate="nav_awards">Awards</a>
+                <a href="#contact" class="block nav-link" data-translate="nav_contact">Contact</a>
             </div>
         </div>
     </nav>
@@ -79,15 +79,25 @@
     <!-- Home Section -->
     <section id="home"
         class="min-h-screen flex flex-col md:flex-row items-center justify-center text-white relative px-6">
+        
+        <!-- Language Switcher - Top Right Corner of Home Section -->
+        <div class="absolute top-8 right-8 z-20">
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="zh">文</button>
+            </div>
+        </div>
+        
         <div class="relative z-10 w-full md:w-1/2 text-center md:text-left" data-aos="fade-right"
             data-aos-duration="800">
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">ARMAAN SIDHU</h1>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" data-translate="home_name">ARMAAN SIDHU</h1>
             <p class="text-green-400 text-xl sm:text-2xl mb-2">
                 <span id="typed-text"></span><span id="cursor" class="animate-pulse">|</span>
             </p>
             <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <a href="#contact" class="cyber-btn">GET IN TOUCH</a>
-                <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Armaan%20Sidhu%27s%20Resume.pdf" class="cyber-btn">DOWNLOAD RESUME</a>
+                <a href="#contact" class="cyber-btn" data-translate="home_get_in_touch">GET IN TOUCH</a>
+                <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Armaan%20Sidhu%27s%20Resume.pdf" class="cyber-btn" data-translate="home_download_resume">DOWNLOAD RESUME</a>
             </div>
         </div>
 
@@ -101,24 +111,24 @@
     <!-- About Section -->
     <section id="about" class="py-20 relative">
         <div class="container mx-auto px-6">
-            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">ABOUT</h2>
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16" data-translate="about_title">ABOUT</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="cyber-card" data-aos="fade-up" data-aos-duration="800">
-                    <p class="text-gray-300 leading-relaxed mb-6">
+                    <p class="text-gray-300 leading-relaxed mb-6" data-translate="about_p1">
                         I'm a Master of Engineering Co-Op student in Information Systems
                         Security at Concordia University with a 3.9 GPA. I am currently interning as an Information
                         Security Analyst at American Express in Toronto, where my work focuses on the exciting
                         intersection of Generative AI and Post-Quantum Cryptography.
                     </p>
-                    <p class="text-gray-300 leading-relaxed mb-6">
+                    <p class="text-gray-300 leading-relaxed mb-6" data-translate="about_p2">
                         My passion lies in exploring the applications of Generative AI within cybersecurity to build
                         next-generation security solutions. I
                         am actively seeking an impactful internship for the Fall 2025 term where I can
                         continue my growth as a GenAI and security-focused
                         engineer.
                     </p>
-                    <p class="text-gray-300 leading-relaxed">
+                    <p class="text-gray-300 leading-relaxed" data-translate="about_p3">
                         Outside of my technical expertise, I'm passionate about reading and writing books, traveling to
                         different destinations, and learning new languages. Currently I'm writing my first book, working
                         on my blogs and
@@ -130,7 +140,7 @@
                     data-aos-duration="800">
                     <img src="assets/images/athack-wwf.jpg" alt="Armaan Sidhu at @Hack"
                         class="w-full h-auto rounded-md mb-4">
-                    <p class="text-sm text-gray-400 italic">
+                    <p class="text-sm text-gray-400 italic" data-translate="about_img_caption">
                         Armaan Sidhu receiving the third prize for Interac Challenge at the @Hack hackathon in Montreal,
                         Quebec, Canada in March 2025
                     </p>
@@ -668,6 +678,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/js/all.min.js"></script>
+    <script src="translations.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
 

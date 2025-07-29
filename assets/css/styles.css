@@ -15,6 +15,16 @@ html {
     background-color: #000000;
 }
 
+.background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
 /* Fixed backgrounds - increase matrix opacity for better visibility on other sections */
 #matrix-background, .web-grid {
     position: fixed;
@@ -22,7 +32,7 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.6;
+    opacity: 0.1;
     pointer-events: none;
 }
 
@@ -56,20 +66,39 @@ html {
 
 .nav-link:hover::after { width: 80%; }
 
-/* Sections */
+/* Sections - Fix the gap issue */
 section {
     min-height: 100vh;
-    padding: 80px 0;
     position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Home section specific adjustments */
+#home {
+    padding-top: 100px; /* Account for navbar height */
+    padding-bottom: 80px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+/* Other sections */
+section:not(#home) {
+    padding: 80px 50px;
 }
 
 /* Apply the fixed background only to the home section. It will stay visible behind #about. */
-#home, #about{
+nav, #home, #about, #experience, #education, #publications, #certifications,#networking, #awards, #contact {
     background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)), url('../images/in_downtown.gif') center/cover no-repeat fixed;
 }
 
-#home, #about {
-    padding: 120px 0 80px 0;
+#footer {
+    background-color: rgba(0, 20, 0, 0.8);
+    color: var(--matrix-green);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    margin: 0;
 }
 
 section:not(#home):not(#about) {
@@ -201,21 +230,54 @@ section:not(#home):not(#about) {
     transform: scale(1.1);
 }
 
-/* Animations */
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+/* Language Switcher */
+.lang-switcher, .lang-switcher-mobile {
+    display: flex;
+    background-color: rgba(0, 20, 0, 0.8);
+    border: 2px solid var(--matrix-green-dark);
+    border-radius: 5px;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
 }
 
-#cursor {
-    display: inline-block;
-    animation: blink 0.8s infinite;
-}
-
-/* Footer - same dark background as other sections for text readability */
-footer {
-    background-color: rgba(0, 0, 0, 0.85);
+.lang-btn {
+    background: transparent;
+    color: var(--matrix-green);
+    border: none;
+    padding: 8px 12px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
     position: relative;
+}
+
+.lang-btn:hover {
+    background-color: rgba(0, 255, 65, 0.1);
+}
+
+.lang-btn.active {
+    background-color: var(--matrix-green);
+    color: var(--dark-bg);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.lang-btn:not(:last-child) {
+    border-right: 1px solid var(--matrix-green-dark);
+}
+
+/* Responsive adjustments for home language switcher */
+@media (max-width: 768px) {
+    #home .lang-switcher {
+        top: 4px;
+        right: 4px;
+        transform: scale(0.9);
+    }
+    
+    #home {
+        padding-top: 80px; /* Smaller top padding on mobile */
+    }
 }
 
 /* Responsive */

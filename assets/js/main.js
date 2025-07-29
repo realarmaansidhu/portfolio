@@ -22,6 +22,12 @@ const nodes = [];
 const nodeCount = 40;
 const maxDistance = 170;
 
+// Typing effect variables - make them global for language switching
+let roles = ["Generative AI Engineer", "Cybersecurity Analyst", "OSINT Investigator"];
+let currentRole = 0;
+let charIndex = 0;
+let isDeleting = false;
+
 // Initialize canvases
 function initCanvases() {
     canvas.width = webCanvas.width = window.innerWidth;
@@ -113,13 +119,10 @@ function animate() {
 }
 
 // Typing effect
-const roles = ["Generative AI Engineer", "Cybersecurity Analyst", "OSINT Investigator"];
-let currentRole = 0;
-let charIndex = 0;
-let isDeleting = false;
-
 function typeLoop() {
     const typedTextSpan = document.getElementById("typed-text");
+    if (!typedTextSpan) return;
+    
     const fullText = roles[currentRole];
 
     if (isDeleting) {
@@ -154,9 +157,20 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+// Make variables global for language switching
+window.roles = roles;
+window.currentRole = currentRole;
+window.charIndex = charIndex;
+window.isDeleting = isDeleting;
+
 // Initialize everything
 document.addEventListener("DOMContentLoaded", () => {
     initCanvases();
     animate();
     typeLoop();
+    
+    // Initialize language switcher
+    if (window.initLanguageSwitcher) {
+        window.initLanguageSwitcher();
+    }
 });
