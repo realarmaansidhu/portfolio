@@ -2,804 +2,684 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Armaan Sidhu 👨🏻‍💻</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armaan Sidhu 👨🏻‍💻</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/source-code-pro@2.38.0/source-code-pro.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
 
-  <title>Armaan Sidhu 👨🏻‍💻</title>
-  <meta content="A Cybersecurity Engineer passionate for evolving cyber landscapes in the digital world."
-    name="descriptison">
-  <meta content="Cybersecurity, Information System Security, Armaan Sidhu" name="keywords">
-
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/favicon.png" rel="apple-touch-icon">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-    rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-
-  <!-- =======================================================
-  * Template Name: DevFolio
-  * Template URL: https://bootstrapmade.com/devfolio-bootstrap-portfolio-html-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
-<body class="index-page">
+<body>
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video" class="background-video">
+        <source src="assets/images/in_downtown.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
-  <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    <!-- Matrix Background -->
+    <canvas id="matrix-background"></canvas>
 
-      <a href="#" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Armaan Sidhu</h1>
-      </a>
+    <!-- Web Grid Overlay -->
+    <canvas id="web-grid" class="web-grid"></canvas>
 
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a href="#hero" class="active">Home<br></a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#certification">Certifications</a></li>
-          <li><a href="#internship">Internships</a></li>
-          <li><a href="#award">Awards</a></li>
-          <li><a href="#testimonials">Recommendation</a></li>
-          <li><a href="#contact">Contact Me
-              <img src="assets/img/canadian-flag.png" alt="Canadian Flag"
-                style="width: 25px; border-radius: 25px; margin-left: 5px;">
-            </a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
+    <!-- Social Icons -->
+    <div class="social-icons">
+        <a href="https://github.com/realarmaansidhu" target="_blank" class="social-icon">
+            <i class="fab fa-github"></i>
+        </a>
+        <a href="https://linkedin.com/in/realarmaansidhu" target="_blank" class="social-icon">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="mailto:realarmaansidhu@gmail.com" class="social-icon">
+            <i class="fas fa-envelope"></i>
+        </a>
     </div>
-  </header>
 
-  <main class="main">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full py-4 px-6 z-50"
+        style="background-color: rgba(10, 10, 10, 0.8); backdrop-filter: blur(5px);">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img src="assets/images/maple-leaf.gif" class="w-7 h-7 animate-pulse">
+                <span class="text-white text-xl font-bold tracking-widest">ARMAAN SIDHU</span>
+            </a>
+            <div class="hidden md:flex space-x-1 items-center">
+                <a href="#home" class="nav-link" data-translate="nav_home">Home</a>
+                <a href="#about" class="nav-link" data-translate="nav_about">About</a>
+                <a href="#experience" class="nav-link" data-translate="nav_experience">Experience</a>
+                <a href="#publications" class="nav-link" data-translate="nav_publications">Publications</a>
+                <a href="#networking" class="nav-link" data-translate="nav_networking">Networking</a>
+                <a href="#certifications" class="nav-link" data-translate="nav_certifications">Certifications</a>
+                <a href="#awards" class="nav-link" data-translate="nav_awards">Awards</a>
+                <a href="#contact" class="nav-link" data-translate="nav_contact">Contact</a>
+            </div>
+            <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden transition-all duration-300 ease-in-out" id="mobile-menu">
+            <div class="px-4 pt-2 pb-4 space-y-3 bg-black bg-opacity-90">
+                <a href="#home" class="block nav-link" data-translate="nav_home">Home</a>
+                <a href="#about" class="block nav-link" data-translate="nav_about">About</a>
+                <a href="#experience" class="block nav-link" data-translate="nav_experience">Experience</a>
+                <a href="#education" class="block nav-link" data-translate="nav_education">Education</a>
+                <a href="#publications" class="block nav-link" data-translate="nav_publications">Publications</a>
+                <a href="#networking" class="block nav-link" data-translate="nav_networking">Networking</a>
+                <a href="#awards" class="block nav-link" data-translate="nav_awards">Awards</a>
+                <a href="#contact" class="block nav-link" data-translate="nav_contact">Contact</a>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background">
+    <!-- Home Section -->
+    <section id="home"
+        class="min-h-screen flex flex-col md:flex-row items-center justify-center text-white relative px-6">
+        
+        <!-- Language Switcher - Top Right Corner of Home Section -->
+        <div class="absolute top-8 right-8 z-20">
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fr">FR</button>
+                <button class="lang-btn" data-lang="zh">文</button>
+            </div>
+        </div>
+        
+        <div class="relative z-10 w-full md:w-1/2 text-center md:text-left" data-aos="fade-right"
+            data-aos-duration="800">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" data-translate="home_name">ARMAAN SIDHU</h1>
+            <p class="text-green-400 text-xl sm:text-2xl mb-2">
+                <span id="typed-text"></span><span id="cursor" class="animate-pulse">|</span>
+            </p>
+            <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <a href="#contact" class="cyber-btn" data-translate="home_get_in_touch">GET IN TOUCH</a>
+                <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Armaan%20Sidhu%27s%20Resume.pdf" class="cyber-btn" data-translate="home_download_resume">DOWNLOAD RESUME</a>
+            </div>
+        </div>
 
-      <img src="assets/img/hero-gif.gif" alt="" data-aos="fade-in">
+        <div class="relative z-10 mt-10 md:mt-0 w-full md:w-1/2 flex justify-center" data-aos="fade-left"
+            data-aos-duration="800">
+            <img src="assets/images/headshot.jpeg" alt="Armaan Sidhu" class="profile-pic" />
+        </div>
+    </section>
 
-      <div class="container d-flex flex-column align-items-center justify-content-center text-center" data-aos="fade-up"
-        data-aos-delay="100">
-        <h2>Armaan Sidhu</h2>
-        <p><span class="typed" data-typed-items="Cybersecurity Engineer, OSINT Investigator, CTF Player"></span></p>
-      </div>
-
-    </section><!-- /Hero Section -->
 
     <!-- About Section -->
-    <section id="about" class="about section" style="background-image: url('assets/img/background-gif.gif');" ;>
+    <section id="about" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16" data-translate="about_title">ABOUT</h2>
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100"
-        style="background-color: white; opacity: 0.9; padding: 25px; border: 4px solid #45A047">
-
-        <div class="row gy-4">
-          <div class="col-md-6">
-
-            <div id="contact" class="row justify-content-between gy-4">
-              <div class="col-lg-6">
-                <img src="assets/img/profile-img.jpg" class="img-fluid" alt="Armaan Sidhu's Photo">
-                <div class="row text-center">
-                  <script src="https://tryhackme.com/badge/2251722"></script>
-                  <p><a href="https://tryhackme.com/r/p/armaansidhu" class="link-secondary">TryHackMe Profile</a></p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="cyber-card" data-aos="fade-up" data-aos-duration="800">
+                    <p class="text-gray-300 leading-relaxed mb-6" data-translate="about_p1">
+                        I'm a Master of Engineering Co-Op student in Information Systems
+                        Security at Concordia University with a 3.9 GPA. I am currently interning as an Information
+                        Security Analyst at American Express in Toronto, where my work focuses on the exciting
+                        intersection of Generative AI and Post-Quantum Cryptography.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed mb-6" data-translate="about_p2">
+                        My passion lies in exploring the applications of Generative AI within cybersecurity to build
+                        next-generation security solutions. I
+                        am actively seeking an impactful internship for the Fall 2025 term where I can
+                        continue my growth as a GenAI and security-focused
+                        engineer.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed" data-translate="about_p3">
+                        Outside of my technical expertise, I'm passionate about reading and writing books, traveling to
+                        different destinations, and learning new languages. Currently I'm writing my first book, working
+                        on my blogs and
+                        learning French.
+                    </p>
                 </div>
-              </div>
-              <div class="col-lg-6 about-info">
-                <p><strong>Name: </strong> <span>Armaan Sidhu</span></p>
-                <p><strong>Profile: </strong> <span>Cybersecurity Engineer, OSINT Investigator, CTF Player</span></p>
-                <p><strong>Email: </strong> <span>armaansidhu.ca@protonmail.com</span></p>
-                <p><strong>Phone: </strong> <span>+1 (263) 881-6038</span></p>
-                <p><strong>Education: </strong> <span>MEng Information Systems Security, BTech Computer Science &
-                    Engineering</span></p>
-                <p>
-                  <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Armaan%20Sidhu%27s%20Resume.pdf"
-                    class="btn btn-primary btn-sm" style="margin-left: 40px;">
-                    <span class="fa fa-download" aria-hidden="true"></span> Download My Resume
-                  </a>
-                </p>
-              </div>
-              <div class="company-logos text-center">
-                <img src="assets/img/company-banner.png" alt="Companies I've Worked With"
-                  style="max-width: 80%; height: auto;">
-              </div>
-              <div style="display: flex; justify-content: space-evenly; align-items: center;">
-                <p>
-                  <a href="https://realarmaansidhu.medium.com/" target="_blank" class="btn btn-dark btn-lg">
-                    Medium
-                    <span class="fa fa-brands fa-medium"></span>
-                  </a>
-                </p>
-                <p>
-                  <a href="https://www.linkedin.com/in/realarmaansidhu" target="_blank" class="btn btn-primary btn-lg">
-                    LinkedIn
-                    <span class="fa fa-brands fa-linkedin"></span>
-                  </a>
-                </p>
-                <p>
-                  <a href="https://www.github.com/realarmaansidhu" target="_blank" class="btn btn-dark btn-lg">
-                    GitHub
-                    <span class="fa fa-brands fa-github"></span>
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div class="col-md-6">
-            <div class="about-me">
-              <h4>About</h4>
-              <p>
-                I'm a Cybersecurity Engineer currently pursuing a <a
-                  href="https://www.concordia.ca/ginacody/info-systems-eng/programs/information-systems-security/meng.html">Master
-                  of Engineering in Information Systems Security</a> at
-                <a href="https://www.concordia.ca/">Concordia University</a> in Montreal, Quebec, Canada. With a
-                Bachelor’s degree in <a
-                  href="https://jaipur.manipal.edu/foe/b-tech-computer-science-engineering.php">Computer Science &
-                  Engineering</a> from <a href="https://jaipur.manipal.edu/">Manipal University Jaipur</a>, I specialize
-                in Cybersecurity, OSINT Investigations, Capture The Flag (CTF) competitions, and Threat Intelligence.
-              </p>
-              <p>
-                I am currently seeking a full-time summer internship in Cybersecurity to further apply my skills and
-                expertise in a dynamic, innovative environment. I am eager to collaborate with forward-thinking teams
-                and contribute to the creation of impactful, cutting-edge solutions while continuing to grow as a
-                Cybersecurity engineer.
-              </p>
-              <p>
-                Outside of my technical expertise, I'm passionate about reading and writing books, traveling to
-                different destinations, and learning new languages. Currently I'm writing my first book and learning
-                French. These hobbies help me stay curious and continuously expand my perspective.
-              </p>
+                <div class="cyber-card flex flex-col justify-center" data-aos="fade-up" data-aos-delay="200"
+                    data-aos-duration="800">
+                    <img src="assets/images/athack-wwf.jpg" alt="Armaan Sidhu at @Hack"
+                        class="w-full h-auto rounded-md mb-4">
+                    <p class="text-sm text-gray-400 italic" data-translate="about_img_caption">
+                        Armaan Sidhu receiving the third prize for Interac Challenge at the @Hack hackathon in Montreal,
+                        Quebec, Canada in March 2025
+                    </p>
+                </div>
             </div>
-          </div>
         </div>
-        <br>
-        <div class="row text-center">
-          <strong>Join My WhatsApp Channel</strong>
-          <p>
-            Stay connected with me! Click the link below:
-          </p>
-          <p>
-            <a href="https://whatsapp.com/channel/0029Vb2HbwODZ4LU9xRScM1A" target="_blank"
-              class="btn btn-success btn-lg">
-              <span class="fa fa-brands fa-whatsapp"> Join Now!</span>
-            </a>
-          </p>
-          <p style="font-size: 12px; margin-bottom: 10px;">These are my GitHub Contributions since the last year: <a
-              href="https://ghchart.rshah.org/" target="_blank"></a></p>
-          <a href="https://github.com/realarmaansidhu" target="_blank">
-            <img src="https://ghchart.rshah.org/realarmaansidhu" alt="Armaan's Github Chart in the last year"
-              style="max-width: 100%; height: auto;">
-          </a>
-          <div id="lastCommit" class="lastCommit" style="margin: 5px;">
-            <p><span id="update-date"></span></p>
-          </div>
-
-          <div class="info-link" style="margin-top: 20px;border: 4px solid #1683ff; padding: 3px">
-            <p class="info-text"><strong>
-                <span style="background-color: #1683ff; opacity: 1; color: white;">‎ Quote of the Month ‎
-                </span></strong></p>
-            <p> "Everybody has a hacking capability. And probably every intelligence service is hacking in the territory
-              of other countries. But who exactly does what? That would be a very sensitive piece of information. But
-              it's very difficult to communicate about it. Because nobody wants to admit the scope of what they're
-              doing." - Henry Alfred Kissinger</p>
-          </div>
-        </div>
-      </div>
-    </section><!-- /About Section -->
-
-    <!-- Start Education Section -->
-    <section id="education" class="education-mf sect-pt4 route"
-      style="background-image: url('assets/img/background-gif.gif');">
-      <div class="container" data-aos="fade-up" data-aos-delay="100"
-        style="background-color: white; opacity: 0.9; padding: 25px; border: 4px solid #45A047;">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                Education
-              </h3>
-              <div class="line-mf"></div>
-            </div>
-            <br>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6" style="border: 2px solid #45A047;">
-            <div class="education-item row text-center" style="padding: 10px; margin: 2px;">
-              <div class="education-logo col-12 d-flex justify-content-center">
-                <img src="assets/img/concordia-logo.png" alt="Concordia Logo" class="img-fluid">
-              </div>
-              <br>
-              <h4 class="education-title"> <a href="https://www.concordia.ca/" target="_blank" class="link">Concordia
-                  University</a> </h4>
-              <p class="education-subtitle">Montreal, Quebec, Canada</p>
-              <p class="education-description">Master of Engineering (MEng) - Information Systems Security</p>
-              <p class="education-date">September 2024 - April 2026</p>
-              <h5 class="education-courses">Focused on:</h5>
-              <ul class="education-course-list" style="list-style-type: none;">
-                <li>- Foundations of Cryptography</li>
-                <li>- Operating System Security</li>
-                <li>- System Physical Security</li>
-                <li>- Cyber-Physical Systems</li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="education-item row text-center" style="border: 2px solid #45A047;">
-              <div class="education-logo col-12 d-flex justify-content-center" style="padding: 10px; margin: 2px;">
-                <img src="assets/img/manipal-logo.png" alt="Manipal Logo" class="img-fluid">
-              </div>
-              <br>
-              <h4 class="education-title"> <a href="https://jaipur.manipal.edu/" target="_blank" class="link">Manipal
-                  University Jaipur</a></h4>
-              <p class="education-subtitle">Jaipur, Rajasthan, India</p>
-              <p class="education-description">B.Tech - Computer Science & Engineering (8.68/10)</p>
-              <p class="education-date">August 2020 - July 2024</p>
-              <h5 class="education-courses">Focused on:</h5>
-              <ul class="education-course-list" ; style="list-style-type: none;">
-                <li>- Information Coding</li>
-                <li>- Computer Networks</li>
-                <li>- Operating Systems</li>
-                <li>- Data Structures</li>
-              </ul>
-              <p class="major-project">Major Project: <a
-                  href="https://github.com/realarmaansidhu/major-project-speed-estimation-of-vehicles-using-deep-learning"
-                  target="_blank" class="link">
-                  Speed Estimation of Vehicles Using Deep Learning</a></p>
-              <p class="major-project-supervisor">Supervisor: <a
-                  href="https://scholar.google.com/citations?user=efRHCz4AAAAJ&hl=en" target="_blank"
-                  class="link">Assistant Professor Dr. Nishant Jain </a></p>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- Start Certification Section -->
-    <section id="certification" class="certification-mf sect-pt4 route"
-      style="background-image: url('assets/img/background-gif.gif');">
-      <div class="container" data-aos="fade-up" data-aos-delay="100"
-        style="background-color: white; opacity: 0.9; padding: 25px; border: 4px solid #45A047">
-        <div class="col-sm-12">
-          <div class="title-box text-center">
-            <h3 class="title-a">
-              My certifications
-            </h3>
-          </div>
-          <div class="line-mf"></div>
-          <br>
+    <!-- Work Experience Section -->
+    <section id="experience" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">WORK EXPERIENCE</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                <!-- Text Content -->
+                <div class="cyber-card md:col-span-2" data-aos="fade-right" data-aos-duration="800">
+                    <h3 class="text-2xl font-bold text-green-400 mb-2">American Express</h3>
+                    <p class="text-lg mb-2">Information Security Analyst (Intern) - AI and Post Quantum Computing</p>
+                    <p class="text-gray-400 mb-4">May 05, 2025 - Present | Toronto, ON</p>
+                    <p class="text-gray-300 font-medium mb-2">Key Focus Areas:</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2">
+                        <li>Conducting research and development in enterprise applications of Generative AI for
+                            security.
+                        </li>
+                        <li>Analyzing and preparing for the transition to Post-Quantum Cryptography (PQC) standards.
+                        </li>
+                        <li>Collaborating with global teams to assess and mitigate emerging threats at the intersection
+                            of AI and cryptography.</li>
+                        <li>Developing proof-of-concept models to enhance threat detection and response capabilities.
+                        </li>
+                    </ul>
+                </div>
+                <!-- Image -->
+                <div class="cyber-card flex items-center justify-center" data-aos="fade-left" data-aos-delay="200"
+                    data-aos-duration="800">
+                    <img src="assets/images/at_amex.png" alt="Armaan Sidhu at American Express Office"
+                        class="experience-img rounded-md">
+                </div>
+            </div>
         </div>
-        <div class="row">
-          <div class="col-lg-3">
-            <div class="certification-item row text-center">
-              <div class="certification-logo row text-center" style="width: 80%;">
-                <img src="assets/img/google-cs.png" alt="Google Cybersecurity Certification" class="img-fluid"
-                  style="margin-left: 40px;">
-              </div>
-              <h5 class="certification-title"> <a
-                  href="https://www.coursera.org/google-certificates/cybersecurity-certificate" target="_blank"
-                  class="link" style="position: relative; top:0px">Google Cybersecurity Certification</a></h5>
-              <p class="certification-description">MEng - Information Systems Security</p>
-              <p class="certification-date">Issued April 2024</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3">
-            <div class="certification-item row text-center">
-              <div class="certification-logo row text-center" style="width: 80%;">
-                <img src="assets/img/isc2-cc.png" alt="ISC2 Certified in Cybersecurity" class="img-fluid"
-                  style="margin-left: 40px;">
-              </div>
-              <br>
-              <h5 class="certification-title"> <a href="https://www.isc2.org/certifications/cc" target="_blank"
-                  class="link">ISC2 Certified in Cybersecurity</a> </h5>
-              <p class="certification-description">Master of Engineering (MEng) - Information Systems Security</p>
-              <p class="certification-date">Issued April 2024</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3">
-            <div class="certification-item row text-center">
-              <div class="certification-logo row text-center" style="width: 80%;">
-                <img src="assets/img/comptia-sec+.png" alt="CompTIA Security+ (SY0-701)" class="img-fluid"
-                  style="margin-left: 40px;">
-              </div>
-              <h5 class="certification-title"> <a href="https://www.comptia.org/certifications/security" target="_blank"
-                  class="link">CompTIA Security+
-                  <br>(SY0-701)</a> </h5>
-              <p class="certification-description">Master of Engineering (MEng) - Information Systems Security</p>
-              <p class="certification-date">Issued July 2024</p>
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="certification-item row text-center">
-              <div class="certification-logo row text-center" style="width: 80%;">
-                <img src="assets/img/comptia-cysa+.png" alt="CompTIA Cybersecurity Analyst+ (CS0-003)" class="img-fluid"
-                  style="margin-left: 40px;">
-              </div>
-              <br>
-              <h5 class="certification-title"> <a href="https://www.comptia.org/certifications/cybersecurity-analyst"
-                  target="_blank" class="link">CompTIA Cybersecurity Analyst+ (CS0-003)</a> </h5>
-              <p class="certification-description">Master of Engineering (MEng) - Information Systems Security</p>
-              <p class="certification-date">Issued October 2024</p>
-            </div>
-          </div>
     </section>
 
-    <section id="publications" class="blog-mf sect-pt4 route"
-      style="background-image: url('assets/img/background-gif.gif');">
-      <div class="container" data-aos="fade-up" data-aos-delay="100"
-        style="background-color: white; opacity: 0.9; padding: 25px;  border: 4px solid #45A047">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                My Publications
-              </h3>
-              <div class="line-mf"></div>
+    <!-- Education Section -->
+    <section id="education" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">EDUCATION</h2>
+            <div class="space-y-16">
+                <!-- Concordia University -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                    <div class="cyber-card md:col-span-2" data-aos="fade-right" data-aos-duration="800">
+                        <h3 class="text-2xl font-bold text-green-400 mb-2">Concordia University</h3>
+                        <p class="text-lg mb-2">M.Eng - Information System Security</p>
+                        <p class="text-gray-400 mb-4">Sep 2024 - Present</p>
+                        <p class="text-green-400 font-semibold mb-3">GPA: 3.80/4.00</p>
+                        <p class="text-gray-300 font-medium mb-2">Focused on:</p>
+                        <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2">
+                            <li>Foundations of Cryptography</li>
+                            <li>Operating System Security</li>
+                            <li>System Physical Security</li>
+                            <li>Cyber-Physical Systems</li>
+                        </ul>
+                    </div>
+                    <div class="cyber-card flex items-center justify-center" data-aos="fade-left" data-aos-delay="200"
+                        data-aos-duration="800">
+                        <img src="assets/images/concordia-img.jpg" alt="Concordia University Campus"
+                            class="education-img rounded-md">
+                    </div>
+                </div>
+                <!-- Manipal University -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                    <div class="cyber-card flex items-center justify-center" data-aos="fade-right"
+                        data-aos-duration="800">
+                        <img src="assets/images/manipal-img.jpeg" alt="Manipal University Jaipur Campus"
+                            class="education-img rounded-md">
+                    </div>
+                    <div class="cyber-card md:col-span-2" data-aos="fade-left" data-aos-delay="200"
+                        data-aos-duration="800">
+                        <h3 class="text-2xl font-bold text-green-400 mb-2">Manipal University Jaipur</h3>
+                        <p class="text-lg mb-2">B.Tech - Computer Science & Engineering</p>
+                        <p class="text-gray-400 mb-4">Aug 2020 - Jun 2024</p>
+                        <p class="text-green-400 font-semibold mb-3">CGPA: 8.68/10</p>
+                        <p class="text-gray-300 font-medium mb-2">Focused on:</p>
+                        <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2">
+                            <li>Information Coding</li>
+                            <li>Computer Networks</li>
+                            <li>Operating Systems</li>
+                            <li>Data Structures</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <br>
-          </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <div class="card card-blog">
-              <div class="card-body">
-                <div class="card-category-box">
-                </div>
-                <h5 class="card-title"><a href="https://zenodo.org/record/8050866" target=”_blank” class="link">
-                    AI-Driven Threat Intelligence: Leveraging Machine Learning to Empower Cybersecurity Applications for
-                    Enhanced Threat Detection and Response
-                  </a></h5>
-                <p class="card-description">
-                  This paper presents an in-depth exploration of the application of Artificial Intelligence (AI),
-                  specifically Machine Learning (ML), in enhancing threat intelligence for cybersecurity applications.
-                </p>
-              </div>
-              <div class="card-footer">
-                <div class="post-author">
-                  <a href="https://www.linkedin.com/posts/realarmaansidhu_researchmilestone-cybersecurity-ai-activity-7098631995420778496-2yZv">
-                    <span class="author">Presented at WCCIT on Saturday, August 12th, 2023 in Berlin, Germany
-                      🇩🇪</span>
-                  </a>
-                  <br>
-                  <br>
-                </div>
-                <p>
-                  <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/AI-Driven%20Threat%20Intelligence%20Leveraging%20Machine%20Learning%20to%20Empower%20Cybersecurity%20Applications%20for%20Enhanced%20Threat%20Detection%20and%20Response.pdf
-                  "
-                    class="btn btn-primary btn-sm" style="margin-top: 10px">
-                    <span class="fa fa-download" aria-hidden="true"></span> Download Research Paper
-                  </a>
-                </p>
-                <br>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card card-blog">
-              <div class="card-body">
-                <div class="card-category-box">
-                </div>
-                <h5 class="card-title"><a href="https://doi.org/10.6084/m9.figshare.23538504.v1" target=”_blank”
-                    class="link">
-                    Mitigating Advanced Persistent Threats (APTs) in Cybersecurity Through the Implementation of
-                    Distributed Ledger Technology: A Detailed Study and Practical Approach to Enhancing Intrusion
-                    Resilience
-                  </a></h5>
-                <p class="card-description">
-                  This research paper addresses the potential of Distributed Ledger Technology (DLT) as a solution to
-                  enhance intrusion resilience and mitigate APT related risks.
-                </p>
-              </div>
-              <div class="card-footer">
-                <div class="post-author">
-                  <a href="#">
-                    <span class="author">Shortlisted for Presentation in 16th SINCONF in Jaipur, India 🇮🇳</span>
-                  </a>
-                </div>
-                <p>
-                  <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Mitigating%20Advanced%20Persistent%20Threats%20%28APTs%29%20in%20Cybersecurity%20Through%20the%20Implementation%20of%20Distributed%20Ledger%20Technology%20A%20Detailed%20Study%20and%20Practical%20Approach%20to%20Enhancing%20Intrusion%20Resilience.pdf
-                  "
-                    class="btn btn-primary btn-sm" style="margin-top: 10px">
-                    <span class="fa fa-download" aria-hidden="true"></span> Download Research Paper
-                  </a>
-                </p>
-                <br>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card card-blog">
-              <div class="card-body">
-                <div class="card-category-box">
-                </div>
-                <h5 class="card-title"><a href="https://doi.org/10.6084/m9.figshare.23541072.v1" target=”_blank
-                    class="link">
-                    Analyzing Modern Cryptography Techniques and Reviewing their Timeline (2023)
-                  </a></h5>
-                <p class="card-description">
-                  This review paper traces the timeline of ciphering techniques in chronological order, from the
-                  earliest known examples of cryptography to the modern cryptographic systems used today. It explores
-                  the development of these over time, the historical context in which they were used, and the
-                  mathematical and computational principles they rely on.
-                </p>
-              </div>
-              <div class="card-footer">
-                <div class="post-author">
-                  <a href="#">
-                    <span class="author">Review Paper uploaded to Figshare</span>
-                  </a>
-                </div>
-                <p>
-                  <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Analyzing%20Modern%20Cryptography%20Techniques%20and%20Reviewing%20their%20Timeline%20%282023%29.pdf
-                  "
-                    class="btn btn-primary btn-sm" style="margin-top: 10px">
-                    <span class="fa fa-download" aria-hidden="true"></span> Download Review Paper
-                  </a>
-                </p>
-                <br>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card card-blog">
-              <div class="card-body">
-                <div class="card-category-box">
-                </div>
-                <h5 class="card-title"><a href="https://doi.org/10.6084/m9.figshare.23537031.v1" target="_blank"
-                    class="link">Process Scheduling in Operating Systems and Evolution of Windows (2023)
-                  </a></h5>
-                <p class="card-description">
-                  This review paper discusses the concept of process scheduling in operating systems, with a focus on
-                  its implementation in the Windows operating system. The article provides an overview of the process
-                  scheduling algorithm used in Windows, which is responsible for determining which process should be
-                  given access to the CPU at any given time.
-                </p>
-              </div>
-              <div class="card-footer">
-                <div class="post-author">
-                  <a href="#">
-                    <span class="author">Review Paper uploaded to Figshare</span>
-                  </a>
-                </div>
-                <p>
-                  <br>
-                  <a href="https://cdn.jsdelivr.net/gh/realarmaansidhu/armaanS@main/Process%20Scheduling%20in%20Operating%20Systems%20and%20Evolution%20of%20Windows%20%282023%29.pdf
-                  "
-                    class="btn btn-primary btn-sm" style="margin-top: 10px">
-                    <span class="fa fa-download" aria-hidden="true"></span> Download Review Paper
-                  </a>
-                </p>
-                <br>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      </div>
     </section>
 
-    <!-- </section>/Resume Section -->
-    <section id="internship" class="internship section" style="background-image: url(assets/img/background-gif.gif);">
-      <div class="container" data-aos="fade-up" data-aos-delay="100"
-        style="background-color: white; opacity: 0.9; padding: 25px; border: 4px solid #45A047">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                Internships
-              </h3>
-              <div class="line-mf"></div>
+    <!-- Publications Section -->
+    <section id="publications" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">PUBLICATIONS</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Publication 1 -->
+                <div class="cyber-card flex flex-col justify-between" data-aos="fade-up" data-aos-duration="800">
+                    <div>
+                        <h3 class="text-xl font-bold text-green-400 mb-3">
+                            AI-Driven Threat Intelligence: Leveraging Machine Learning to Empower Cybersecurity
+                            Applications for Enhanced Threat Detection and Response</h3>
+                        <br>
+                        <br>
+                        <p class="text-gray-300 mb-4">This paper presents an in-depth exploration of the application of
+                            Artificial Intelligence (AI), specifically Machine Learning (ML), in enhancing threat
+                            intelligence for cybersecurity applications.</p>
+                    </div>
+                    <p class="text-sm text-gray-400 italic">
+                        Presented at World Conference on Computing and IT on Saturday, August 12th, 2023 in Berlin,
+                        Germany 🇩🇪
+                    </p>
+                    <button class="cyber-btn w-full mt-4"><a href="https://zenodo.org/records/8050866" target="_blank">READ THE PAPER ↗</a></button>
+                </div>
+
+                <!-- Publication 2 -->
+                <div class="cyber-card flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100"
+                    data-aos-duration="800">
+                    <div>
+                        <h3 class="text-xl font-bold text-green-400 mb-3">
+                            Mitigating Advanced Persistent Threats (APTs) in Cybersecurity Through the Implementation of
+                            Distributed Ledger Technology: A Detailed Study and Practical Approach to Enhancing
+                            Intrusion Resilience</h3>
+                        <p class="text-gray-300 mb-4">This research paper addresses the potential of Distributed Ledger
+                            Technology (DLT) as a solution to enhance intrusion resilience and mitigate APT related
+                            risks.</p>
+                        <br>
+                        <p class="text-sm text-gray-400 italic">
+                            Shortlisted for Presentation in 16th SINCONF in Jaipur, India 🇮🇳
+                        </p>
+                    </div>
+                    <button class="cyber-btn w-full mt-4"><a href="https://doi.org/10.6084/m9.figshare.23538504.v1" target="_blank">READ THE PAPER ↗</a></button>
+                </div>
+
+                <!-- Publication 3 -->
+                <div class="cyber-card flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200"
+                    data-aos-duration="800">
+                    <div>
+                        <h3 class="text-xl font-bold text-green-400 mb-3">Analyzing Modern Cryptography Techniques and
+                            Reviewing their Timeline (2023)</h3>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <p class="text-gray-300 mb-4">This review paper traces the timeline of ciphering techniques in
+                            chronological order, from the earliest known examples of cryptography to the modern
+                            cryptographic systems.</p>
+                    </div>
+                    <p class="text-sm text-gray-400 italic">
+                        Review Paper uploaded to Figshare
+                    </p>
+                    <button class="cyber-btn w-full mt-4"><a href="https://doi.org/10.6084/m9.figshare.23541072.v1" target="_blank">READ THE PAPER ↗</a></button>
+                </div>
+
+                <!-- Publication 4 -->
+                <div class="cyber-card flex flex-col justify-between" data-aos="fade-up" data-aos-delay="300"
+                    data-aos-duration="800">
+                    <div>
+                        <h3 class="text-xl font-bold text-green-400 mb-3">
+                            Process Scheduling in Operating Systems and Evolution of Windows (2023)</h3>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <p class="text-gray-300 mb-4">This review paper discusses the concept of process scheduling in
+                            operating systems, with a focus on its implementation in the Windows operating system
+                            specifically.</p>
+                    </div>
+                    <p class="text-sm text-gray-400 italic">
+                        Review Paper uploaded to Figshare
+                    </p>
+                    <button class="cyber-btn w-full mt-4"><a href="https://doi.org/10.6084/m9.figshare.23537031.v1" target="_blank">READ THE PAPER ↗</a></button>
+                </div>
             </div>
-            <br>
-          </div>
         </div>
+    </section>
 
-        <div class="row">
+    <!-- Networking Section -->
+    <section id="networking" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">NETWORKING EVENTS</h2>
 
-          <div class="col-md-4">
-            <div class="card card-blog">
-              <div class="card-img">
-                <img src="assets/img/Exp1.png" alt="" class="img-fluid">
-              </div>
-              <div class="card-body">
-                <div class="row text-center">
-                  <h3 class="card-title"> <a href="https://atlanz.in/" target="_blank" class="link">AI/ML
-                      Developer</h3>
-                  <h6 class="card-category text-center">AtlanZ Mobility, Vadodara, India</h6></a>
+            <!-- Centered 3x2 Grid -->
+            <div class="flex justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl">
+                    <!-- Featured Event -->
+                    <div class="network-card sm:col-span-2 lg:col-span-3" data-aos="fade-up" data-aos-duration="800">
+                        <img src="assets/images/freeland-oath.jpeg"
+                            alt="Attending Chrystia Freeland's Oath Ceremony at the Parliament of Canada"
+                            class="featured-network-img">
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Minister Chrystia Freeland's Oath Ceremony</h3>
+                            <p class="text-gray-300 italic">Attended Minister of Transport Chrystia Freeland's Oath
+                                Ceremony inside the Parliament of Canada along with her team on Thursday, 22nd May,
+                                2025.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mark Carney -->
+                    <div class="network-card" data-aos="fade-up" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_Carney.jpg" alt="Meeting with Mark Carney" class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Mark Carney</h3>
+                            <p class="text-gray-300 italic">Prime Minister of Canada
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Chrystia Freeland -->
+                    <div class="network-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_Freeland.JPG" alt="Meeting with Chrystia Freeland"
+                                class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Chrystia Freeland</h3>
+                            <p class="text-gray-300 italic">Minister of Transport of Canada
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bill Blair -->
+                    <div class="network-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_Blair.jpg" alt="Meeting with Bill Blair" class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Bill Blair</h3>
+                            <p class="text-gray-300 italic">MP from Scarborough Southwest
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Jennifer McKelvie -->
+                    <div class="network-card" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_McKelvie.jpg" alt="Meeting with Jennifer McKelvie"
+                                class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Jennifer McKelvie</h3>
+                            <p class="text-gray-300 italic">MP from Ajax
+                                <br>
+                                &nbsp;
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Marc Miller -->
+                    <div class="network-card" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_Miller.JPG" alt="Meeting with Marc Miller" class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Marc Miller</h3>
+                            <p class="text-gray-300 italic">MP from Ville-Marie—Le Sud-Ouest—Île-des-Soeurs</p>
+                        </div>
+                    </div>
+
+                    <!-- Salma Zahid -->
+                    <div class="network-card" data-aos="fade-up" data-aos-delay="500" data-aos-duration="800">
+                        <div class="relative bg-green-900 flex items-center justify-center overflow-hidden">
+                            <img src="assets/images/Avec_Zahid.jpg" alt="Meeting with Salma Zahid" class="network-img">
+                        </div>
+                        <div class="network-info">
+                            <h3 class="text-xl font-bold text-green-400">Salma Zahid</h3>
+                            <p class="text-gray-300 italic">Member of Canada-UK Interparliamentary Association</p>
+                        </div>
+                    </div>
                 </div>
-                <ul class="card-list">
-                  <li>Worked Onsite in Vadodara, collecting and enhancing the Primary Dataset of Moving Vehicles
-                    obtained from Surveillance Cameras for better model training</li>
-                  <li>Worked on an AI Model that detects speeds of moving objects in real time from input streams of
-                    Surveillance Cameras, Drones, etc <a
-                      href="https://github.com/realarmaansidhu/major-project-speed-estimation-of-vehicles-using-deep-learning">GitHub
-                      Folder Link</a></li>
-                </ul>
-              </div>
-              <div class="card-footer">
-                <div class="post-date text-center">
-                  <span class="ion-ios-clock-outline"></span> 10th Jan 2024 - 10th May 2024
-                </div>
-              </div>
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card card-blog">
-              <div class="card-img">
-                <img src="assets/img/Exp1.png" alt="" class="img-fluid">
-              </div>
-              <div class="card-body">
-                <div class="row text-center">
-                  <h3 class="card-title"> <a href="https://the-cyberhost.com/" target="_blank"
-                      class="link">Cybersecurity
-                      Engineer</h3>
-                  <h6 class="card-category text-center">THECYBERHOST, New Delhi, India</h6></a>
-                </div>
-                <ul class="card-list">
-                  <li>Worked on the Penetration Testing of an Android application, identifying critical vulnerabilities
-                    and presented a report of them to the team lead</li>
-                  <li>Gained first hand experience of various vulnerabilities, baseline configurations etc for Android
-                    applications.</li>
-                </ul><br>
-              </div>
-              <div class="card-footer">
-                <div class="post-date text-center">
-                  <span class="ion-ios-clock-outline"></span> 25th Aug 2023 - 25th Sep 2023
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card card-blog">
-              <div class="card-img">
-                <img src="assets/img/Exp1.png" alt="" class="img-fluid">
-              </div>
-              <div class="card-body">
-                <div class="row text-center">
-                  <h3 class="card-title"> <a href="https://www.wictronix.com/" target="_blank" class="link">Fullstack
-                      Developer</h3>
-                  <h6 class="card-category text-center">WictroniX, Chandigarh, India</h6></a>
-                </div>
-                <ul class="card-list">
-                  <li>Worked Onsite as Team Lead of the Quality Assurance Team - TTW, ensuring efficient QA Testing of
-                    web applications developed for Clients</li>
-                  <li>Efficient leadership and fluent team coordination led to an accurate and fast track testing
-                    procedure, resulting in 98% client satisfaction </li>
-                </ul>
-              </div>
-              <div class="card-footer">
-                <div class="post-date text-center">
-                  <span class="ion-ios-clock-outline"></span> 24th April 2023 - 30th Dec 2023
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <br>
-      <section id="award" class="award section" style="background-image: url(assets/img/background-gif.gif);">
-        <div class="container" data-aos="fade-up" data-aos-delay="100"
-          style="background-color: white; opacity: 0.9; padding: 25px; border: 4px solid #45A047">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="title-box text-center">
-                <h3 class="title-a">
-                  Awards and Accomplishments
-                </h3>
-                <div class="line-mf"></div>
-              </div>
-              <br>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="card card-blog">
-                <div class="card-img">
-                  <img src="assets/img/Exp1.png" alt="" class="img-fluid">
-                </div>
-                <div class="card-body">
-                  <div class="row text-center">
-                    <h3 class="card-title"> <a href="https://www.tryhackme.com/r/p/armaansidhu" target="_blank"
-                        class="link">Among the
-                        Top 3% Students Globally</h3>
-                    <h6 class="card-category text-center">Achieved on: tryhackme.com</h6></a>
-                  </div>
-                  <ul class="card-list">
-                    <li>Ranked #45,722 globally with 16 badges and 105 completed rooms on TryHackMe.</li>
-                    <li>Currently completing SOC Level 1 Path</li>
-                  </ul><br><br>
-                </div>
-                <div class="card-footer">
-                  <div class="post-date text-center">
-                    <span class="ion-ios-clock-outline"></span> Ranking Last Verified: January 2025
-                  </div>
-                </div>
-              </div>
-            </div>
+    </section>
 
-            <div class="col-md-4">
-              <div class="card card-blog">
-                <div class="card-img">
-                  <img src="assets/img/Exp1.png" alt="" class="img-fluid">
-                </div>
-                <div class="card-body">
-                  <div class="row text-center">
-                    <h3 class="card-title"> <a
-                        href="https://careernext.manipal.edu/content/dam/manipal/mu/foa/document/5.%20MA%20(FM)%20Course%20regulations.pdf">Perfect
-                        10/10 Grade Point Average</h3>
-                    <h6 class="card-category text-center">Awarded by: Manipal University Jaipur</h6></a>
-                  </div>
-                  <ul class="card-list">
-                    <li>Achieved 10 GPA in the final semester of BTech at Manipal University Jaipur.</li>
-                    <li>GPA was awarded after presentation of the speed detection project undertaken during the
-                      Internship at AtlanZ Mobility</li>
-                  </ul>
-                </div>
-                <div class="card-footer">
-                  <div class="post-date text-center">
-                    <span class="ion-ios-clock-outline"></span> GPA Confirmed On: 10th June 2024
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="col-md-4">
-              <div class="card card-blog">
-                <div class="card-img">
-                  <img src="assets/img/Exp1.png" alt="" class="img-fluid">
+    <!-- Certifications Section -->
+    <section id="certifications" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">CERTIFICATIONS</h2>
+
+            <!-- Centered Grid with 3 columns -->
+            <div class="flex justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl">
+                    <!-- Certification 1 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">TryHackMe Security Analyst
+                            Level 1</h3>
+                        <img src="assets/images/thm-sal1.jpg" alt="TryHackMe Security Analyst Level 1 Certificate"
+                            class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: March 24, 2025</p>
+                    </div>
+
+                    <!-- Certification 2 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-delay="100"
+                        data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">TCM Practical OSINT Research
+                            Professional</h3>
+                        <img src="assets/images/tcm-porp.jpg"
+                            alt="TCM Practical OSINT Research Professional Certificate" class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: January 30, 2025</p>
+                    </div>
+
+                    <!-- Certification 3 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-delay="200"
+                        data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">CompTIA Cybersecurity
+                            Analyst+ (CySA+)</h3>
+                        <img src="assets/images/comptia-cysa.jpg" alt="CompTIA Cybersecurity Analyst+ Certificate"
+                            class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: October 17, 2024</p>
+                    </div>
+
+                    <!-- Certification 4 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-delay="300"
+                        data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">CompTIA Security+ SY0-701
+                        </h3>
+                        <img src="assets/images/comptia-sec.jpg" alt="CompTIA Security+ Certificate"
+                            class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: July 20, 2024</p>
+                    </div>
+
+                    <!-- Certification 5 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-delay="400"
+                        data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">ISC2 Certified in
+                            Cybersecurity</h3>
+                        <img src="assets/images/isc2-cc.jpg" alt="ISC2 Certified in Cybersecurity Certificate"
+                            class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: May 01, 2024</p>
+                    </div>
+
+                    <!-- Certification 6 -->
+                    <div class="cyber-card flex flex-col" data-aos="fade-up" data-aos-delay="500"
+                        data-aos-duration="800">
+                        <h3 class="text-xl font-bold text-green-400 h-16 flex items-center">Google Cybersecurity
+                            Certification</h3>
+                        <img src="assets/images/google-cs.jpg" alt="Google Cybersecurity Certificate"
+                            class="certification-img my-4">
+                        <p class="text-gray-400 mt-auto">Awarded: April 22, 2024</p>
+                    </div>
                 </div>
-                <div class="card-body">
-                  <div class="row text-center">
-                    <h3 class="card-title"><a
-                        href="https://www.linkedin.com/posts/realarmaansidhu_deanslist-academicexcellence-deansexcellenceaward-activity-7205843850089689088-Bw0v">Dean's
-                        List Excellence in Academics Award</h3>
-                    <h6 class="card-category text-center">Awarded by: Manipal University Jaipur</h6></a>
-                  </div>
-                  <ul class="card-list">
-                    <li>Recognized for academic excellence in Semester 7 at Manipal University Jaipur.
-                    </li>
-                    <li>Certificate handed over to me by the Dean of Manipal University Jaipur</li>
-                  </ul><br>
-                </div>
-                <div class="card-footer">
-                  <div class="post-date text-center">
-                    <span class="ion-ios-clock-outline"></span> Awarded On: 20th May 2024
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </section>
+    </section>
 
-      <!-- Testimonials Section -->
-      <section id="testimonials" class="testimonials section accent-background"
-        style="border-top: 4px solid #45A047; border-bottom: 4px solid #45A047; height: 450px;">
 
-        <img src="assets/img/testimonial-gif.gif" class="testimonials-bg" alt="">
+    <!-- Awards Section -->
+    <section id="awards" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">AWARDS</h2>
 
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-          <div class="swiper init-swiper">
-            <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 600,
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": "auto",
-              "pagination": {
-                "el": ".swiper-pagination",
-                "type": "bullets",
-                "clickable": true
-              }
-            }
-          </script>
-            <div class="swiper-wrapper">
-
-              <div class="swiper-slide" style="height: 350px;">
-                <div class="testimonial-item">
-                  <a href="https://www.linkedin.com/in/sunil-kumar-poonia/">
-                    <img src="assets/img/testimonials/sk-poonia.jpeg" class="testimonial-img" alt="">
-                    <h3>Sunil Kumar Poonia</h3>
-                    <h4>CMO &amp; Co-Founder, WictroniX Infotech Private Limited</h4>
-                  </a>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span>Armaan Sidhu interned with AtlanZ Mobility as an AI/ML Engineer, where he contributed
-                      significantly to our ‘Speed Estimation of Vehicles using Deep Learning’ project. His technical
-                      skills and dedication were evident, and his work played a key role in the success of the project.
-                      Based on this project, Armaan earned a perfect 10 Grade Point in his 8th semester at Manipal
-                      University Jaipur, reflecting his academic excellence. I am excited to see him pursue his Master’s
-                      in Information System Security at Concordia University and I am confident he will continue to
-                      excel in his future endeavors.</span>
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Award 1 -->
+                <div class="cyber-card" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+                    <h3 class="text-xl font-bold text-green-400 mb-3">Third Place - Interac Challenge</h3>
+                    <p class="text-gray-400 mb-3">Awarded at: @Hack 2025, Montreal</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2 mb-4">
+                        <li>Secured third position in the Regular Track</li>
+                        <li>Awarded Hak5 $100 USD gift card</li>
+                    </ul>
+                    <p class="text-gray-400 italic mt-auto">Competition Date: March 2025</p>
                 </div>
-              </div><!-- End testimonial item -->
+
+                <!-- Award 2 -->
+                <div class="cyber-card" data-aos="fade-up" data-aos-duration="800">
+                    <h3 class="text-xl font-bold text-green-400 mb-3">Among the Top 1% Students Globally</h3>
+                    <p class="text-gray-400 mb-3">Achieved on: tryhackme.com</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2 mb-4">
+                        <li>Ranked ~20,000 globally with 20+ badges</li>
+                        <li>~150 completed rooms on TryHackMe</li>
+                        <li>Currently completing SOC Level 1 Path</li>
+                    </ul>
+                    <p class="text-gray-400 italic mt-auto">Ranking Last Verified: April 2025</p>
+                </div>
+
+                <!-- Award 3 -->
+                <div class="cyber-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+                    <h3 class="text-xl font-bold text-green-400 mb-3">Perfect 10/10 Grade Point Average</h3>
+                    <p class="text-gray-400 mb-3">Awarded by: Manipal University Jaipur</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2 mb-4">
+                        <li>Achieved 10 GPA in the final semester of BTech</li>
+                        <li>GPA was awarded after presentation of the speed detection project</li>
+                    </ul>
+                    <p class="text-gray-400 italic mt-auto">GPA Confirmed On: 10th June 2024</p>
+                </div>
+
+                <!-- Award 4 -->
+                <div class="cyber-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                    <h3 class="text-xl font-bold text-green-400 mb-3">Dean's List Excellence in Academics Award</h3>
+                    <p class="text-gray-400 mb-3">Awarded by: Manipal University Jaipur</p>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1 ml-2 mb-4">
+                        <li>Recognized for academic excellence in Semester 7</li>
+                        <li>Certificate handed over by the Dean</li>
+                    </ul>
+                    <p class="text-gray-400 italic mt-auto">Awarded On: 20th May 2024</p>
+                </div>
+
             </div>
-            <div class="swiper-pagination"></div>
-          </div>
-
         </div>
+    </section>
 
-      </section><!-- /Testimonials Section -->
-  </main>
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title text-4xl font-bold text-green-400 mb-16">CONTACT</h2>
 
-  <footer id="footer" class="footer accent-background"
-    style="color: white; background-image: url(assets/img/background-gif.gif);">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="cyber-card" data-aos="fade-right" data-aos-duration="800">
+                    <h3 class="text-2xl font-bold text-green-400 mb-6">Get In Touch</h3>
+                    <p class="text-gray-300 mb-8">
+                        Have a project in mind or want to discuss potential collaborations? Feel free to reach out using
+                        the form or connect with me directly through my social channels.
+                    </p>
 
-    <div class="container"">
-      <div class=" copyright text-center ">
-        <p>© <span>Copyright</span> <strong class=" px-1 sitename">Armaan Sidhu</strong> <span>All Rights
-        Reserved</span>
-      </p>
-    </div>
-    <div class="credits">
-      Designed by <a style="background-color: #2355B3;" href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-    </div>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center">
+                                <i class="fas fa-envelope text-green-400"></i>
+                            </div>
+                            <span class="text-gray-300">realarmaansidhu@gmail.com</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center">
+                                <i class="fas fa-phone text-green-400"></i>
+                            </div>
+                            <span class="text-gray-300">+1 (263) 881-6038</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-green-400"></i>
+                            </div>
+                            <span class="text-gray-300">Toronto, Ontario, Canada</span>
+                        </div>
+                    </div>
 
-  </footer>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/realarmaansidhu" target="_blank"
+                            class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center hover:bg-green-400 hover:text-black transition duration-300">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/realarmaansidhu" target="_blank"
+                            class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center hover:bg-green-400 hover:text-black transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://medium.com/@realarmaansidhu" target="_blank"
+                            class="w-10 h-10 rounded-full bg-green-900 flex items-center justify-center hover:bg-green-400 hover:text-black transition duration-300">
+                            <i class="fab fa-medium-m"></i>
+                        </a>
+                    </div>
+                </div>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-      class="bi bi-arrow-up-short"></i></a>
+                <div class="cyber-card" data-aos="fade-left" data-aos-duration="800">
+                    <form>
+                        <div class="mb-6">
+                            <label for="name" class="block text-green-400 mb-2">Name</label>
+                            <input type="text" id="name"
+                                class="w-full bg-black bg-opacity-50 border border-green-900 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition duration-300"
+                                placeholder="Your Name">
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-green-400 mb-2">Email</label>
+                            <input type="email" id="email"
+                                class="w-full bg-black bg-opacity-50 border border-green-900 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition duration-300"
+                                placeholder="Your Email">
+                        </div>
+                        <div class="mb-6">
+                            <label for="subject" class="block text-green-400 mb-2">Subject</label>
+                            <input type="text" id="subject"
+                                class="w-full bg-black bg-opacity-50 border border-green-900 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition duration-300"
+                                placeholder="Subject">
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-green-400 mb-2">Message</label>
+                            <textarea id="message" rows="5"
+                                class="w-full bg-black bg-opacity-50 border border-green-900 rounded-md py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition duration-300"
+                                placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit" class="cyber-btn w-full">SEND MESSAGE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
+    <!-- Footer -->
+    <footer class="py-8 border-t border-green-900">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold text-green-400 mb-4">Armaan Sidhu</h3>
+                    <p class="text-gray-400">
+                        Cybersecurity and GenAI Engineer specializing in threat intelligence, OSINT, and building secure
+                        AI-driven solutions.
+                    </p>
+                </div>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+                <div>
+                    <h3 class="text-xl font-bold text-green-400 mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-green-400 transition duration-300">Home</a>
+                        </li>
+                        <li><a href="#about"
+                                class="text-gray-400 hover:text-green-400 transition duration-300">About</a></li>
+                        <li><a href="#education"
+                                class="text-gray-400 hover:text-green-400 transition duration-300">Education</a></li>
+                        <li><a href="#publications"
+                                class="text-gray-400 hover:text-green-400 transition duration-300">Publications</a></li>
+                    </ul>
+                </div>
+            </div>
 
-  <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/app.js"></script>
+            <div class="text-center pt-8 border-t border-green-900">
+                <p class="text-gray-500">&copy; 2025 Armaan Sidhu. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/js/all.min.js"></script>
+    <script src="translations.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>
