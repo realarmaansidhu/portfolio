@@ -65,7 +65,7 @@ section {
 
 /* Apply the fixed background only to the home section. It will stay visible behind #about. */
 #home, #about{
-    background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)), url('../images/bg-cover.png') center/cover no-repeat fixed;
+    background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)), url('../images/in_downtown.gif') center/cover no-repeat fixed;
 }
 
 #home, #about {
