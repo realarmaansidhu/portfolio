@@ -164,6 +164,7 @@ section:not(#home):not(#about) {
     border: 4px solid var(--matrix-green);
     box-shadow: 0 0 25px var(--matrix-green-glow);
     object-fit: cover;
+    filter: brightness(0.80)
 }
 
 /* Networking Cards */
