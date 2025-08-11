@@ -157,6 +157,28 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+// Projects dropdown tap support for mobile
+document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('projects-menu-btn');
+    var dropdown = document.getElementById('projects-dropdown');
+    if (btn && dropdown) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            dropdown.classList.toggle('opacity-0');
+            dropdown.classList.toggle('pointer-events-none');
+            dropdown.classList.toggle('opacity-100');
+            dropdown.classList.toggle('pointer-events-auto');
+        });
+        // Optional: Hide dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('opacity-0', 'pointer-events-none');
+                dropdown.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        });
+    }
+});
+
 // Make variables global for language switching
 window.roles = roles;
 window.currentRole = currentRole;

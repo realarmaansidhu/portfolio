@@ -286,3 +286,12 @@ section:not(#home):not(#about) {
     .profile-pic { width: 200px; height: 200px; }
     .social-icons { right: 10px; }
 }
+
+/* Dropdown menu for Projects */
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+.group:hover .group-hover\:pointer-events-auto {
+    pointer-events: auto !important;
+}
