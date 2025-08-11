@@ -177,6 +177,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // Mobile Projects dropdown toggle
+    var mobileProjectsBtn = document.getElementById('mobile-projects-btn');
+    var mobileProjectsDropdown = document.getElementById('mobile-projects-dropdown');
+    if (mobileProjectsBtn && mobileProjectsDropdown) {
+        mobileProjectsBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            mobileProjectsDropdown.classList.toggle('hidden');
+        });
+        // Optional: close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!mobileProjectsBtn.contains(e.target) && !mobileProjectsDropdown.contains(e.target)) {
+                mobileProjectsDropdown.classList.add('hidden');
+            }
+        });
+    }
 });
 
 // Make variables global for language switching

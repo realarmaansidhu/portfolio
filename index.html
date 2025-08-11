@@ -80,9 +80,17 @@
                 <a href="#home" class="block nav-link" data-translate="nav_home">Home</a>
                 <a href="#about" class="block nav-link" data-translate="nav_about">About</a>
                 <a href="#experience" class="block nav-link" data-translate="nav_experience">Experience</a>
-                <a href="#education" class="block nav-link" data-translate="nav_education">Education</a>
-                <a href="#publications" class="block nav-link" data-translate="nav_publications">Publications</a>
-                <a href="#networking" class="block nav-link" data-translate="nav_networking">Networking</a>
+                <!-- Projects Dropdown for Mobile -->
+                <button id="mobile-projects-btn" class="block nav-link w-full text-left flex items-center justify-between focus:outline-none">
+                    Projects
+                    <svg class="ml-2 w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="mobile-projects-dropdown" class="hidden pl-4">
+                    <a href="KnowledgeTree.html" target="_blank" class="block nav-link py-2">Knowledge Tree</a>
+                    <!-- Add more projects here as needed -->
+                </div>
                 <a href="#awards" class="block nav-link" data-translate="nav_awards">Awards</a>
                 <a href="#contact" class="block nav-link" data-translate="nav_contact">Contact</a>
             </div>
