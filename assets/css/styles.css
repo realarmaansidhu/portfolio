@@ -287,6 +287,63 @@ section:not(#home):not(#about) {
     .social-icons { right: 10px; }
 }
 
+/* Responsive card and section adjustments for mobile */
+@media (max-width: 640px) {
+    .cyber-card,
+    .network-card {
+        padding: 12px !important;
+        font-size: 0.98rem;
+        max-width: 98vw;
+        margin-left: auto;
+        margin-right: auto;
+        border-width: 1.5px;
+    }
+
+    .cyber-card p,
+    .cyber-card ul,
+    .network-card p,
+    .network-card ul {
+        font-size: 0.98rem;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    .section-title {
+        font-size: 2rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    section,
+    #home {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        padding-top: 60px !important;
+        padding-bottom: 30px !important;
+    }
+
+    /* Limit card height and enable scrolling for overflow */
+    .cyber-card,
+    .network-card {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+/* Prevent horizontal overflow on all screens */
+.cyber-card,
+.network-card {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Make publication and about cards more compact on all screens */
+.cyber-card p,
+.cyber-card ul {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
 /* Dropdown menu for Projects */
 .group:hover .group-hover\:opacity-100 {
     opacity: 1 !important;
