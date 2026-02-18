@@ -77,8 +77,8 @@ html {
 }
 
 /* Sections - Fix the gap issue */
+/* Sections - Fix the gap issue */
 section {
-    min-height: 100vh;
     position: relative;
     margin: 0;
     padding: 0;
@@ -86,6 +86,7 @@ section {
 
 /* Home section specific adjustments */
 #home {
+    min-height: 100vh;
     padding-top: 100px;
     /* Account for navbar height */
     padding-bottom: 80px;
