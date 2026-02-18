@@ -400,6 +400,35 @@ section:not(#home):not(#about) {
     pointer-events: auto !important;
 }
 
-.group:hover .group-hover\:pointer-events-auto {
-    pointer-events: auto !important;
+
+/* Responsive Typography and Spacing */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2.5rem !important;
+        /* Smaller titles on mobile */
+        margin-bottom: 2.5rem !important;
+    }
+
+    section:not(#home) {
+        padding: 50px 20px !important;
+        /* Less padding on mobile sections */
+    }
+}
+
+/* Publication Card Minimum Heights - Desktop Only */
+@media (min-width: 1024px) {
+    .publication-title {
+        min-height: 14rem;
+    }
+
+    .publication-desc {
+        min-height: 10rem;
+    }
+}
+
+/* Mobile Menu Link Spacing */
+#mobile-menu .nav-link {
+    padding: 1rem 1.5rem;
+    /* Larger touch targets */
+    border-bottom: 1px solid rgba(0, 255, 65, 0.1);
 }
