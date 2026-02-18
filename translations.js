@@ -22,9 +22,10 @@ const translations = {
         placeholder_subject: "Subject",
         placeholder_message: "Your Message",
         about_title: "ABOUT",
-        about_p1: "I'm a Master of Engineering Co-Op student in Information Systems Security at Concordia University with a 3.9 GPA. I am currently interning as an Information Security Analyst at American Express in Toronto, where my work focuses on the exciting intersection of Generative AI and Post-Quantum Cryptography.",
-        about_p2: "My passion lies in exploring the applications of Generative AI within cybersecurity to build next-generation security solutions. I am actively seeking an impactful internship for the Fall 2025 term where I can continue my growth as a GenAI and security-focused engineer.",
-        about_p3: "Outside of my technical expertise, I'm passionate about reading and writing books, traveling to different destinations, and learning new languages. Currently I'm writing my first book, working on my blogs and learning French.",
+        about_p1: "I'm currently pursuing a Master of Engineering in Information Systems Security at Concordia University (Montréal, Québec), with a 3.91/4.30 GPA, and my core interests lie at the intersection of cybersecurity, artificial intelligence.",
+        about_p2: "Earlier as a Junior Security Operations Analyst with The TMX Group at the Toronto Stock Exchange, I worked with enterprise-grade cybersecurity tools to monitor, investigate, and help strengthen the security posture of critical financial market infrastructure.",
+        about_p3: "Prior to that, I worked as an Information Security Analyst in the Generative AI Security team at American Express, where I gained hands-on experience with LLMOps, secure AI/ML pipeline integration, and risk mitigation across production systems.",
+        about_p4: "Outside of my technical expertise, I'm passionate about reading and writing books, traveling abroad (been to India, UAE, Mexico and Peru till now) and learning new languages. Currently I'm writing my first book - One Night in Trombay, working on my blog articles on X and Medium and learning French.",
         about_img_caption: "Armaan Sidhu receiving the third prize for Interac Challenge at the @Hack hackathon in Montreal, Quebec, Canada in March 2025",
         experience_title: "WORK EXPERIENCE",
         amex_title: "American Express",
@@ -153,9 +154,10 @@ const translations = {
         placeholder_subject: "Sujet",
         placeholder_message: "Votre Message",
         about_title: "À PROPOS",
-        about_p1: "Je suis étudiant en maîtrise de génie en sécurité des systèmes d'information à l'Université Concordia avec une moyenne de 3,9. Je suis actuellement stagiaire en tant qu'analyste en sécurité de l'information chez American Express à Toronto, où mon travail se concentre sur l'intersection passionnante de l'IA générative et de la cryptographie post-quantique.",
-        about_p2: "Ma passion réside dans l'exploration des applications de l'IA générative au sein de la cybersécurité pour construire des solutions de sécurité de nouvelle génération. Je recherche activement un stage impactant pour la session d'automne 2025 où je pourrai continuer ma croissance en tant qu'ingénieur axé sur la GenAI et la sécurité.",
-        about_p3: "En dehors de mon expertise technique, je suis passionné par la lecture et l'écriture de livres, les voyages vers différentes destinations et l'apprentissage de nouvelles langues. Actuellement, j'écris mon premier livre, je travaille sur mes blogs et j'apprends le français.",
+        about_p1: "Je poursuis actuellement une maîtrise en ingénierie de la sécurité des systèmes d'information à l'Université Concordia (Montréal, Québec), avec une moyenne de 3,91/4,30, et mes principaux intérêts se situent à l'intersection de la cybersécurité et de l'intelligence artificielle.",
+        about_p2: "Auparavant, en tant qu'analyste junior des opérations de sécurité au Groupe TMX à la Bourse de Toronto, j'ai travaillé avec des outils de cybersécurité de niveau entreprise pour surveiller, enquêter et aider à renforcer la posture de sécurité de l'infrastructure critique des marchés financiers.",
+        about_p3: "Avant cela, j'ai travaillé comme analyste en sécurité de l'information au sein de l'équipe de sécurité de l'IA générative chez American Express, où j'ai acquis une expérience pratique avec les LLMOps, l'intégration sécurisée des pipelines IA/ML et l'atténuation des risques dans les systèmes de production.",
+        about_p4: "En dehors de mon expertise technique, je suis passionné par la lecture et l'écriture de livres, les voyages à l'étranger (je suis allé en Inde, aux EAU, au Mexique et au Pérou jusqu'à présent) et l'apprentissage de nouvelles langues. Actuellement, j'écris mon premier livre - One Night in Trombay, je travaille sur mes articles de blog sur X et Medium et j'apprends le français.",
         about_img_caption: "Armaan Sidhu recevant le troisième prix pour le défi Interac au hackathon @Hack à Montréal, Québec, Canada en mars 2025",
         experience_title: "EXPÉRIENCE PROFESSIONNELLE",
         amex_title: "American Express",
@@ -284,9 +286,10 @@ const translations = {
         placeholder_subject: "主题",
         placeholder_message: "您的信息",
         about_title: "关于",
-        about_p1: "我是康考迪亚大学信息系统安全工程硕士Co-Op学生，GPA为3.9。目前我在多伦多的美国运通公司实习，担任信息安全分析师，主要研究生成式AI与后量子密码学的结合。",
-        about_p2: "我的热情在于探索生成式AI在网络安全中的应用，以构建下一代安全解决方案。我正在积极寻找2025年秋季学期的实习机会，希望能继续作为一名专注于GenAI和安全的工程师成长。",
-        about_p3: "除了技术专长，我还热衷于阅读和写作、去各地旅行以及学习新语言。目前我正在写我的第一本书，经营博客并学习法语。",
+        about_p1: "我目前正在康考迪亚大学（魁北克省蒙特利尔）攻读信息系统安全工程硕士学位，GPA为3.91/4.30，我的核心兴趣在于网络安全与人工智能的交叉领域。",
+        about_p2: "此前，作为多伦多证券交易所TMX集团的初级安全运营分析师，我使用企业级网络安全工具来监控、调查并帮助加强关键金融市场基础设施的安全态势。",
+        about_p3: "在此之前，我在美国运通的生成式AI安全团队担任信息安全分析师，在那里获得了关于LLMOps、安全AI/ML管道集成以及跨生产系统风险缓解的实践经验。",
+        about_p4: "除了技术专长，我还热衷于阅读和写作、出国旅行（目前去过印度、阿联酋、墨西哥和秘鲁）以及学习新语言。目前我正在写我的第一本书——《One Night in Trombay》，在X和Medium上撰写博客文章，并学习法语。",
         about_img_caption: "2025年3月，Armaan Sidhu在加拿大魁北克省蒙特利尔的@Hack黑客马拉松上获得Interac挑战赛三等奖",
         experience_title: "工作经验",
         amex_title: "美国运通 (American Express)",
@@ -415,9 +418,10 @@ const translations = {
         placeholder_subject: "Asunto",
         placeholder_message: "Tu Mensaje",
         about_title: "SOBRE MÍ",
-        about_p1: "Soy estudiante de Maestría en Ingeniería en Seguridad de Sistemas de Información en la Universidad de Concordia con un promedio de 3.9. Actualmente soy pasante como Analista de Seguridad de la Información en American Express en Toronto, donde mi trabajo se centra en la emocionante intersección de la IA Generativa y la Criptografía Post-Cuántica.",
-        about_p2: "Mi pasión reside en explorar las aplicaciones de la IA Generativa dentro de la ciberseguridad para construir soluciones de seguridad de próxima generación. Busco activamente una pasantía impactante para el período de otoño de 2025 donde pueda continuar mi crecimiento como ingeniero enfocado en GenAI y seguridad.",
-        about_p3: "Fuera de mi experiencia técnica, me apasiona leer y escribir libros, viajar a diferentes destinos y aprender nuevos idiomas. Actualmente estoy escribiendo mi primer libro, trabajando en mis blogs y aprendiendo francés.",
+        about_p1: "Actualmente estoy cursando una Maestría en Ingeniería en Seguridad de Sistemas de Información en la Universidad de Concordia (Montreal, Quebec), con un promedio de 3.91/4.30, y mis intereses principales se encuentran en la intersección de la ciberseguridad y la inteligencia artificial.",
+        about_p2: "Anteriormente, como Analista Junior de Operaciones de Seguridad en The TMX Group en la Bolsa de Valores de Toronto, trabajé con herramientas de ciberseguridad de nivel empresarial para monitorear, investigar y ayudar a fortalecer la postura de seguridad de la infraestructura crítica del mercado financiero.",
+        about_p3: "Antes de eso, trabajé como Analista de Seguridad de la Información en el equipo de Seguridad de IA Generativa en American Express, donde obtuve experiencia práctica con LLMOps, integración segura de pipelines de IA/ML y mitigación de riesgos en sistemas de producción.",
+        about_p4: "Fuera de mi experiencia técnica, me apasiona leer y escribir libros, viajar al extranjero (he estado en India, EAU, México y Perú hasta ahora) y aprender nuevos idiomas. Actualmente estoy escribiendo mi primer libro: One Night in Trombay, trabajando en mis artículos de blog en X y Medium y aprendiendo francés.",
         about_img_caption: "Armaan Sidhu recibiendo el tercer premio del Desafío Interac en el hackathon @Hack en Montreal, Quebec, Canadá en marzo de 2025",
         experience_title: "EXPERIENCIA LABORAL",
         amex_title: "American Express",
@@ -548,6 +552,7 @@ function initLanguageSwitcher() {
 }
 
 function setLanguage(lang) {
+    const elements = document.querySelectorAll('[data-translate]');
     // Update text content
     elements.forEach(el => {
         const key = el.getAttribute('data-translate');
