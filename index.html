@@ -456,7 +456,7 @@
                     </p>
                     <p class="text-gray-300 mb-8 text-lg leading-relaxed" data-translate="book_desc">
                         Coming soon. A gripping tale of mystery and resilience set against the vibrant backdrop of
-                        Mumbai.
+                        Bombay.
                     </p>
 
                     <div class="bg-black bg-opacity-60 p-6 rounded-lg border border-green-900 max-w-md">
@@ -465,14 +465,16 @@
                             Get notified when it launches:
                         </label>
                         <div class="flex gap-2">
-                            <input type="email" placeholder="email@example.com"
+                            <input type="email" id="book-notify-email" placeholder="email@example.com"
                                 class="bg-gray-900 border border-green-700 text-white px-4 py-2 rounded focus:outline-none focus:border-green-400 flex-grow">
                             <button
                                 class="bg-green-600 hover:bg-green-500 text-black font-bold py-2 px-6 rounded transition duration-300"
-                                data-translate="btn_notify">
+                                data-translate="btn_notify" onclick="handleBookNotify(event)">
                                 NOTIFY
                             </button>
                         </div>
+                        <p id="book-notify-msg" class="text-green-400 text-sm mt-3 hidden">✓ You're on the list! We'll
+                            reach out when the book drops.</p>
                     </div>
                 </div>
             </div>

@@ -235,3 +235,39 @@ document.addEventListener("DOMContentLoaded", () => {
         window.initLanguageSwitcher();
     }
 });
+
+// Book Notify Handler
+function handleBookNotify(event) {
+    event.preventDefault();
+    const emailInput = document.getElementById('book-notify-email');
+    const msg = document.getElementById('book-notify-msg');
+    const btn = event.currentTarget;
+
+    const email = emailInput ? emailInput.value.trim() : '';
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!emailValid) {
+        // Shake the input to signal invalid email
+        if (emailInput) {
+            emailInput.style.borderColor = '#ff4444';
+            emailInput.placeholder = 'Please enter a valid email';
+            setTimeout(() => {
+                emailInput.style.borderColor = '';
+                emailInput.placeholder = 'email@example.com';
+            }, 2500);
+        }
+        return;
+    }
+
+    // Store locally (no backend needed)
+    const stored = JSON.parse(localStorage.getItem('book_notify_emails') || '[]');
+    if (!stored.includes(email)) stored.push(email);
+    localStorage.setItem('book_notify_emails', JSON.stringify(stored));
+
+    // Show confirmation
+    if (msg) msg.classList.remove('hidden');
+    if (emailInput) emailInput.value = '';
+    btn.disabled = true;
+    btn.textContent = '✓ NOTED';
+    btn.classList.replace('bg-green-600', 'bg-green-900');
+}
