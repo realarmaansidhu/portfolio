@@ -1,6 +1,10 @@
 // Initialize AOS
 AOS.init({ once: false, mirror: true, duration: 800 });
 
+// Matrix Interval Control
+let matrixInterval;
+let matrixIntensity = 50;
+
 // Mobile menu toggle
 document.getElementById('mobile-menu-button').addEventListener('click', () => {
     document.getElementById('mobile-menu').classList.toggle('hidden');
@@ -55,6 +59,7 @@ function initCanvases() {
 
 // Matrix effect
 function drawMatrix() {
+    // Fade effect
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#0F0';
@@ -208,8 +213,20 @@ window.charIndex = charIndex;
 window.isDeleting = isDeleting;
 
 // Initialize everything
+function startMatrix(intensity = 50) {
+    if (matrixInterval) clearInterval(matrixInterval);
+    matrixIntensity = intensity;
+    matrixInterval = setInterval(drawMatrix, matrixIntensity);
+}
+
+// Expose for Terminal
+window.setMatrixIntensity = (intensity) => {
+    startMatrix(intensity);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     initCanvases();
+    startMatrix(50);
     animate();
     typeLoop();
 
