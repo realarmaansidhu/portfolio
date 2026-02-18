@@ -26,7 +26,8 @@ html {
 }
 
 /* Fixed backgrounds - increase matrix opacity for better visibility on other sections */
-#matrix-background, .web-grid {
+#matrix-background,
+.web-grid {
     position: fixed;
     top: 0;
     left: 0;
@@ -36,8 +37,13 @@ html {
     pointer-events: none;
 }
 
-#matrix-background { z-index: 0; }
-.web-grid { z-index: -1; }
+#matrix-background {
+    z-index: 0;
+}
+
+.web-grid {
+    z-index: -1;
+}
 
 /* Navigation */
 .nav-link {
@@ -50,7 +56,9 @@ html {
     transition: all 0.3s ease;
 }
 
-.nav-link:hover { color: var(--matrix-green); }
+.nav-link:hover {
+    color: var(--matrix-green);
+}
 
 .nav-link::after {
     content: '';
@@ -64,7 +72,9 @@ html {
     transition: width 0.3s ease;
 }
 
-.nav-link:hover::after { width: 80%; }
+.nav-link:hover::after {
+    width: 80%;
+}
 
 /* Sections - Fix the gap issue */
 section {
@@ -76,7 +86,8 @@ section {
 
 /* Home section specific adjustments */
 #home {
-    padding-top: 100px; /* Account for navbar height */
+    padding-top: 100px;
+    /* Account for navbar height */
     padding-bottom: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -88,7 +99,16 @@ section:not(#home) {
 }
 
 /* Apply the fixed background only to the home section. It will stay visible behind #about. */
-nav, #home, #about, #experience, #education, #publications, #certifications,#networking, #awards, #contact {
+nav,
+#home,
+#about,
+#experience,
+#education,
+#publications,
+#certifications,
+#networking,
+#awards,
+#contact {
     background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)), url('../images/in_downtown.gif') center/cover no-repeat fixed;
 }
 
@@ -153,8 +173,13 @@ section:not(#home):not(#about) {
     z-index: -1;
 }
 
-.cyber-btn:hover { color: var(--dark-bg); }
-.cyber-btn:hover::before { left: 0; }
+.cyber-btn:hover {
+    color: var(--dark-bg);
+}
+
+.cyber-btn:hover::before {
+    left: 0;
+}
 
 /* Images */
 .profile-pic {
@@ -190,16 +215,31 @@ section:not(#home):not(#about) {
 .network-info {
     padding: 20px;
 }
-.network-img, .experience-img, .education-img {
+
+.network-img,
+.experience-img,
+.education-img {
     width: 100%;
     object-fit: cover;
     border-radius: 5px;
 }
 
-.network-img { height: 350px; }
-.experience-img { max-height: 450px; }
-.education-img { max-height: 350px; }
-.certification-img { height: 170px; object-fit: contain; }
+.network-img {
+    height: 350px;
+}
+
+.experience-img {
+    max-height: 450px;
+}
+
+.education-img {
+    max-height: 350px;
+}
+
+.certification-img {
+    height: 170px;
+    object-fit: contain;
+}
 
 /* Social Icons */
 .social-icons {
@@ -232,7 +272,8 @@ section:not(#home):not(#about) {
 }
 
 /* Language Switcher */
-.lang-switcher, .lang-switcher-mobile {
+.lang-switcher,
+.lang-switcher-mobile {
     display: flex;
     background-color: rgba(0, 20, 0, 0.8);
     border: 2px solid var(--matrix-green-dark);
@@ -245,9 +286,9 @@ section:not(#home):not(#about) {
     background: transparent;
     color: var(--matrix-green);
     border: none;
-    padding: 8px 12px;
+    padding: 6px 10px;
     font-family: 'Source Code Pro', monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -271,24 +312,32 @@ section:not(#home):not(#about) {
 /* Responsive adjustments for home language switcher */
 @media (max-width: 768px) {
     #home .lang-switcher {
-        top: 4px;
+        top: 85px;
         right: 4px;
         transform: scale(0.9);
     }
-    
+
     #home {
-        padding-top: 80px; /* Smaller top padding on mobile */
+        padding-top: 80px;
+        /* Smaller top padding on mobile */
     }
 }
 
 /* Responsive */
 @media (max-width: 992px) {
-    .profile-pic { width: 200px; height: 200px; }
-    .social-icons { right: 10px; }
+    .profile-pic {
+        width: 200px;
+        height: 200px;
+    }
+
+    .social-icons {
+        right: 10px;
+    }
 }
 
 /* Responsive card and section adjustments for mobile */
 @media (max-width: 640px) {
+
     .cyber-card,
     .network-card {
         padding: 12px !important;
@@ -349,6 +398,7 @@ section:not(#home):not(#about) {
     opacity: 1 !important;
     pointer-events: auto !important;
 }
+
 .group:hover .group-hover\:pointer-events-auto {
     pointer-events: auto !important;
 }

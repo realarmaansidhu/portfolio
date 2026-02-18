@@ -32,13 +32,13 @@ let isDeleting = false;
 function initCanvases() {
     canvas.width = webCanvas.width = window.innerWidth;
     canvas.height = webCanvas.height = window.innerHeight;
-    
+
     columns = canvas.width / fontSize;
     drops.length = 0;
     for (let i = 0; i < columns; i++) {
         drops[i] = Math.floor(Math.random() * canvas.height);
     }
-    
+
     // Initialize nodes if empty
     if (nodes.length === 0) {
         for (let i = 0; i < nodeCount; i++) {
@@ -122,23 +122,29 @@ function animate() {
 function typeLoop() {
     const typedTextSpan = document.getElementById("typed-text");
     if (!typedTextSpan) return;
-    
-    const fullText = roles[currentRole];
 
-    if (isDeleting) {
-        typedTextSpan.textContent = fullText.substring(0, charIndex--);
+    // Ensure window.roles is initialized
+    if (!window.roles) window.roles = roles;
+    if (window.currentRole === undefined) window.currentRole = currentRole;
+    if (window.charIndex === undefined) window.charIndex = charIndex;
+    if (window.isDeleting === undefined) window.isDeleting = isDeleting;
+
+    const fullText = window.roles[window.currentRole];
+
+    if (window.isDeleting) {
+        typedTextSpan.textContent = fullText.substring(0, window.charIndex--);
     } else {
-        typedTextSpan.textContent = fullText.substring(0, charIndex++);
+        typedTextSpan.textContent = fullText.substring(0, window.charIndex++);
     }
 
-    if (!isDeleting && charIndex === fullText.length + 1) {
-        setTimeout(() => isDeleting = true, 350);
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        currentRole = (currentRole + 1) % roles.length;
+    if (!window.isDeleting && window.charIndex === fullText.length + 1) {
+        setTimeout(() => window.isDeleting = true, 350);
+    } else if (window.isDeleting && window.charIndex === 0) {
+        window.isDeleting = false;
+        window.currentRole = (window.currentRole + 1) % window.roles.length;
     }
 
-    setTimeout(typeLoop, isDeleting ? 25 : 70);
+    setTimeout(typeLoop, window.isDeleting ? 25 : 70);
 }
 
 // Event listeners
@@ -206,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initCanvases();
     animate();
     typeLoop();
-    
+
     // Initialize language switcher
     if (window.initLanguageSwitcher) {
         window.initLanguageSwitcher();
