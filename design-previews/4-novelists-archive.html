@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 4 — The Novelist's Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400;1,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#F2EDE3;color:#23211E;font-family:'Playfair Display',serif;overflow-x:hidden}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#8a8377;text-decoration:none;font-size:12px;letter-spacing:2px;font-family:'Inter',sans-serif;border:1px solid #d8d1c2;padding:8px 14px;border-radius:999px;background:rgba(242,237,227,.7);backdrop-filter:blur(6px);transition:.3s}
+.back:hover{color:#23211E;border-color:#993C1D}
+.hint{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:40;color:#a49b8a;font-size:11px;letter-spacing:3px;font-family:'Inter',sans-serif;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.sheet-f,.sheet-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 10vw;position:relative}
+.floaty{position:absolute;background:#EAE3D4;border:1px solid #ddd5c4;box-shadow:0 20px 50px rgba(60,50,30,.12)}
+#f1{width:190px;height:250px;right:12vw;top:16vh;transform:rotate(7deg)}
+#f2{width:150px;height:200px;right:24vw;top:52vh;transform:rotate(-5deg)}
+#f3{width:110px;height:150px;right:8vw;top:60vh;transform:rotate(12deg)}
+.chapter-eyebrow{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:6px;color:#993C1D;margin-bottom:26px}
+.hero h1{font-size:clamp(52px,8.5vw,120px);font-weight:800;line-height:1;letter-spacing:-2px}
+.hero h1 em{font-style:italic;font-weight:400;color:#993C1D}
+.lede{margin-top:36px;max-width:560px;font-size:19px;line-height:1.8;color:#4b463d}
+.lede::first-letter{font-size:64px;font-weight:800;float:left;line-height:.85;padding:6px 12px 0 0;color:#993C1D}
+.ink{position:absolute;left:8vw;bottom:8vh;width:260px}
+.ink path{stroke:#993C1D;stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:draw 2.4s .5s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.flip-stage{height:260vh;position:relative}
+.flip-view{position:sticky;top:0;height:100vh;perspective:1800px;overflow:hidden}
+.under{position:absolute;inset:0;background:#EDE7DA;display:flex;align-items:center;justify-content:center}
+.under span{font-size:34vw;font-weight:800;color:#E3DBC9}
+.sheet{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:left center;background:transparent;z-index:2}
+.sheet-f{background:#F2EDE3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;border-right:1px solid #ddd5c4;box-shadow:inset -40px 0 60px -40px rgba(60,50,30,.25)}
+.bookcover{width:min(300px,60vw);aspect-ratio:2/3;background:#1A1A1F;border-radius:6px;box-shadow:0 30px 70px rgba(40,30,10,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:18px}
+.bookcover .btitle{color:#F2EDE3;font-size:26px;font-weight:800;line-height:1.2}
+.bookcover .bsub{color:#C89B6B;font-size:12px;letter-spacing:3px;font-family:'Inter',sans-serif}
+.bookcover .rule{width:50px;height:1px;background:#C89B6B}
+.sheet-f .turnhint{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:4px;color:#a49b8a}
+.sheet-b{background:#F2EDE3;transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 10vw;box-shadow:inset 40px 0 60px -40px rgba(60,50,30,.25)}
+.sheet-b .num{font-size:15vw;font-weight:800;color:#E6DECC;line-height:1}
+.sheet-b h2{font-size:clamp(38px,6vw,84px);font-weight:800;margin-top:-4vw}
+.sheet-b h2 em{font-style:italic;font-weight:400;color:#993C1D}
+.ch2{min-height:160vh;padding:14vh 10vw 26vh;position:relative;background:#F2EDE3}
+.ch2 .chapter-eyebrow{margin-bottom:60px}
+.timeline{position:relative;max-width:760px;padding-left:50px}
+.tline{position:absolute;left:12px;top:6px;bottom:6px;width:2px;background:#993C1D;transform-origin:top;transform:scaleY(0)}
+.entry{margin-bottom:70px;position:relative}
+.entry::before{content:'';position:absolute;left:-44px;top:10px;width:10px;height:10px;border-radius:50%;background:#993C1D}
+.entry .when{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:3px;color:#8a8377;margin-bottom:10px}
+.entry h3{font-size:clamp(26px,3.4vw,42px);font-weight:800;line-height:1.1}
+.entry h3 em{font-style:italic;font-weight:400;color:#993C1D}
+.entry p{margin-top:14px;font-size:17px;line-height:1.75;color:#4b463d;max-width:560px}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hint">SCROLL — TURN THE PAGE ↓</div>
+<section class="hero">
+  <div class="floaty" id="f1"></div>
+  <div class="floaty" id="f2"></div>
+  <div class="floaty" id="f3"></div>
+  <div class="chapter-eyebrow">CHAPTER 01 — THE AUTHOR</div>
+  <h1>Armaan<br><em>Sidhu</em></h1>
+  <p class="lede">Some people write code. Some people write novels. I never understood why anyone would choose. By day I defend financial infrastructure and secure AI systems; by night I am finishing my debut novel, One Night in Trombay — a story of mystery and resilience set against the vibrant backdrop of Bombay.</p>
+  <svg class="ink" viewBox="0 0 260 80"><path d="M10 55 C60 15 110 75 160 40 C195 18 230 45 250 30"/></svg>
+</section>
+<div class="flip-stage">
+  <div class="flip-view">
+    <div class="under"><span>02</span></div>
+    <div class="sheet" id="sheet">
+      <div class="sheet-f">
+        <div class="bookcover">
+          <div class="bsub">A DEBUT NOVEL</div>
+          <div class="rule"></div>
+          <div class="btitle">ONE NIGHT<br>IN TROMBAY</div>
+          <div class="rule"></div>
+          <div class="bsub">ARMAAN SIDHU</div>
+        </div>
+        <div class="turnhint">KEEP SCROLLING TO TURN THE PAGE</div>
+      </div>
+      <div class="sheet-b">
+        <div class="num">02</div>
+        <h2>The <em>Engineer</em></h2>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="ch2">
+  <div class="chapter-eyebrow">CHAPTER 02 — THE ENGINEER</div>
+  <div class="timeline">
+    <div class="tline" id="tline"></div>
+    <div class="entry">
+      <div class="when">2025 — TORONTO</div>
+      <h3>TMX Group, <em>Toronto Stock Exchange</em></h3>
+      <p>Junior Security Operations Analyst. Designed context-aware social engineering campaigns and analyzed key risk indicators to harden the human defense layer of critical financial market infrastructure.</p>
+    </div>
+    <div class="entry">
+      <div class="when">2025 — TORONTO</div>
+      <h3>American Express, <em>GenAI Security</em></h3>
+      <p>Information Security Analyst on the AI and Post-Quantum Computing team. LLMOps, secure AI/ML pipeline integration, and post-quantum cryptography research across production systems.</p>
+    </div>
+    <div class="entry">
+      <div class="when">2024 — MONTRÉAL</div>
+      <h3>Concordia University, <em>M.Eng</em></h3>
+      <p>Master of Engineering in Information Systems Security. Cryptography, operating system security, and cyber-physical systems — the theory beneath the practice.</p>
+    </div>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+gsap.to('#sheet',{rotationY:-178,ease:'none',scrollTrigger:{trigger:'.flip-stage',start:'top top',end:'bottom bottom',scrub:.35}});
+gsap.to('#f1',{y:-120,rotation:12,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:.4}});
+gsap.to('#f2',{y:-190,rotation:-12,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:.4}});
+gsap.to('#f3',{y:-70,rotation:22,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:.4}});
+gsap.to('#tline',{scaleY:1,ease:'none',scrollTrigger:{trigger:'.timeline',start:'top 70%',end:'bottom 60%',scrub:.4}});
+gsap.utils.toArray('.entry').forEach(e=>{
+  gsap.from(e,{opacity:0,y:60,duration:1,ease:'power3.out',scrollTrigger:{trigger:e,start:'top 80%'}});
+});
+gsap.from('.hero h1',{opacity:0,y:60,duration:1.1,ease:'power3.out'});
+gsap.from('.lede',{opacity:0,y:40,duration:1.1,delay:.25,ease:'power3.out'});
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armaan Sidhu — Design Previews</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0C0C10;color:#EDEDEA;font-family:'Space Grotesk',sans-serif;min-height:100vh;padding:8vh 6vw 12vh}
+.eyebrow{color:#8a8a97;font-size:13px;letter-spacing:5px;margin-bottom:18px}
+h1{font-size:clamp(34px,5vw,60px);font-weight:700;letter-spacing:-1px;margin-bottom:14px}
+.sub{color:#8a8a97;font-size:16px;line-height:1.6;max-width:640px;margin-bottom:7vh}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;max-width:1200px}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid #232330;border-radius:16px;padding:30px 28px;transition:.35s;background:#111117;position:relative;overflow:hidden}
+a.card:hover{transform:translateY(-6px);border-color:var(--ac)}
+a.card .num{font-size:13px;letter-spacing:3px;color:var(--ac);margin-bottom:14px}
+a.card h2{font-size:24px;font-weight:700;margin-bottom:10px}
+a.card p{color:#8a8a97;font-size:14.5px;line-height:1.6;margin-bottom:18px}
+a.card .go{font-size:13px;letter-spacing:2px;color:var(--ac)}
+a.card .swatch{position:absolute;top:0;right:0;width:8px;height:100%;background:var(--ac);opacity:.85}
+.note{margin-top:7vh;color:#5f5f6b;font-size:13.5px;line-height:1.7;max-width:640px}
+</style>
+</head>
+<body>
+<div class="eyebrow">PORTFOLIO REDESIGN — LIVE PREVIEWS</div>
+<h1>Six directions. Scroll each one.</h1>
+<p class="sub">Every preview is a real, working prototype: full-size hero (page 1), a second section (page 2), and the actual scroll-driven 3D transition between them. Open each, scroll slowly, scroll fast, move your mouse around.</p>
+<div class="grid">
+  <a class="card" href="1-neural-constellation.html" style="--ac:#5DCAA5"><div class="swatch"></div><div class="num">01</div><h2>Neural constellation</h2><p>5,200 GPU particles form a neural galaxy, then reassemble into a padlock as you scroll into the security chapter.</p><span class="go">OPEN PREVIEW →</span></a>
+  <a class="card" href="2-liquid-obsidian.html" style="--ac:#D3D1C7"><div class="swatch"></div><div class="num">02</div><h2>Liquid obsidian</h2><p>A liquid chrome blob over near-black, massive typography, and a work section that melts up over the hero.</p><span class="go">OPEN PREVIEW →</span></a>
+  <a class="card" href="3-matrix-evolved.html" style="--ac:#1D9E75"><div class="swatch"></div><div class="num">03</div><h2>Matrix: evolved</h2><p>Camera dive through a 3D wireframe data tunnel with digital rain, glitch-cut flash, and a living terminal.</p><span class="go">OPEN PREVIEW →</span></a>
+  <a class="card" href="4-novelists-archive.html" style="--ac:#993C1D"><div class="swatch"></div><div class="num">04</div><h2>The novelist's archive</h2><p>The portfolio as a book — scroll physically turns a 3D page from Chapter 01 (the author) to Chapter 02 (the engineer).</p><span class="go">OPEN PREVIEW →</span></a>
+  <a class="card" href="5-brutalist-kinetic.html" style="--ac:#E24B4A"><div class="swatch"></div><div class="num">05</div><h2>Brutalist kinetic</h2><p>Velocity-reactive kinetic type, scroll-speed marquees, a live ASCII 3D donut, and rows that invert on hover.</p><span class="go">OPEN PREVIEW →</span></a>
+  <a class="card" href="6-aurora-glass.html" style="--ac:#AFA9EC"><div class="swatch"></div><div class="num">06</div><h2>Aurora glass north</h2><p>A real-time aurora shader over parallax mountains, with tilting glass cards floating in the night sky.</p><span class="go">OPEN PREVIEW →</span></a>
+</div>
+<p class="note">Best viewed full-screen in Chrome on desktop. These are style prototypes, not final builds — every color, font, layout and effect is tunable, and directions can be mixed (for example: constellation particles with obsidian typography). Scroll velocity matters on 05; mouse movement matters on 01, 02, 03 and 06.</p>
+</body>
+</html>

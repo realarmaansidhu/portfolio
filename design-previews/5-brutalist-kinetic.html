@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 5 — Brutalist Kinetic</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;cursor:none}
+body{background:#101010;color:#F1EFE8;font-family:'Archivo',sans-serif;overflow-x:hidden}
+a{cursor:none}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#888;text-decoration:none;font-size:12px;letter-spacing:2px;border:1px solid #333;padding:8px 14px;transition:.3s;background:#101010}
+.back:hover{color:#101010;background:#F1EFE8}
+#cursor{position:fixed;width:28px;height:28px;border:2px solid #F1EFE8;border-radius:50%;z-index:99;pointer-events:none;mix-blend-mode:difference;transform:translate(-50%,-50%)}
+#donut{position:fixed;right:2vw;top:50%;transform:translateY(-50%);z-index:0;font-size:11px;line-height:1;color:#E24B4A;opacity:.75;font-family:monospace;pointer-events:none}
+.grid-lines{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grid-lines::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:#2a2a2a}
+.grid-lines::after{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:#2a2a2a}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 4vw;position:relative;z-index:2}
+.htag{font-size:13px;letter-spacing:5px;color:#888;margin-bottom:16px}
+h1{font-family:'Archivo Black',sans-serif;font-size:clamp(70px,17vw,240px);line-height:.85;letter-spacing:-4px;text-transform:uppercase}
+h1 .stroke{color:transparent;-webkit-text-stroke:2px #F1EFE8}
+h1 .red{color:#E24B4A}
+.redblock{position:absolute;right:16vw;top:18vh;width:16vw;height:16vw;background:#E24B4A;z-index:-1;transform:rotate(8deg)}
+.marq{overflow:hidden;white-space:nowrap;border-top:1px solid #333;border-bottom:1px solid #333;padding:14px 0;position:relative;z-index:2;background:#101010}
+.marq-inner{display:inline-block;white-space:nowrap;font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3vw,38px);letter-spacing:2px;text-transform:uppercase}
+.marq-inner span{margin:0 24px}
+.marq-inner .o{color:transparent;-webkit-text-stroke:1px #F1EFE8}
+.hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:40;color:#666;font-size:11px;letter-spacing:3px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.sec2{min-height:150vh;padding:16vh 4vw 30vh;position:relative;z-index:2}
+.sec2 .htag{margin-bottom:50px}
+.wrow{border-top:2px solid #F1EFE8;padding:5vh 2vw;display:flex;align-items:baseline;justify-content:space-between;gap:3vw;transition:background .25s,color .25s;position:relative}
+.wrow:last-child{border-bottom:2px solid #F1EFE8}
+.wrow .big{font-family:'Archivo Black',sans-serif;font-size:clamp(34px,7vw,96px);text-transform:uppercase;letter-spacing:-2px;line-height:.9}
+.wrow .idx{font-size:14px;color:#888;letter-spacing:2px}
+.wrow .cat{font-size:13px;letter-spacing:3px;color:#888;text-transform:uppercase}
+.wrow:hover{background:#E24B4A;color:#101010}
+.wrow:hover .idx,.wrow:hover .cat{color:#101010}
+.foot{padding:8vh 4vw;font-size:12px;letter-spacing:3px;color:#666;border-top:1px solid #333;position:relative;z-index:2}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div class="grid-lines"></div>
+<pre id="donut"></pre>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hint">SCROLL FAST — THE TYPE REACTS ↓</div>
+<section class="hero">
+  <div class="redblock" id="redblock"></div>
+  <div class="htag">PORTFOLIO — NO TEMPLATES WERE HARMED</div>
+  <h1 id="kinetic">ARMAAN<br><span class="stroke">SIDHU</span><span class="red">.</span></h1>
+</section>
+<div class="marq"><div class="marq-inner" id="m1"><span>SECURITY</span><span class="o">GENAI</span><span>AUTHOR</span><span class="o">OSINT</span><span>SECURITY</span><span class="o">GENAI</span><span>AUTHOR</span><span class="o">OSINT</span><span>SECURITY</span><span class="o">GENAI</span><span>AUTHOR</span><span class="o">OSINT</span></div></div>
+<div class="marq"><div class="marq-inner" id="m2"><span class="o">TORONTO</span><span>MONTRÉAL</span><span class="o">EST 2025</span><span>ONE NIGHT IN TROMBAY</span><span class="o">TORONTO</span><span>MONTRÉAL</span><span class="o">EST 2025</span><span>ONE NIGHT IN TROMBAY</span></div></div>
+<section class="sec2">
+  <div class="htag">02 — THE WORK. HOVER THE ROWS.</div>
+  <div class="wrow"><span class="idx">001</span><span class="big">TMX Group</span><span class="cat">Security Ops</span></div>
+  <div class="wrow"><span class="idx">002</span><span class="big">Amex GenAI</span><span class="cat">AI Security</span></div>
+  <div class="wrow"><span class="idx">003</span><span class="big">SentinelXC</span><span class="cat">Toolkit</span></div>
+  <div class="wrow"><span class="idx">004</span><span class="big">Trombay</span><span class="cat">The Novel</span></div>
+</section>
+<div class="foot">© 2026 ARMAAN SIDHU — BUILT LOUD ON PURPOSE</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const W=80,H=24;let A=1,B=1;
+const pre=document.getElementById('donut');
+function donut(){
+  A+=0.07;B+=0.035;
+  const b=[],z=[];
+  for(let k=0;k<W*H;k++){b[k]=k%W===W-1?'\n':' ';z[k]=0;}
+  for(let j=0;j<6.28;j+=0.07){
+    for(let i=0;i<6.28;i+=0.02){
+      const c=Math.sin(i),d=Math.cos(j),e=Math.sin(A),f=Math.sin(j),g=Math.cos(A),
+      h=d+2,D=1/(c*h*e+f*g+5),l=Math.cos(i),m=Math.cos(B),n=Math.sin(B),
+      t=c*h*g-f*e;
+      const x=Math.floor(W/2+30*D*(l*h*m-t*n)),
+      y=Math.floor(H/2+15*D*(l*h*n+t*m)*0.7),
+      o=x+W*y,
+      N=Math.floor(8*((f*e-c*d*g)*m-c*d*e-f*g-l*d*n));
+      if(y>=0&&y<H&&x>=0&&x<W&&D>z[o]){z[o]=D;b[o]='.,-~:;=!*#$@'[N>0?N:0];}
+    }
+  }
+  pre.textContent=b.join('');
+}
+setInterval(donut,50);
+
+const cur=document.getElementById('cursor');
+let cx=innerWidth/2,cy=innerHeight/2,tx=cx,ty=cy;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;});
+(function cloop(){cx+=(tx-cx)*.2;cy+=(ty-cy)*.2;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(cloop);})();
+
+const skewK=gsap.quickTo('#kinetic','skewX',{duration:.5,ease:'power3'});
+const skewR=gsap.quickTo('.wrow .big','skewX',{duration:.5,ease:'power3'});
+let m1x=0,m2x=0,speed=1;
+ScrollTrigger.create({
+  onUpdate(self){
+    const v=gsap.utils.clamp(-1400,1400,self.getVelocity());
+    skewK(v/90);skewR(v/140);
+    speed=1+Math.abs(v)/400;
+  }
+});
+gsap.ticker.add((t,dt)=>{
+  m1x-=dt*.06*speed;m2x+=dt*.045*speed;
+  const w1=document.getElementById('m1').scrollWidth/2;
+  const w2=document.getElementById('m2').scrollWidth/2;
+  if(m1x<-w1)m1x+=w1;if(m2x>0)m2x-=w2;
+  gsap.set('#m1',{x:m1x});gsap.set('#m2',{x:m2x});
+  speed+=(1-speed)*.04;
+});
+gsap.to('#redblock',{rotation:60,y:120,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:.4}});
+gsap.from('#kinetic',{y:120,opacity:0,duration:.9,ease:'power4.out'});
+gsap.utils.toArray('.wrow').forEach((r,i)=>{
+  gsap.from(r,{clipPath:'inset(0 100% 0 0)',duration:.8,delay:i*.1,ease:'power4.out',scrollTrigger:{trigger:r,start:'top 85%'}});
+});
+</script>
+</body>
+</html>

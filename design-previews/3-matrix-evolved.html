@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 3 — Matrix: Evolved</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020806;color:#D8F5E8;font-family:'JetBrains Mono',monospace;overflow-x:hidden}
+#scene{position:fixed;inset:0;z-index:1}
+#rain{position:fixed;inset:0;z-index:0;opacity:.35}
+#flash{position:fixed;inset:0;z-index:60;background:#CFF5E4;opacity:0;pointer-events:none}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#3f6f5c;text-decoration:none;font-size:12px;letter-spacing:1px;border:1px solid #123328;padding:8px 14px;border-radius:2px;transition:.3s;background:rgba(2,8,6,.6)}
+.back:hover{color:#5DCAA5;border-color:#5DCAA5}
+.content{position:relative;z-index:2}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 6vw}
+.hero .pre{color:#1D9E75;font-size:13px;letter-spacing:4px;margin-bottom:20px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(46px,8vw,104px);font-weight:700;letter-spacing:2px;color:#E9FBF2;position:relative}
+h1.glitch::before,h1.glitch::after{content:attr(data-text);position:absolute;inset:0}
+h1.glitch::before{color:#5DCAA5;animation:gl1 3.2s infinite steps(1)}
+h1.glitch::after{color:#AFA9EC;animation:gl2 2.7s infinite steps(1)}
+@keyframes gl1{0%,93%{clip-path:inset(0 0 100% 0);transform:none}94%{clip-path:inset(10% 0 55% 0);transform:translate(-6px,2px)}96%{clip-path:inset(60% 0 8% 0);transform:translate(5px,-2px)}98%,100%{clip-path:inset(0 0 100% 0);transform:none}}
+@keyframes gl2{0%,89%{clip-path:inset(0 0 100% 0);transform:none}90%{clip-path:inset(40% 0 30% 0);transform:translate(6px,1px)}92%{clip-path:inset(75% 0 2% 0);transform:translate(-5px,-1px)}94%,100%{clip-path:inset(0 0 100% 0);transform:none}}
+.typed-line{margin-top:22px;font-size:16px;color:#5DCAA5;height:22px;letter-spacing:2px}
+.cursor{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:40;color:#2f5f4c;font-size:11px;letter-spacing:3px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.tunnel-space{height:120vh}
+.sec2{min-height:140vh;padding:10vh 6vw 30vh;display:flex;flex-direction:column;align-items:center}
+.sec2 .eyebrow{color:#1D9E75;font-size:12px;letter-spacing:5px;margin-bottom:40px}
+.term{width:min(860px,94vw);background:rgba(1,10,7,.92);border:1px solid #1D9E75;border-radius:10px;box-shadow:0 0 60px rgba(29,158,117,.18);overflow:hidden}
+.tbar{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid #123328;background:rgba(6,20,15,.9)}
+.dot{width:11px;height:11px;border-radius:50%}
+.tbody{padding:26px 28px 34px;font-size:14.5px;line-height:2.05}
+.tl{white-space:pre-wrap}
+.p{color:#5DCAA5}
+.c{color:#9adfc4}
+.dim{color:#3f6f5c}
+.hl{color:#E9FBF2}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<canvas id="scene"></canvas>
+<div id="flash"></div>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hint">SCROLL — DIVE THROUGH THE TUNNEL ↓</div>
+<div class="content">
+  <section class="hero" id="hero">
+    <div class="pre">[ SYSTEM ONLINE — WELCOME TO THE CONSTRUCT ]</div>
+    <h1 class="glitch" data-text="ARMAAN SIDHU">ARMAAN SIDHU</h1>
+    <div class="typed-line"><span id="typed"></span><span class="cursor">▊</span></div>
+  </section>
+  <div class="tunnel-space"></div>
+  <section class="sec2" id="sec2">
+    <div class="eyebrow">// SECTION 02 — EXPERIENCE.LOG</div>
+    <div class="term">
+      <div class="tbar"><span class="dot" style="background:#E24B4A"></span><span class="dot" style="background:#EF9F27"></span><span class="dot" style="background:#1D9E75"></span><span class="dim" style="margin-left:12px;font-size:12px">armaan@construct: ~/experience</span></div>
+      <div class="tbody">
+        <div class="tl"><span class="p">$</span> <span class="hl">whoami</span></div>
+        <div class="tl"><span class="c">cybersecurity_analyst · genai_engineer · author</span></div>
+        <div class="tl">&nbsp;</div>
+        <div class="tl"><span class="p">$</span> <span class="hl">cat tmx_group.log</span></div>
+        <div class="tl"><span class="c">[2025] Junior Security Operations Analyst — Toronto Stock Exchange</span></div>
+        <div class="tl"><span class="dim">└─ social engineering campaigns · KRI analysis · human-layer defense</span></div>
+        <div class="tl">&nbsp;</div>
+        <div class="tl"><span class="p">$</span> <span class="hl">cat american_express.log</span></div>
+        <div class="tl"><span class="c">[2025] InfoSec Analyst — GenAI Security &amp; Post-Quantum Computing</span></div>
+        <div class="tl"><span class="dim">└─ LLMOps hardening · PQC research · secure AI/ML pipelines</span></div>
+        <div class="tl">&nbsp;</div>
+        <div class="tl"><span class="p">$</span> <span class="hl">./next_mission.sh</span> <span class="cursor">▊</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const rc=document.getElementById('rain'),rctx=rc.getContext('2d');
+let cols,drops;
+function rainInit(){rc.width=innerWidth;rc.height=innerHeight;cols=Math.floor(rc.width/16);drops=Array(cols).fill(0).map(()=>Math.random()*-50);}
+rainInit();addEventListener('resize',rainInit);
+const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノ01';
+setInterval(()=>{
+  rctx.fillStyle='rgba(2,8,6,0.12)';rctx.fillRect(0,0,rc.width,rc.height);
+  rctx.font='14px monospace';
+  for(let i=0;i<cols;i++){
+    const ch=chars[Math.floor(Math.random()*chars.length)];
+    rctx.fillStyle=Math.random()<.08?'#9FE1CB':'#0F6E56';
+    rctx.fillText(ch,i*16,drops[i]*18);
+    if(drops[i]*18>rc.height&&Math.random()>.975)drops[i]=0;
+    drops[i]++;
+  }
+},55);
+
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x020806,2,34);
+const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,.1,120);
+camera.position.z=6;
+const tube=new THREE.Mesh(
+  new THREE.CylinderGeometry(3,3,140,20,70,true),
+  new THREE.MeshBasicMaterial({color:0x0F6E56,wireframe:true,transparent:true,opacity:.32})
+);
+tube.rotation.x=Math.PI/2;tube.position.z=-55;
+scene.add(tube);
+const ringGeo=new THREE.TorusGeometry(3,.02,6,60);
+const ringMat=new THREE.MeshBasicMaterial({color:0x5DCAA5,transparent:true,opacity:.7});
+const rings=[];
+for(let i=0;i<26;i++){
+  const r=new THREE.Mesh(ringGeo,ringMat.clone());
+  r.position.z=-i*5;
+  rings.push(r);scene.add(r);
+}
+const pGeo=new THREE.BufferGeometry();
+const pCount=700,pPos=new Float32Array(pCount*3);
+for(let i=0;i<pCount;i++){
+  const a=Math.random()*Math.PI*2,rr=Math.random()*2.6;
+  pPos[i*3]=Math.cos(a)*rr;pPos[i*3+1]=Math.sin(a)*rr;pPos[i*3+2]=-Math.random()*130;
+}
+pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+scene.add(new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x9FE1CB,size:.05,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+let mx=0,my=0,camZ=6,camZTarget=6;
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;});
+function onScroll(){
+  const p=scrollY/(document.body.scrollHeight-innerHeight);
+  camZTarget=6-p*105;
+}
+addEventListener('scroll',onScroll);onScroll();
+const clock=new THREE.Clock();
+function tick(){
+  const t=clock.getElapsedTime();
+  camZ+=(camZTarget-camZ)*.07;
+  camera.position.z=camZ;
+  camera.position.x+=(mx*.7-camera.position.x)*.05;
+  camera.position.y+=(-my*.5-camera.position.y)*.05;
+  camera.rotation.z=Math.sin(t*.3)*.03;
+  rings.forEach((r,i)=>{
+    const d=Math.abs(r.position.z-camZ);
+    r.material.opacity=Math.max(0,.75-d*.03);
+    r.scale.setScalar(1+Math.sin(t*2+i)*.015);
+  });
+  renderer.render(scene,camera);
+  requestAnimationFrame(tick);
+}
+function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();tick();
+
+const roles=['CYBERSECURITY ANALYST','GENAI ENGINEER','OSINT INVESTIGATOR','AUTHOR'];
+let ri=0,ci=0,del=false;
+const typed=document.getElementById('typed');
+function typeLoop(){
+  const w=roles[ri];
+  typed.textContent=w.slice(0,ci);
+  if(!del){ci++;if(ci>w.length+6){del=true}}
+  else{ci--;if(ci===0){del=false;ri=(ri+1)%roles.length}}
+  setTimeout(typeLoop,del?38:85);
+}
+typeLoop();
+
+gsap.to('#hero',{opacity:0,scale:.92,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 25%',scrub:.4}});
+function flicker(){
+  gsap.timeline()
+    .to('#flash',{opacity:.85,duration:.05})
+    .to('#flash',{opacity:0,duration:.06})
+    .to('#flash',{opacity:.45,duration:.04},'+=0.04')
+    .to('#flash',{opacity:0,duration:.09});
+}
+ScrollTrigger.create({trigger:'#sec2',start:'top 75%',onEnter:flicker,onLeaveBack:flicker});
+gsap.from('.term',{opacity:0,y:80,duration:.9,ease:'power3.out',scrollTrigger:{trigger:'#sec2',start:'top 65%'}});
+gsap.utils.toArray('.tl').forEach((l,i)=>{
+  gsap.from(l,{opacity:0,x:-14,duration:.4,delay:i*.06,ease:'none',scrollTrigger:{trigger:'.term',start:'top 60%'}});
+});
+</script>
+</body>
+</html>

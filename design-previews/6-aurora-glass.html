@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 6 — Aurora Glass North</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#070D1F;color:#EAF0FF;font-family:'Outfit',sans-serif;overflow-x:hidden}
+#scene{position:fixed;inset:0;z-index:0}
+.mtn{position:fixed;bottom:-4vh;left:0;width:100%;z-index:1;pointer-events:none}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#8b95b5;text-decoration:none;font-size:13px;letter-spacing:1px;border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.05);backdrop-filter:blur(8px);transition:.3s}
+.back:hover{color:#EAF0FF;border-color:rgba(255,255,255,.5)}
+.hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:40;color:#6d7899;font-size:12px;letter-spacing:3px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.content{position:relative;z-index:2}
+.hero{height:100vh;display:flex;align-items:center;justify-content:center}
+.glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:24px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.hero-card{padding:60px 70px;text-align:center;max-width:640px;will-change:transform}
+.hero-card .eyebrow{font-size:12px;letter-spacing:6px;color:#9FE1CB;margin-bottom:22px;font-weight:600}
+.hero-card h1{font-size:clamp(44px,6.5vw,84px);font-weight:800;letter-spacing:-1px;line-height:1}
+.hero-card h1 .lite{font-weight:200;color:#CFC9F5}
+.hero-card p{margin-top:22px;color:#aab4d4;font-size:16px;line-height:1.7;font-weight:300}
+.hero-card .loc{margin-top:26px;font-size:13px;letter-spacing:4px;color:#8b95b5}
+.spacer{height:34vh}
+.sec2{min-height:150vh;padding:12vh 7vw 34vh}
+.sec2 .eyebrow{font-size:12px;letter-spacing:6px;color:#CFC9F5;margin-bottom:16px;font-weight:600}
+.sec2 h2{font-size:clamp(36px,5vw,68px);font-weight:800;letter-spacing:-1px;margin-bottom:8vh}
+.gcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:28px;max-width:1150px}
+.gcard{padding:38px 34px;transition:transform .4s,border-color .4s;will-change:transform}
+.gcard:hover{transform:translateY(-8px);border-color:rgba(159,225,203,.6)}
+.gcard .ic{font-size:26px;margin-bottom:18px}
+.gcard h3{font-size:21px;font-weight:600;margin-bottom:12px}
+.gcard p{color:#aab4d4;font-size:14.5px;line-height:1.7;font-weight:300}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<svg class="mtn" id="mtn2" viewBox="0 0 1440 240" preserveAspectRatio="none" style="height:26vh;opacity:.8"><path d="M0 240 L0 150 L180 70 L340 160 L520 90 L720 180 L900 100 L1100 170 L1280 110 L1440 160 L1440 240 Z" fill="#0A1128"/></svg>
+<svg class="mtn" id="mtn1" viewBox="0 0 1440 240" preserveAspectRatio="none" style="height:20vh"><path d="M0 240 L0 180 L220 110 L420 190 L640 120 L860 200 L1060 130 L1260 190 L1440 140 L1440 240 Z" fill="#050912"/></svg>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hint">SCROLL — THE AURORA INTENSIFIES ↓</div>
+<div class="content">
+  <section class="hero">
+    <div class="glass hero-card" id="herocard">
+      <div class="eyebrow">UNDER NORTHERN SKIES</div>
+      <h1>ARMAAN<br><span class="lite">SIDHU</span></h1>
+      <p>Cybersecurity analyst, GenAI engineer, and author — building secure intelligent systems from Toronto and Montréal. Move your mouse over this card, then scroll.</p>
+      <div class="loc">43.65°N — TORONTO, CANADA</div>
+    </div>
+  </section>
+  <div class="spacer"></div>
+  <section class="sec2">
+    <div class="eyebrow">02 — THE WORK</div>
+    <h2>Three northern lights</h2>
+    <div class="gcards">
+      <div class="glass gcard"><div class="ic">🛡</div><h3>Security operations</h3><p>Defending the Toronto Stock Exchange's market infrastructure at TMX Group — social engineering campaigns, KRI analysis, human-layer defense.</p></div>
+      <div class="glass gcard"><div class="ic">◈</div><h3>GenAI security</h3><p>LLMOps hardening and post-quantum cryptography research at American Express — securing the AI/ML pipelines of a global financial network.</p></div>
+      <div class="glass gcard"><div class="ic">✧</div><h3>One Night in Trombay</h3><p>A debut novel of mystery and resilience set in Bombay — proof that the same mind can secure a system and tell a story.</p></div>
+    </div>
+  </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const uniforms={
+  uTime:{value:0},
+  uIntensity:{value:.75},
+  uRes:{value:new THREE.Vector2(innerWidth,innerHeight)}
+};
+const mat=new THREE.ShaderMaterial({
+  uniforms,
+  vertexShader:'void main(){gl_Position=vec4(position.xy,0.,1.);}',
+  fragmentShader:`
+precision highp float;
+uniform float uTime;uniform float uIntensity;uniform vec2 uRes;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p*=2.03;a*=.5;}return v;}
+void main(){
+vec2 uv=gl_FragCoord.xy/uRes;
+vec3 col=mix(vec3(0.008,0.012,0.038),vec3(0.03,0.05,0.11),uv.y);
+float t=uTime*0.05;
+vec3 acol=vec3(0.);
+for(int j=0;j<3;j++){
+float fj=float(j);
+float center=0.52+0.15*fj+(fbm(vec2(uv.x*1.8+t*(0.6+0.25*fj),fj*7.31+t*0.2))-0.5)*0.5;
+float d=uv.y-center;
+float band=exp(-d*d*(58.-12.*fj));
+float curtain=0.5+0.5*fbm(vec2(uv.x*24.,fj*3.7+t*3.2));
+vec3 c=j==0?vec3(0.22,0.85,0.62):j==1?vec3(0.55,0.5,0.95):vec3(0.9,0.45,0.66);
+acol+=c*band*curtain*(0.55-0.12*fj);
+}
+col+=acol*uIntensity;
+vec2 sp=floor(gl_FragCoord.xy/2.5);
+float s=hash(sp);
+if(s>0.9986){float tw=0.5+0.5*sin(uTime*2.5+s*90.);col+=vec3(tw*0.65);}
+gl_FragColor=vec4(col,1.);
+}`
+});
+scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat));
+const clock=new THREE.Clock();
+function tick(){
+  uniforms.uTime.value=clock.getElapsedTime();
+  renderer.render(scene,camera);
+  requestAnimationFrame(tick);
+}
+function resize(){renderer.setSize(innerWidth,innerHeight);uniforms.uRes.value.set(innerWidth,innerHeight);}
+addEventListener('resize',resize);resize();tick();
+
+gsap.to(uniforms.uIntensity,{value:1.45,ease:'none',scrollTrigger:{trigger:'.sec2',start:'top bottom',end:'top 20%',scrub:.5}});
+gsap.to('#mtn1',{yPercent:36,ease:'none',scrollTrigger:{trigger:'body',start:'top top',end:'max',scrub:.4}});
+gsap.to('#mtn2',{yPercent:20,ease:'none',scrollTrigger:{trigger:'body',start:'top top',end:'max',scrub:.4}});
+
+const card=document.getElementById('herocard');
+const rx=gsap.quickTo(card,'rotationX',{duration:.6,ease:'power3'});
+const ry=gsap.quickTo(card,'rotationY',{duration:.6,ease:'power3'});
+gsap.set(card,{transformPerspective:900});
+addEventListener('mousemove',e=>{
+  rx((e.clientY/innerHeight-.5)*-10);
+  ry((e.clientX/innerWidth-.5)*12);
+});
+gsap.to('#herocard',{opacity:0,y:-80,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom 40%',scrub:.4}});
+gsap.from('.sec2 h2',{opacity:0,y:50,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.sec2',start:'top 65%'}});
+gsap.utils.toArray('.gcard').forEach((c,i)=>{
+  gsap.from(c,{opacity:0,y:90,duration:1,delay:i*.13,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 85%'}});
+});
+</script>
+</body>
+</html>
