@@ -10,10 +10,13 @@ const ORDER = ['low', 'med', 'high'];
 
 export function detectDevice() {
   const q = new URLSearchParams(location.search);
-  const coarse = matchMedia('(pointer: coarse)').matches;
+  let coarse = matchMedia('(pointer: coarse)').matches;
   const minSide = Math.min(screen.width, screen.height);
-  const tablet = coarse && minSide >= 700;
-  const phone = coarse && !tablet;
+  let tablet = coarse && minSide >= 700;
+  let phone = coarse && !tablet;
+  // the device lab (devices.html) runs the site in frames on a laptop and says what to behave as
+  const dev = q.get('dev');
+  if (dev === 'phone' || dev === 'tablet' || dev === 'desktop') { coarse = dev !== 'desktop'; tablet = dev === 'tablet'; phone = dev === 'phone'; }
   const mem = navigator.deviceMemory || 8;
   const cores = navigator.hardwareConcurrency || 8;
   const weak = mem <= 3 || cores <= 4;

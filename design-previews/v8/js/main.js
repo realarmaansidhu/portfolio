@@ -21,6 +21,7 @@ THREE.ColorManagement.enabled = false;
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot') && !Q.has('live');
 const LIVE = Q.has('shot') && Q.has('live');
+const EMBED = Q.has('embed'); // running inside devices.html
 const device = detectDevice();
 const REDUCED = device.reducedMotion;
 const S0 = 2.3, REF_COUNT = 165000, K_SIZE = 0.24, L = TUN.L;
@@ -68,19 +69,21 @@ const post = new Post(renderer, hdrType);
 post.u.uTaps.value = REDUCED ? 0 : tier.zoomTaps;
 post.u.uGrain.value = device.coarse ? 0.028 : 0.035;
 const sound = new Sound();
+// the device lab passes the safe-area insets a real phone would report
+if (EMBED && Q.get('safe')) Q.get('safe').split(',').forEach((v, i) => document.documentElement.style.setProperty(['--safe-t', '--safe-r', '--safe-b', '--safe-l'][i], (+v || 0) + 'px'));
 
 let mainSys = null, laptopSys = null, occluder = null;
 
 // ---------- sizing: stable on iOS (ignore the address bar sliding in and out) ----------
 const lvh = $('lvh');
 const heroEl = $('hero');
-let W = 0, H = 0, dpr = 1, layout = null;
+let W = 0, H = 0, dpr = 1, layout = null, dprCap = +Q.get('dpr') || 9;
 function resize(force) {
   const w = innerWidth, h = Math.max(innerHeight, lvh.getBoundingClientRect().height || 0);
   if (!force && w === W && Math.abs(h - H) < 140) return;
   W = w; H = h;
   document.documentElement.style.setProperty('--vhs', innerHeight + 'px');
-  dpr = Math.min(window.devicePixelRatio || 1, tier.dpr);
+  dpr = Math.min(window.devicePixelRatio || 1, tier.dpr, dprCap);
   renderer.setPixelRatio(dpr);
   renderer.setSize(W, H, false);
   post.setSize(Math.round(W * dpr), Math.round(H * dpr), tier.bloom);
@@ -115,7 +118,7 @@ const aq = new AdaptiveQuality(device, applyTier);
 
 // ---------- smooth scroll on desktop; native momentum on touch ----------
 let lenis = null;
-if (!device.coarse && !REDUCED && !SHOT) {
+if (!device.coarse && !REDUCED && !SHOT && !EMBED) {
   lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9 });
   lenis.stop();
 }
@@ -175,7 +178,7 @@ let ready = false;
     ready = true;
     $('gate-text').textContent = 'CONSTELLATION READY';
     $('gate').classList.add('ready');
-    if ((SHOT || LIVE) && !Q.has('gate')) enter(false);
+    if (((SHOT || LIVE) && !Q.has('gate')) || EMBED) enter(false);
   } catch (err) {
     console.error(err);
     $('gate-text').textContent = 'SIGNAL LOST — REFRESH TO RETRY';
@@ -199,12 +202,12 @@ function enableTilt() {
 function enter(withSound) {
   if (entered || !ready) return;
   entered = true;
-  if (device.coarse && !SHOT) enableTilt();
+  if (device.coarse && !SHOT && !EMBED) enableTilt();
   if (withSound) sound.start().then((ok) => setSoundUI(ok)); else setSoundUI(false);
   $('gate').classList.add('gone');
   if (SHOT) $('gate').style.display = 'none';
   document.documentElement.classList.remove('locked');
-  introStart = T;
+  introStart = EMBED && Q.has('nointro') ? T - 10 : T;
   if (lenis) lenis.start();
 }
 $('enter-sound').addEventListener('click', () => enter(true));
@@ -227,7 +230,12 @@ function tap(target) {
   ripple.age = 0;
   sound.blip();
 }
-addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch') setPointer(e.clientX, e.clientY); }, { passive: true });
+addEventListener('pointermove', (e) => {
+  if (e.pointerType === 'touch') return;
+  setPointer(e.clientX, e.clientY);
+  if (EMBED && device.coarse) { tilt.tx = pointer.ndc.x; tilt.ty = -pointer.ndc.y; } // the lab's mouse stands in for tilting the phone
+}, { passive: true });
+if (EMBED) document.documentElement.addEventListener('pointerleave', () => { tilt.tx = tilt.ty = 0; });
 addEventListener('pointerdown', (e) => { if (e.pointerType !== 'touch') { setPointer(e.clientX, e.clientY); tap(e.target); } }, { passive: true });
 // a tap is short and still; a swipe that starts a scroll is neither
 let touch0 = null;
@@ -506,8 +514,9 @@ function update(dt) {
 }
 
 // ---------- loop ----------
-let last = performance.now(), frames = 0;
+let last = performance.now(), frames = 0, paused = false;
 function loop(now) {
+  if (paused) { last = now; requestAnimationFrame(loop); return; }
   const dt = SHOT ? 1 / 60 : Math.min(0.05, (now - last) / 1000);
   last = now;
   T = SHOT ? shot.t : T + dt;
@@ -528,4 +537,12 @@ if (SHOT) {
 }
 document.addEventListener('visibilitychange', () => { last = performance.now(); });
 
-window.__v8 = { get state() { return { pS, extra, T, tier: tier.name, entered, ready, W, H, dpr }; }, camera, renderer, post, layout: () => layout, applyTier, TIERS, sound, fx, iris, solar, sky, scene };
+// hooks for the device lab: read and set the flight position, pause, and match render resolution to the frame's on-screen size
+function rawProgress() { const span = Math.max(1, journeyEl.offsetHeight - innerHeight); return { p: clamp01(scrollY / span), ex: Math.max(0, scrollY - span) / innerHeight }; }
+function seek(p, ex = 0) {
+  const span = Math.max(1, journeyEl.offsetHeight - innerHeight), max = document.documentElement.scrollHeight - innerHeight;
+  const y = Math.round(Math.max(0, Math.min(max, p * span + ex * innerHeight)));
+  scrollTo(0, y);
+  return y;
+}
+window.__v8 = { get state() { return { pS, extra, T, tier: tier.name, entered, ready, W, H, dpr }; }, raw: rawProgress, seek, pause: (b) => { paused = !!b; }, setDprCap: (c) => { dprCap = c || 9; resize(true); }, camera, renderer, post, layout: () => layout, applyTier, TIERS, sound, fx, iris, solar, sky, scene };
