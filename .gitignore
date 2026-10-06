@@ -1,2 +1,4 @@
 .gitigniore
 .vscode
+.venv
+.DS_Store
