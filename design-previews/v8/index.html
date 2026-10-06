@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" class="locked">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04060c">
+<title>Armaan Sidhu — Constellation (v8)</title>
+<meta name="description" content="Armaan Sidhu — cybersecurity, GenAI, and a debut novel. A portfolio you fly through.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/portrait.png" as="fetch" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js",
+  "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.mjs"
+} }
+</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="lvh" aria-hidden="true"></div>
+
+<div id="gate" role="dialog" aria-label="Loading">
+  <div class="gate-inner">
+    <p class="gate-kicker">ARMAAN SIDHU</p>
+    <p class="gate-status"><span class="blink">▍</span><span id="gate-text">INITIALIZING CONSTELLATION</span></p>
+    <div class="gate-bar"><i id="gate-fill"></i></div>
+    <p class="gate-pct" id="gate-pct">0%</p>
+    <div class="gate-actions">
+      <button id="enter-sound" class="btn primary" type="button"><span>Enter with sound</span></button>
+      <button id="enter-quiet" class="btn" type="button"><span>Enter in silence</span></button>
+    </div>
+    <p class="gate-note">Headphones recommended · scroll or swipe to fly</p>
+  </div>
+</div>
+
+<header class="chrome">
+  <a class="back" href="../index.html">← All designs</a>
+  <button id="sound" class="sound" type="button" data-on="0" aria-label="Turn sound on"><i></i><i></i><i></i><i></i></button>
+</header>
+
+<nav id="rail" aria-label="Flight progress">
+  <span data-at="0"><b>Portrait</b></span>
+  <span data-at="0.06"><b>Into the mind</b></span>
+  <span data-at="0.22"><b>The tunnel</b></span>
+  <span data-at="0.66"><b>The sun</b></span>
+  <span data-at="0.72"><b>The vault</b></span>
+</nav>
+
+<div class="hint" id="hint"><span>Scroll to dive in</span><i></i></div>
+
+<div class="hud" id="hud1"><div class="h-line"></div><p class="h-main">&gt; DESCENDING · SECURITY LAYER</p><p class="h-sub">TMX GROUP — TORONTO STOCK EXCHANGE</p></div>
+<div class="hud right" id="hud2"><div class="h-line"></div><p class="h-main">&gt; TRACING THREAT VECTORS</p><p class="h-sub">OSINT · KRI ANALYSIS · SOC OPERATIONS</p></div>
+<div class="hud" id="hud3"><div class="h-line"></div><p class="h-main">&gt; HARDENING AI PIPELINES</p><p class="h-sub">AMERICAN EXPRESS — GENAI SECURITY · PQC</p></div>
+
+<div id="granted" aria-live="polite"><span>ACCESS GRANTED</span></div>
+<div id="q" class="q" aria-hidden="true" hidden></div>
+
+<main>
+  <section id="journey" aria-label="Introduction">
+    <div class="hero" id="hero">
+      <p class="eyebrow">[ CONSTELLATION ONLINE — 2026 ]</p>
+      <h1>ARMAAN<br><span class="thin">SIDHU</span></h1>
+      <p class="lede">That's me at my desk, drawn in starlight from a real photograph. Scroll, and the camera dives into my eye — down a data tunnel, through the sun, all the way to the vault.</p>
+      <p class="roles">CYBERSECURITY × GENAI × AUTHOR</p>
+    </div>
+  </section>
+
+  <section id="vault-content" class="vault">
+    <p class="eyebrow reveal">[ ACCESS GRANTED — STATION 02 ]</p>
+    <h2 class="reveal">THE VAULT</h2>
+    <p class="lede reveal">The stars you flew through just became this padlock. In the full site every section is a station on this flight path — the constellation re-forms into a new shape for each chapter.</p>
+    <div class="cards">
+      <article class="card reveal"><p class="mono">$ cat tmx_group.log</p><h3>SOC — TMX Group</h3><p>Social engineering campaigns, KRI analysis and human-layer defense for the Toronto Stock Exchange's critical market infrastructure.</p></article>
+      <article class="card reveal"><p class="mono">$ cat american_express.log</p><h3>GenAI Security — Amex</h3><p>LLMOps hardening, secure AI/ML pipeline integration and risk mitigation across production systems at American Express.</p></article>
+      <article class="card reveal"><p class="mono">$ ./pqc_research.sh</p><h3>Post-Quantum R&amp;D</h3><p>Post-quantum cryptography readiness — preparing enterprise cryptography for the next era of computing.</p></article>
+    </div>
+    <p class="eyebrow reveal spaced">[ CONTENT LAYER — PHOTOS &amp; TEXT OVER THE SKY ]</p>
+    <div class="media">
+      <figure class="shot tilt-l reveal"><img src="../../assets/images/Headshot.jpeg" alt="Armaan Sidhu" loading="lazy"><figcaption>glass frames keep the sky visible around every photo</figcaption></figure>
+      <div class="panel reveal"><h3>Text panels stay translucent</h3><p>Real content sits on frosted glass — blurred, never solid. The constellation keeps moving behind every panel, photo and caption, and nothing ever covers the whole screen, so the sky always breathes around the edges.</p></div>
+      <figure class="shot tilt-r reveal"><img src="../../assets/images/athack-wwf.jpg" alt="Armaan receiving the Interac Challenge prize at the @Hack hackathon" loading="lazy"><figcaption>photos float as tilted cards</figcaption></figure>
+    </div>
+    <p class="foot reveal">Next in the full build: <b>Station 03</b> a neural core (GenAI) · <b>Station 04</b> an open book (One Night in Trombay) · <b>Station 05</b> a maple leaf (Canada &amp; networking) · <b>Station 06</b> a beacon (contact). One continuous flight, no page loads.</p>
+  </section>
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
