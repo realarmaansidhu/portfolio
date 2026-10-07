@@ -6,7 +6,7 @@ import Lenis from './vendor/lenis.mjs';
 import { TUN, pathPos, pathBank } from './path.js';
 import { TIERS, detectDevice, AdaptiveQuality } from './quality.js';
 import { mulberry32, buildMain, buildLaptop, buildGadgets } from './build-data.js';
-import { createGadgets, setGadgetBudget } from './gadgets.js';
+import { createGadgets, setGadgetBudget, carLoop } from './gadgets.js';
 import { createMainSystem, createLaptop, createOccluder } from './particles.js';
 import { Sky } from './sky.js';
 import { Solar } from './solar.js';
@@ -516,11 +516,21 @@ function update(dt) {
         const c = layout.gadgets[k];
         scale = c.world / g.radius;
         g.group.position.copy(c.pos); g.group.position.y += Math.sin(T * 0.8 + i * 2.1) * 0.05 * c.world;
-        g.group.rotation.set(c.rot.x + Math.sin(T * 0.5 + i) * 0.08, c.rot.y + Math.sin(T * 0.3 + i * 1.7) * 0.35, c.rot.z + Math.sin(T * 0.45 + i) * 0.05);
+        const sway = k === 'car' ? 0.06 : 0.35;   // the car holds still enough to park
+        g.group.rotation.set(c.rot.x + Math.sin(T * 0.5 + i) * 0.08, c.rot.y + Math.sin(T * 0.3 + i * 1.7) * sway, c.rot.z + Math.sin(T * 0.45 + i) * 0.05);
         gu.uOp.value = heroK;
       }
       g.group.scale.setScalar(scale); gu.uObjScale.value = scale;
       g.group.visible = gu.uOp.value > 0.001;
+      if (k === 'car') {
+        // drive in, charge at the Supercharger, drive off; the charger itself stays put
+        const run = carLoop(T), cu = g.charger.u;
+        g.points.position.z = run.z;
+        cu.uTime.value = T; cu.uIntro.value = introT; cu.uPxScale.value = pxScale; cu.uMaxPt.value = maxPt; cu.uObjScale.value = scale;
+        cu.uOp.value = gu.uOp.value; cu.uPlug.value = run.plug; cu.uCharge.value = run.charge;
+        gu.uWheel.value = run.wheel; gu.uCharge.value = run.charge; gu.uOp.value *= run.fade;
+        g.points.visible = gu.uOp.value > 0.001;
+      }
     });
   }
   if (occluder) {

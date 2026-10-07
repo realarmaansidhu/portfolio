@@ -274,24 +274,32 @@ function buildGlasses(N, R) {
 }
 
 // DJI Osmo Pocket 3: a slim handle with its 2-inch screen, and a 3-axis gimbal head that pans on top.
+// The screen turns from portrait to 16:9 landscape and back (pivot mode 5 spins it about its centre), and the
+// red record button gets pressed in between. u, v carry each screen point's place on the portrait screen.
+const PK = { sw: 0.27, sh: 0.48, cy: 0.075 };   // portrait screen: width, height (16:9), centre height
 function buildPocket(N, R) {
-  const A = gadgetArrays(N), hx = 0.21, hz = 0.165, rad = 0.08, PAN = [0, 0, 0, 3];
+  const A = gadgetArrays(N), hx = 0.21, hz = 0.165, rad = 0.08, PAN = [0, 0, 0, 3], SCR = [0, PK.cy, hz + 0.006, 5];
+  const scr = (u, v, kind, lift = 0.006) => put(A, R, (u - 0.5) * PK.sw, PK.cy + (v - 0.5) * PK.sh, hz + lift, kind, u, v, SCR);
   while (A.n < N) {
     const r = R();
-    if (r < 0.3) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, -0.72 + R() * 1.0, z, 0); }
-    else if (r < 0.37) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, R() < 0.5 ? -0.72 : 0.28, z, 1); }
-    else if (r < 0.4) { put(A, R, (R() * 2 - 1) * (hx - 0.02), R() < 0.5 ? -0.72 : 0.28, (R() * 2 - 1) * (hz - 0.02), 0); }
-    else if (r < 0.57) { const u = R(), v = R(); put(A, R, (u - 0.5) * 0.32, -0.06 + v * 0.3, hz + 0.003, 3, u, v); }
-    else if (r < 0.6) {
+    if (r < 0.27) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, -0.72 + R() * 1.0, z, 0); }
+    else if (r < 0.33) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, R() < 0.5 ? -0.72 : 0.28, z, 1); }
+    else if (r < 0.35) { put(A, R, (R() * 2 - 1) * (hx - 0.02), R() < 0.5 ? -0.72 : 0.28, (R() * 2 - 1) * (hz - 0.02), 0); }
+    else if (r < 0.55) scr(R(), R(), 3);
+    // extra points where the REC dot and shutter icon land once the screen is sideways, so they read clearly
+    else if (r < 0.57) { const [a, b] = disc(R, 0.03); scr(0.5 + (-0.105 + a) / PK.sw, 0.5 + (-0.21 + b) / PK.sh, 3); }
+    else if (r < 0.58) { const [a, b] = disc(R, 0.03); scr(0.5 + a / PK.sw, 0.5 + (0.205 + b) / PK.sh, 3); }
+    else if (r < 0.61) {
       const e = Math.floor(R() * 4), t = R();
-      const p = e === 0 ? [(t - 0.5) * 0.34, -0.07] : e === 1 ? [(t - 0.5) * 0.34, 0.25] : e === 2 ? [-0.17, -0.07 + t * 0.32] : [0.17, -0.07 + t * 0.32];
-      put(A, R, p[0], p[1], hz + 0.004, 1);
-    } else if (r < 0.62) { const [a, b] = ring(R, 0.03, 0.042); put(A, R, a, -0.23 + b, hz + 0.004, 5, 0); }
-    else if (r < 0.635) { const [a, b] = ring(R, 0.02, 0.028); put(A, R, a, -0.38 + b, hz + 0.004, 1); }
+      const [u, v] = e === 0 ? [t, 0] : e === 1 ? [t, 1] : e === 2 ? [0, t] : [1, t];
+      scr(u, v, 1, 0.008);
+    } else if (r < 0.645) { const [a, b] = ring(R, 0.028, 0.046); put(A, R, a, -0.23 + b, hz + 0.004, 5, 0); }   // record button
+    else if (r < 0.655) { const [a, b] = disc(R, 0.022); put(A, R, a, -0.23 + b, hz + 0.006, 5, 0); }
+    else if (r < 0.665) { const [a, b] = ring(R, 0.02, 0.028); put(A, R, a, -0.38 + b, hz + 0.004, 1); }
     // everything above the handle pans with the gimbal
-    else if (r < 0.68) { const [a, b] = ring(R, 0.095, 0.105); put(A, R, a, 0.28 + R() * 0.06, b, R() < 0.3 ? 1 : 0, 0, 0, PAN); }
-    else if (r < 0.74) { const [x, y, z, ed] = boxSurface(R, [0.2, 0.47, 0], [0.03, 0.17, 0.045], 0.4); put(A, R, x, y, z, ed ? 1 : 0, 0, 0, PAN); }
-    else if (r < 0.76) { const [a, b] = ring(R, 0.055, 0.07); put(A, R, 0.168, 0.52 + a, b, 1, 0, 0, PAN); }
+    else if (r < 0.7) { const [a, b] = ring(R, 0.095, 0.105); put(A, R, a, 0.28 + R() * 0.06, b, R() < 0.3 ? 1 : 0, 0, 0, PAN); }
+    else if (r < 0.75) { const [x, y, z, ed] = boxSurface(R, [0.2, 0.47, 0], [0.03, 0.17, 0.045], 0.4); put(A, R, x, y, z, ed ? 1 : 0, 0, 0, PAN); }
+    else if (r < 0.77) { const [a, b] = ring(R, 0.055, 0.07); put(A, R, 0.168, 0.52 + a, b, 1, 0, 0, PAN); }
     else if (r < 0.88) { const [x, y, z, ed] = boxSurface(R, [-0.03, 0.52, 0], [0.14, 0.12, 0.12], 0.3); put(A, R, x, y, z, ed ? 1 : 0, 0, 0, PAN); }
     else if (r < 0.91) { const [a, b] = ring(R, 0.098, 0.108); put(A, R, -0.03 + a, 0.52 + b, 0.122, 1, 0, 0, PAN); }
     else if (r < 0.96) { const [a, b] = ring(R, 0.07, 0.082); put(A, R, -0.03 + a, 0.52 + b, 0.124, 4, 0, 0, PAN); }
@@ -417,7 +425,9 @@ function buildCar(N, R) {
       else { const x = side * (0.25 + R() * 0.15); put(A, R, x, 0.43 + (R() - 0.5) * 0.02, 1.08 - 0.12 * (x / 0.42) ** 2, 4); }
     } else if (r < 0.7) {                 // rear light bar, red
       const x = (R() * 2 - 1) * 0.43; put(A, R, x, 0.625 + (R() - 0.5) * 0.012, -1.095 + 0.08 * (x / 0.42) ** 2, 5, 0);
-    } else if (r < 0.71) {                // mirrors
+    } else if (r < 0.705) {               // charge port, rear left (glows green while charging)
+      const [a, b] = disc(R, 0.03); put(A, R, 0.468, 0.62 + b, -0.92 + a, 5, 1);
+    } else if (r < 0.715) {               // mirrors
       const [a, b] = disc(R, 0.035); put(A, R, side * (0.5 + R() * 0.04), 0.64 + b, 0.33 + a, R() < 0.4 ? 1 : 0);
     } else {                              // wheels: tyre, rim and five spokes, all turning about the axle
       const w = wheels[Math.floor(R() * 4)], out = Math.sign(w[0]), pv = [w[0], w[1], w[2], 4], f = R();
@@ -433,8 +443,36 @@ function buildCar(N, R) {
   return A;
 }
 
-export function buildGadgets({ NG = 5200, NP = 4600, ND = 6800, NC = 9000, seed = 23 }) {
+// A Tesla Supercharger stall beside the parking spot, with its cable. Same frame as the car (ground y = 0, the car's
+// nose toward +z, its left side toward +x). Cable points (kind 9) store a small offset in position and their place
+// along the cable in u; the shader lays them on a curve that runs from the stall to the holster or to the car's port.
+function buildCharger(N, R) {
+  const A = gadgetArrays(N), x0 = 0.6, x1 = 0.74, z0 = -1.48, z1 = -1.16, top = 1.02, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+  while (A.n < N) {
+    const r = R();
+    if (r < 0.34) {                       // the slim body
+      const [x, y, z, ed] = boxSurface(R, [cx, top / 2, cz], [(x1 - x0) / 2, top / 2, (z1 - z0) / 2], 0.28);
+      put(A, R, x, y, z, ed ? 1 : 0);
+    } else if (r < 0.42) {                // rounded cap
+      const a = R() * Math.PI, w = (x1 - x0) / 2;
+      put(A, R, cx + Math.cos(a) * w, top + Math.sin(a) * 0.05, z0 + R() * (z1 - z0), R() < 0.5 ? 1 : 0);
+    } else if (r < 0.5) {                 // light strip down the outer face
+      put(A, R, x1 + 0.004, 0.18 + R() * 0.74, z1 - 0.035 + (R() - 0.5) * 0.012, 4);
+    } else if (r < 0.54) {                // the red logo near the top
+      const [a, b] = disc(R, 0.03); put(A, R, x1 + 0.005, 0.86 + b, cz + a, 5, 0);
+    } else if (r < 0.58) {                // holster
+      const [a, b] = ring(R, 0.025, 0.035); put(A, R, x1 + 0.004, 0.66 + b, -1.3 + a, 1);
+    } else if (r < 0.62) {                // base plate
+      put(A, R, cx + (R() - 0.5) * 0.24, 0.005, cz + (R() - 0.5) * 0.42, 1);
+    } else {                              // cable
+      const [a, b] = disc(R, 0.011); put(A, R, a, b, (R() - 0.5) * 0.022, 9, R());
+    }
+  }
+  return A;
+}
+
+export function buildGadgets({ NG = 5200, NP = 4600, ND = 6800, NC = 9000, NS = 2600, seed = 23 }) {
   const R = mulberry32(seed);
   const strip = (A) => ({ pos: A.pos, part: A.part, pivot: A.pivot, scat: A.scat });
-  return { glasses: strip(buildGlasses(NG, R)), pocket: strip(buildPocket(NP, R)), drone: strip(buildDrone(ND, R)), car: strip(buildCar(NC, mulberry32(seed + 7))) };
+  return { glasses: strip(buildGlasses(NG, R)), pocket: strip(buildPocket(NP, R)), drone: strip(buildDrone(ND, R)), car: strip(buildCar(NC, mulberry32(seed + 7))), charger: strip(buildCharger(NS, mulberry32(seed + 11))) };
 }
