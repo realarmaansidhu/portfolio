@@ -18,5 +18,3 @@
   Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
 /assets/img/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
-/assets/icons/*
-  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
