@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#04060c">
 <meta name="robots" content="noindex">
-<title>Lost in space — Armaan Sidhu</title>
-<link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
+<title>Page not found</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/icons/icon-192.png" sizes="192x192" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -42,15 +43,21 @@
     <a href="/" id="t-a">Take me home</a>
   </main>
   <script>
-    // Same language as the visitor picked on the main page.
+    // The language the visitor picked on the main page, or else their device's language.
     (function () {
       var T = {
-        fr: ['html:fr', 'Perdu dans l’espace — Armaan Sidhu', 'ERREUR 404', 'Cette page est sortie de son orbite.', 'Ce qui se trouvait ici n’y est plus, ou n’y a jamais été. Le reste de l’univers est exactement là où vous l’avez laissé.', 'Retour à l’accueil'],
-        es: ['html:es', 'Perdido en el espacio — Armaan Sidhu', 'ERROR 404', 'Esta página se salió de su órbita.', 'Lo que había aquí ya no está, o nunca estuvo. El resto del universo sigue justo donde lo dejaste.', 'Volver al inicio'],
-        zh: ['html:zh-Hans', '迷失在太空 — Armaan Sidhu', '错误 404', '这个页面偏离了轨道。', '这里的内容已经不在了，或者从未存在过。宇宙的其余部分，都还在你离开时的地方。', '返回首页']
+        fr: ['html:fr', 'Page introuvable', 'ERREUR 404', 'Cette page est sortie de son orbite.', 'Ce qui se trouvait ici n’y est plus, ou n’y a jamais été. Le reste de l’univers est exactement là où vous l’avez laissé.', 'Retour à l’accueil'],
+        es: ['html:es', 'Página no encontrada', 'ERROR 404', 'Esta página se salió de su órbita.', 'Lo que había aquí ya no está, o nunca estuvo. El resto del universo sigue justo donde lo dejaste.', 'Volver al inicio'],
+        zh: ['html:zh-Hans', '页面未找到', '错误 404', '这个页面偏离了轨道。', '这里的内容已经不在了，或者从未存在过。宇宙的其余部分，都还在你离开时的地方。', '返回首页']
       };
-      var t;
-      try { t = T[localStorage.getItem('site.lang')]; } catch (e) { t = null; }
+      var lang = null;
+      try { lang = localStorage.getItem('site.lang'); } catch (e) { /* storage blocked */ }
+      var device = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+      for (var i = 0; i < device.length && !lang; i++) {
+        var p = String(device[i] || '').toLowerCase().split(/[^a-z]/)[0];
+        if (p === 'en' || T[p]) lang = p;
+      }
+      var t = T[lang];
       if (!t) return;
       document.documentElement.lang = t[0].slice(5);
       document.title = t[1];

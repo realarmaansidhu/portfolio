@@ -1,5 +1,5 @@
 // The iris: a disc of starlight that kindles inside your eye as the camera dives in,
-// then opens like an aperture — the tunnel waits behind the pupil.
+// then opens like an aperture, with the tunnel waiting behind the pupil.
 import * as THREE from './vendor/three.module.min.js';
 
 const VERT = /* glsl */`

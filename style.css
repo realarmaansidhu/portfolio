@@ -1,4 +1,4 @@
-/* v8 — mobile first. Base styles are the phone; larger screens are layered on top. */
+/* Mobile first. Base styles are the phone; larger screens are layered on top. */
 :root {
   --bg: #04060c;
   --ink: #edede9;

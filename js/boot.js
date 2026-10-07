@@ -12,14 +12,22 @@
   fonts.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap';
   document.head.appendChild(fonts);
 
-  // A visitor who picked another language last time shouldn't see the English flash past first.
-  try {
-    var lang = (location.search.match(/[?&]lang=([a-z]+)/) || [])[1] || localStorage.getItem('site.lang');
-    if (lang && lang !== 'en') {
-      root.classList.add('i18n-wait');
-      setTimeout(function () { root.classList.remove('i18n-wait'); }, 4000);
-    }
-  } catch (e) { /* storage blocked */ }
+  // Which language to open in: a ?lang= link, else the one the visitor picked before, else the first of their
+  // device's languages that the site speaks, else English. js/i18n.js applies it; until then the text stays hidden
+  // so nobody sees the English flash past first.
+  var SPOKEN = { en: 1, fr: 1, es: 1, zh: 1 };
+  var pick = function (tag) { var p = String(tag || '').toLowerCase().split(/[^a-z]/)[0]; return SPOKEN[p] ? p : null; };
+  var lang = pick((location.search.match(/[?&]lang=([a-zA-Z-]+)/) || [])[1]);
+  if (!lang) { try { lang = pick(localStorage.getItem('site.lang')); } catch (e) { /* storage blocked */ } }
+  if (!lang) {
+    var device = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+    for (var i = 0; i < device.length && !lang; i++) lang = pick(device[i]);
+  }
+  window.__siteLang = lang || 'en';
+  if (window.__siteLang !== 'en') {
+    root.classList.add('i18n-wait');
+    setTimeout(function () { root.classList.remove('i18n-wait'); }, 4000);
+  }
 
   var done = false;
   function fallback(why) {

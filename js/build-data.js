@@ -1,4 +1,4 @@
-// Pure data builders (no DOM, no three.js) — run inside a worker, or inline in shot mode.
+// Pure data builders (no DOM, no three.js). They run inside a worker, or inline in shot mode.
 // Every star gets four lives: portrait → tunnel → padlock, plus an intro scatter start.
 
 export function mulberry32(a) {

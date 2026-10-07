@@ -1,4 +1,4 @@
-// Sound, synthesized live — no audio files. On by default; it wakes on the visitor's first tap, click or key press.
+// Sound, synthesized live with no audio files. On by default; it wakes on the visitor's first tap, click or key press.
 // Drone that shifts per act · wind that follows scroll speed · tunnel shimmer · sun approach + boom ·
 // portrait chime · tap blips · key scrape, tumbler clicks, the heavy clunk, and an "access granted" chord.
 
