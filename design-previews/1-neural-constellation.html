@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 1 — Neural Constellation</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#07070F;color:#EDEDEA;font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+#scene{position:fixed;inset:0;z-index:0}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#8a8a97;text-decoration:none;font-size:13px;letter-spacing:1px;border:1px solid #2a2a38;padding:8px 14px;border-radius:999px;backdrop-filter:blur(6px);transition:.3s}
+.back:hover{color:#EDEDEA;border-color:#5DCAA5}
+.content{position:relative;z-index:2}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw}
+.hero .eyebrow{color:#5DCAA5;letter-spacing:6px;font-size:13px;margin-bottom:22px}
+.hero h1{font-size:clamp(48px,8vw,110px);font-weight:700;line-height:.95;letter-spacing:-2px}
+.hero h1 .thin{font-weight:300;color:#AFA9EC}
+.hero p{margin-top:26px;max-width:520px;color:#9a9aa8;font-size:17px;line-height:1.6}
+.roles{margin-top:18px;color:#5DCAA5;font-size:15px;letter-spacing:2px}
+.hint{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:40;color:#6a6a78;font-size:12px;letter-spacing:3px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.spacer{height:36vh}
+.sec2{min-height:150vh;padding:14vh 8vw 30vh}
+.sec2 .eyebrow{color:#AFA9EC;letter-spacing:6px;font-size:13px;margin-bottom:18px}
+.sec2 h2{font-size:clamp(36px,5.5vw,72px);font-weight:700;letter-spacing:-1px;line-height:1;margin-bottom:8vh}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1100px}
+.card{border:1px solid #232332;background:rgba(14,14,24,.55);backdrop-filter:blur(10px);border-radius:16px;padding:30px 28px;transition:border-color .4s,transform .4s}
+.card:hover{border-color:#5DCAA5;transform:translateY(-6px)}
+.card h3{color:#5DCAA5;font-size:19px;margin-bottom:12px}
+.card p{color:#9a9aa8;font-size:14.5px;line-height:1.65}
+.card .tag{display:inline-block;margin-top:16px;color:#AFA9EC;font-size:12px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hint">SCROLL — WATCH THE PARTICLES ↓</div>
+<div class="content">
+  <section class="hero" id="hero">
+    <div class="eyebrow">PORTFOLIO — 2026</div>
+    <h1>ARMAAN<br><span class="thin">SIDHU</span></h1>
+    <p>Every section of the site is the same living cloud of particles. Right now it is a neural constellation. Keep scrolling — it will reassemble itself into a padlock as you enter the security chapter.</p>
+    <div class="roles">CYBERSECURITY × GENAI × AUTHOR</div>
+  </section>
+  <div class="spacer"></div>
+  <section class="sec2" id="sec2">
+    <div class="eyebrow">CHAPTER — SECURITY</div>
+    <h2>WHAT I PROTECT</h2>
+    <div class="cards">
+      <div class="card"><h3>SOC — TMX Group</h3><p>Social engineering campaigns, KRI analysis and human-layer defense for the Toronto Stock Exchange's critical market infrastructure.</p><span class="tag">THREAT OPS</span></div>
+      <div class="card"><h3>GenAI Security — Amex</h3><p>LLMOps hardening, secure AI/ML pipeline integration and risk mitigation across production systems at American Express.</p><span class="tag">AI DEFENSE</span></div>
+      <div class="card"><h3>Post-Quantum R&amp;D</h3><p>Research into post-quantum cryptography readiness — preparing enterprise cryptography for the next era of computing.</p><span class="tag">PQC</span></div>
+    </div>
+  </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x07070F);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
+camera.position.z=4.2;
+
+const COUNT=5200;
+const hubs=[];
+for(let i=0;i<14;i++){
+  const th=Math.acos(2*Math.random()-1),ph=Math.PI*2*Math.random(),r=.7+Math.random()*.9;
+  hubs.push(new THREE.Vector3(r*Math.sin(th)*Math.cos(ph),r*Math.sin(th)*Math.sin(ph)*.75,r*Math.cos(th)));
+}
+const edges=[];
+for(let i=0;i<26;i++){
+  const a=Math.floor(Math.random()*hubs.length);let b=Math.floor(Math.random()*hubs.length);
+  if(a===b)b=(b+1)%hubs.length;edges.push([a,b]);
+}
+const g=()=> (Math.random()+Math.random()+Math.random()-1.5)*.3;
+const posA=new Float32Array(COUNT*3),posB=new Float32Array(COUNT*3),hash=new Float32Array(COUNT),cols=new Float32Array(COUNT*3);
+const teal=[.36,.79,.65],purp=[.69,.66,.93];
+for(let i=0;i<COUNT;i++){
+  let x,y,z;
+  if(Math.random()<.62){const h=hubs[Math.floor(Math.random()*hubs.length)];x=h.x+g()*.8;y=h.y+g()*.8;z=h.z+g()*.8;}
+  else{const e=edges[Math.floor(Math.random()*edges.length)];const s=Math.random();
+    x=hubs[e[0]].x+(hubs[e[1]].x-hubs[e[0]].x)*s+g()*.2;
+    y=hubs[e[0]].y+(hubs[e[1]].y-hubs[e[0]].y)*s+g()*.2;
+    z=hubs[e[0]].z+(hubs[e[1]].z-hubs[e[0]].z)*s+g()*.2;}
+  posA[i*3]=x;posA[i*3+1]=y;posA[i*3+2]=z;
+  const r=Math.random();
+  if(r<.55){posB[i*3]=(Math.random()*2-1)*.8;posB[i*3+1]=-1.05+Math.random()*1.15;posB[i*3+2]=(Math.random()*2-1)*.3;}
+  else if(r<.9){const t2=Math.PI*Math.random();const jx=g()*.22,jy=g()*.22;
+    posB[i*3]=Math.cos(t2)*.55+jx;posB[i*3+1]=.1+Math.sin(t2)*.72+jy;posB[i*3+2]=g()*.18;}
+  else{const side=Math.random()<.5?-.55:.55;posB[i*3]=side+g()*.12;posB[i*3+1]=-.05+Math.random()*.2;posB[i*3+2]=g()*.15;}
+  posB[i*3]*=1.35;posB[i*3+1]*=1.35;posB[i*3+2]*=1.35;
+  hash[i]=Math.random();
+  const c=Math.random()<.55?teal:purp;const v=.7+Math.random()*.3;
+  cols[i*3]=c[0]*v;cols[i*3+1]=c[1]*v;cols[i*3+2]=c[2]*v;
+}
+const geo=new THREE.BufferGeometry();
+const cur=new Float32Array(posA);
+geo.setAttribute('position',new THREE.BufferAttribute(cur,3));
+geo.setAttribute('color',new THREE.BufferAttribute(cols,3));
+const mat=new THREE.PointsMaterial({size:.028,vertexColors:true,transparent:true,opacity:.95,blending:THREE.AdditiveBlending,depthWrite:false});
+const points=new THREE.Points(geo,mat);
+scene.add(points);
+
+const lpos=new Float32Array(edges.length*6);
+edges.forEach((e,i)=>{
+  lpos[i*6]=hubs[e[0]].x;lpos[i*6+1]=hubs[e[0]].y;lpos[i*6+2]=hubs[e[0]].z;
+  lpos[i*6+3]=hubs[e[1]].x;lpos[i*6+4]=hubs[e[1]].y;lpos[i*6+5]=hubs[e[1]].z;
+});
+const lgeo=new THREE.BufferGeometry();
+lgeo.setAttribute('position',new THREE.BufferAttribute(lpos,3));
+const lmat=new THREE.LineBasicMaterial({color:0x534AB7,transparent:true,opacity:.35});
+const lines=new THREE.LineSegments(lgeo,lmat);
+points.add(lines);
+
+let t=0,tTarget=0,rot=0,mx=0,my=0;
+addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);});
+function onScroll(){
+  const p=scrollY/(document.body.scrollHeight-innerHeight);
+  let s=(p-.14)/(.5-.14);s=Math.max(0,Math.min(1,s));
+  tTarget=s*s*(3-2*s);
+}
+addEventListener('scroll',onScroll);onScroll();
+const clock=new THREE.Clock();
+function tick(){
+  const dt=clock.getDelta(),time=clock.elapsedTime;
+  t+=(tTarget-t)*.06;
+  const arr=geo.attributes.position.array;
+  for(let i=0;i<COUNT;i++){
+    let ti=t*1.35-hash[i]*.35;ti=Math.max(0,Math.min(1,ti));
+    const e=ti*ti*(3-2*ti);
+    const wob=Math.sin(time*1.2+i)*.012;
+    arr[i*3]=posA[i*3]+(posB[i*3]-posA[i*3])*e;
+    arr[i*3+1]=posA[i*3+1]+(posB[i*3+1]-posA[i*3+1])*e+wob;
+    arr[i*3+2]=posA[i*3+2]+(posB[i*3+2]-posA[i*3+2])*e;
+  }
+  geo.attributes.position.needsUpdate=true;
+  rot+=dt*(.25*(1-t*.85));
+  points.rotation.y=rot;
+  lmat.opacity=.35*(1-t);
+  camera.position.x+=(mx*.6-camera.position.x)*.05;
+  camera.position.y+=(-my*.4-camera.position.y)*.05;
+  camera.lookAt(0,0,0);
+  renderer.render(scene,camera);
+  requestAnimationFrame(tick);
+}
+function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();tick();
+
+gsap.to('#hero',{opacity:0,y:-90,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom 30%',scrub:.4}});
+gsap.utils.toArray('.card').forEach((c,i)=>{
+  gsap.from(c,{opacity:0,y:70,duration:.9,delay:i*.12,ease:'power3.out',scrollTrigger:{trigger:c,start:'top 82%'}});
+});
+gsap.from('.sec2 h2',{opacity:0,y:50,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.sec2',start:'top 65%'}});
+</script>
+</body>
+</html>

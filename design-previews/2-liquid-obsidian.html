@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview 2 — Liquid Obsidian</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:#0B0B0D;color:#F1EFE8;font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+.back{position:fixed;top:20px;left:20px;z-index:50;color:#7c7c78;text-decoration:none;font-size:13px;letter-spacing:1px;border:1px solid #26262a;padding:8px 14px;border-radius:999px;transition:.3s;background:rgba(11,11,13,.5);backdrop-filter:blur(6px)}
+.back:hover{color:#F1EFE8;border-color:#F1EFE8}
+.hero-wrap{height:100vh;position:sticky;top:0;overflow:hidden}
+#scene{position:absolute;inset:0}
+.hero-text{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 7vw;pointer-events:none}
+.meta-row{display:flex;justify-content:space-between;width:100%;position:absolute;top:30px;left:0;padding:0 7vw;font-size:12px;letter-spacing:3px;color:#7c7c78}
+h1{font-size:clamp(60px,11vw,150px);line-height:.92;font-weight:700;letter-spacing:-3px}
+h1.outline{color:transparent;-webkit-text-stroke:1.5px #F1EFE8;font-weight:400}
+.hero-sub{margin-top:30px;display:flex;gap:40px;color:#8f8f8a;font-size:15px;letter-spacing:1px}
+.hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:#6a6a66;font-size:12px;letter-spacing:3px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateX(-50%) translateY(8px)}}
+.sec2{position:relative;z-index:3;background:#0B0B0D;border-top:1px solid #222;min-height:160vh;padding:16vh 7vw 30vh}
+.sec2 .eyebrow{font-size:12px;letter-spacing:4px;color:#7c7c78;margin-bottom:20px}
+.sec2 h2{font-size:clamp(44px,8vw,110px);letter-spacing:-2px;line-height:.95;color:transparent;-webkit-text-stroke:1.5px #F1EFE8;margin-bottom:10vh}
+.work{max-width:1200px}
+.row{display:flex;align-items:baseline;gap:4vw;border-top:1px solid #2a2a2e;padding:44px 10px;cursor:pointer;transition:background .4s,padding-left .4s}
+.row:last-child{border-bottom:1px solid #2a2a2e}
+.row:hover{background:#141416;padding-left:34px}
+.row .num{font-size:14px;color:#7c7c78;letter-spacing:2px;min-width:44px}
+.row .name{font-size:clamp(26px,4vw,52px);font-weight:500;letter-spacing:-1px;flex:1}
+.row .cat{font-size:13px;color:#7c7c78;letter-spacing:2px;text-align:right}
+.row .arrow{font-size:26px;opacity:0;transform:translateX(-14px);transition:.35s;color:#F1EFE8}
+.row:hover .arrow{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← ALL DESIGNS</a>
+<div class="hero-wrap">
+  <canvas id="scene"></canvas>
+  <div class="meta-row"><span>PORTFOLIO ©2026</span><span>TORONTO / MONTRÉAL</span><span>SCROLL</span></div>
+  <div class="hero-text">
+    <h1 id="h1a">ARMAAN</h1>
+    <h1 class="outline" id="h1b">SIDHU</h1>
+    <div class="hero-sub" id="hsub"><span>CYBERSECURITY</span><span>GENAI ENGINEERING</span><span>AUTHOR</span></div>
+  </div>
+  <div class="hint">SCROLL — THE NEXT SECTION MELTS OVER ↓</div>
+</div>
+<section class="sec2">
+  <div class="eyebrow">02 — SELECTED WORK</div>
+  <h2>SELECTED<br>WORK</h2>
+  <div class="work">
+    <div class="row"><span class="num">01</span><span class="name">SentinelXC</span><span class="cat">SECURITY TOOLKIT</span><span class="arrow">→</span></div>
+    <div class="row"><span class="num">02</span><span class="name">TapeDeck</span><span class="cat">MARKET DATA</span><span class="arrow">→</span></div>
+    <div class="row"><span class="num">03</span><span class="name">TacTracer</span><span class="cat">OSINT RESEARCH</span><span class="arrow">→</span></div>
+    <div class="row"><span class="num">04</span><span class="name">One Night in Trombay</span><span class="cat">DEBUT NOVEL</span><span class="arrow">→</span></div>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0B0B0D);
+const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,50);
+camera.position.set(0,0,4);
+
+const noiseGLSL=`
+vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
+vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+i=mod289(i);
+vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;
+vec4 j=p-49.0*floor(p*ns.z*ns.z);
+vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);
+vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
+vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
+return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
+`;
+const mat=new THREE.MeshStandardMaterial({color:0xd8d8d8,metalness:.95,roughness:.16});
+let shaderRef=null;
+mat.onBeforeCompile=(shader)=>{
+  shader.uniforms.uTime={value:0};
+  shader.uniforms.uAmp={value:.22};
+  shader.vertexShader='uniform float uTime;uniform float uAmp;\n'+noiseGLSL+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',
+    'float n=snoise(vec3(position.x*1.5,position.y*1.5,position.z*1.5+uTime*0.45));\nvec3 transformed=position+normal*(n*uAmp);');
+  shaderRef=shader;
+};
+const blob=new THREE.Mesh(new THREE.SphereGeometry(1.05,180,180),mat);
+blob.position.x=1.15;
+scene.add(blob);
+scene.add(new THREE.AmbientLight(0xffffff,.12));
+const key=new THREE.DirectionalLight(0xffffff,1.35);key.position.set(2,2.5,3);scene.add(key);
+const rim=new THREE.PointLight(0xAFA9EC,7,20);rim.position.set(-4,1,2);scene.add(rim);
+const cool=new THREE.PointLight(0x5DCAA5,4,20);cool.position.set(2,-3,1.5);scene.add(cool);
+const back=new THREE.PointLight(0xffffff,3,20);back.position.set(0,3,-3);scene.add(back);
+
+let mx=0,my=0;
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;});
+const state={amp:.22,px:1.15,rotSpeed:.15};
+const clock=new THREE.Clock();
+function tick(){
+  const time=clock.getElapsedTime();
+  if(shaderRef){shaderRef.uniforms.uTime.value=time;shaderRef.uniforms.uAmp.value=state.amp;}
+  blob.rotation.y=time*state.rotSpeed;
+  blob.rotation.z=time*.07;
+  blob.position.x=state.px+mx*.15;
+  blob.position.y=-my*.15;
+  renderer.render(scene,camera);
+  requestAnimationFrame(tick);
+}
+function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();tick();
+
+gsap.to(state,{amp:.55,px:0,ease:'none',scrollTrigger:{trigger:'.sec2',start:'top bottom',end:'top 20%',scrub:.5}});
+gsap.to('#h1a',{y:-70,opacity:.15,ease:'none',scrollTrigger:{trigger:'.sec2',start:'top bottom',end:'top 30%',scrub:.5}});
+gsap.to('#h1b',{y:-40,opacity:.15,ease:'none',scrollTrigger:{trigger:'.sec2',start:'top bottom',end:'top 30%',scrub:.5}});
+gsap.to('#hsub',{opacity:0,ease:'none',scrollTrigger:{trigger:'.sec2',start:'top bottom',end:'top 60%',scrub:.5}});
+gsap.from('.sec2 h2',{y:90,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.sec2',start:'top 60%'}});
+gsap.utils.toArray('.row').forEach((r,i)=>{
+  gsap.from(r,{y:60,opacity:0,duration:.8,delay:i*.08,ease:'power3.out',scrollTrigger:{trigger:r,start:'top 88%'}});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# Cloudflare Pages. The design archive and the device lab are for local work only, so send them home.
+/design-previews/*  /  302
+/dev/*              /  302

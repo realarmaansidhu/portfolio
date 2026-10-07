@@ -1,0 +1,5 @@
+# If you've found a security issue on this site, thank you. Please email me and I'll get back to you.
+Contact: mailto:justarmaansidhu@gmail.com
+Expires: 2027-10-01T00:00:00.000Z
+Preferred-Languages: en, fr
+Canonical: https://realarmaansidhu.com/.well-known/security.txt

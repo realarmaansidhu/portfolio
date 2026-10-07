@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>v8 Device Lab</title>
+<meta name="description" content="The v8 flight running live on every phone, tablet and laptop size at once, on one synced scrubber.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05070d; --panel: #0b0f18; --line: rgba(159, 225, 203, 0.16); --line-2: rgba(255, 255, 255, 0.08);
+  --ink: #edede9; --ink-2: #aab4c8; --ink-3: #6c768c; --teal: #6fe0b2; --amber: #ffcf8f;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', system-ui, sans-serif; overflow: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+.top { position: fixed; inset: 0 0 auto 0; z-index: 10; display: flex; align-items: center; gap: 18px; padding: 12px 18px; border-bottom: 1px solid var(--line-2); background: rgba(5, 7, 13, 0.86); backdrop-filter: blur(10px); }
+.brand { font-size: 14px; letter-spacing: 0.5px; white-space: nowrap; }
+.brand b { font-weight: 700; }
+.brand span { color: var(--teal); font-family: var(--mono); font-size: 12px; margin-right: 8px; }
+.seg { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line-2); border-radius: 999px; }
+.seg button { padding: 6px 13px; border-radius: 999px; font-size: 13px; color: var(--ink-2); white-space: nowrap; transition: background 0.2s, color 0.2s; }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: rgba(111, 224, 178, 0.14); color: var(--teal); }
+.tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.tool { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 999px; font-size: 13px; color: var(--ink-2); white-space: nowrap; transition: border-color 0.2s, color 0.2s; }
+.tool:hover { border-color: var(--line); color: var(--ink); }
+.tool[aria-pressed="true"] { border-color: var(--line); color: var(--teal); }
+.tool .box { width: 12px; height: 12px; border: 1px solid currentColor; border-radius: 3px; display: grid; place-items: center; }
+.tool[aria-pressed="true"] .box::after { content: ''; width: 6px; height: 6px; border-radius: 1.5px; background: currentColor; }
+
+.chips { position: fixed; top: 57px; left: 0; right: 0; z-index: 9; display: none; gap: 6px; padding: 10px 18px; overflow-x: auto; border-bottom: 1px solid var(--line-2); background: rgba(5, 7, 13, 0.8); }
+body.single .chips { display: flex; }
+.chips button { padding: 5px 12px; border: 1px solid var(--line-2); border-radius: 999px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.chips button[aria-pressed="true"] { border-color: var(--line); color: var(--teal); background: rgba(111, 224, 178, 0.08); }
+.chips .rot { margin-left: auto; }
+
+#stage { position: fixed; left: 0; right: 0; top: 57px; bottom: 92px; }
+body.single #stage { top: 104px; }
+.dev { position: absolute; }
+.body { position: absolute; left: 0; top: 0; transform-origin: 0 0; background: #15171e; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.07), 0 30px 80px -20px rgba(0, 0, 0, 0.9); }
+.body.desktop { background: #101218; }
+.screen { position: absolute; overflow: hidden; background: #04060c; isolation: isolate; }
+.screen iframe { position: absolute; left: 0; border: 0; display: block; background: #04060c; }
+.label { position: absolute; left: 0; right: 0; text-align: center; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.label i { font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-left: 6px; }
+.home-btn { position: absolute; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1); }
+
+/* phone and browser chrome, drawn at the device's own CSS pixel size */
+.ui { position: absolute; left: 0; right: 0; z-index: 2; pointer-events: none; color: #fff; font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; }
+.status { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 16px; }
+.bar.status { justify-content: space-between; }
+.status .icons { display: flex; gap: 6px; align-items: center; }
+.status .icons b { display: block; background: #fff; border-radius: 2px; }
+.island { position: absolute; z-index: 3; background: #000; border-radius: 20px; pointer-events: none; }
+.homebar { position: absolute; z-index: 3; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: rgba(255, 255, 255, 0.85); pointer-events: none; }
+.bar { background: rgba(14, 16, 22, 0.94); display: flex; align-items: center; justify-content: center; }
+.pill { display: flex; align-items: center; justify-content: center; gap: 6px; height: 36px; border-radius: 12px; background: rgba(255, 255, 255, 0.1); font-size: 15px; color: rgba(255, 255, 255, 0.92); }
+.pill.android { border-radius: 20px; height: 40px; justify-content: flex-start; padding-left: 16px; }
+.dots { display: flex; justify-content: space-around; width: 100%; padding: 0 22px; }
+.dots i { width: 22px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.45); }
+.tabs { display: flex; align-items: flex-end; gap: 6px; height: 38px; padding: 0 12px; background: #1b1d24; }
+.tabs i { width: 12px; height: 12px; border-radius: 50%; margin: 0 2px 13px; }
+.tabs .t { height: 30px; width: 210px; border-radius: 8px 8px 0 0; background: #2a2c34; font-size: 12px; color: #ddd; padding: 8px 12px; font-style: normal; margin-left: 14px; }
+.menu { height: 30px; background: rgba(30, 32, 40, 0.96); display: flex; align-items: center; gap: 18px; padding: 0 14px; font-size: 13px; color: #ddd; }
+.addr { height: 42px; background: #2a2c34; display: flex; align-items: center; padding: 0 12px; }
+.addr .pill { width: 100%; justify-content: flex-start; padding-left: 14px; height: 30px; border-radius: 15px; font-size: 13px; background: #1b1d24; }
+
+.empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--ink-3); font-size: 14px; }
+
+.scrub { position: fixed; inset: auto 0 0 0; z-index: 10; height: 92px; display: flex; align-items: center; gap: 18px; padding: 0 22px; border-top: 1px solid var(--line-2); background: rgba(5, 7, 13, 0.9); backdrop-filter: blur(10px); }
+#play { width: 92px; flex: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 0; border-radius: 999px; border: 1px solid var(--line); color: var(--teal); font-size: 14px; }
+#play:hover { background: rgba(111, 224, 178, 0.1); }
+.track { position: relative; flex: 1; height: 56px; margin-top: -10px; }
+.track input { position: absolute; left: 0; right: 0; top: 4px; width: 100%; height: 22px; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; }
+.track input::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--teal) var(--fill, 0%), rgba(255, 255, 255, 0.1) var(--fill, 0%)); }
+.track input::-moz-range-track { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.1); }
+.track input::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--teal); }
+.track input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 4px rgba(111, 224, 178, 0.25); }
+.track input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--ink); }
+.ticks { position: absolute; left: 8px; right: 8px; top: 30px; height: 22px; }
+.ticks button { position: absolute; transform: translateX(-50%); font-size: 11px; color: var(--ink-3); white-space: nowrap; padding: 2px 4px; }
+.ticks button::before { content: ''; position: absolute; left: 50%; top: -8px; width: 1px; height: 6px; background: rgba(255, 255, 255, 0.2); }
+.ticks button:hover, .ticks button.on { color: var(--ink); }
+.ticks button:first-child { transform: none; padding-left: 0; }
+.ticks button:first-child::before { left: 0; }
+.readout { width: 150px; flex: none; text-align: right; font-family: var(--mono); font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+.readout b { display: block; color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: 0.5px; }
+.hint { position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%); font-size: 11px; color: var(--ink-3); pointer-events: none; white-space: nowrap; opacity: 0.8; }
+.hint kbd { font-family: var(--mono); font-size: 10px; padding: 0 4px; border: 1px solid var(--line-2); border-radius: 4px; color: var(--ink-2); }
+
+@media (max-width: 980px) {
+  .tool .lbl { display: none; }
+  .seg button { padding: 6px 9px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span>v8</span><b>Device Lab</b></div>
+  <nav class="seg" id="sets" aria-label="Device set"></nav>
+  <div class="tools">
+    <button class="tool" id="bars" type="button" aria-pressed="true" title="Draw the phone's status bar and the browser's address bar, and shrink the page to what a visitor really sees"><span class="box"></span><span class="lbl">Browser bars</span></button>
+    <button class="tool" id="replay" type="button" title="Reload every screen and play the entrance"><span>↻</span><span class="lbl">Replay entrance</span></button>
+    <a class="tool" href="../index.html" target="_blank" rel="noopener" title="Open the site full screen in a new tab"><span class="lbl">Open the site</span><span>↗</span></a>
+  </div>
+</header>
+<nav class="chips" id="chips" aria-label="Device"></nav>
+<main id="stage" aria-label="Live device previews"></main>
+<footer class="scrub">
+  <p class="hint">Scroll over any screen and every screen follows · <kbd>space</kbd> fly · <kbd>←</kbd> <kbd>→</kbd> chapters · hover a phone to tilt it · click to send a ripple</p>
+  <button id="play" type="button" aria-label="Fly through automatically"><span id="play-ic">▶</span><span id="play-tx">Fly</span></button>
+  <div class="track">
+    <input id="pos" type="range" min="0" max="1300" step="1" value="0" aria-label="Flight position">
+    <div class="ticks" id="ticks"></div>
+  </div>
+  <div class="readout"><b id="ro-ch">Portrait</b><span id="ro-p">0%</span></div>
+</footer>
+
+<script>
+// ---------- devices (CSS px). bars = [top, bottom] that the browser and OS cover in a normal browser tab;
+// safe = the env(safe-area-inset) values [t, r, b, l] the page then sees; full = insets with no browser bars (home-screen app).
+// Bar heights are approximate Safari (iOS 17–18), Chrome (Android) and desktop-browser sizes.
+const DEV = {
+  se:      { name: 'iPhone SE',         kind: 'phone',   ui: 'ios-old', w: 375,  h: 667,  r: 0,  bz: [16, 70], bars: [20, 94],  safe: [0, 0, 0, 0],   full: [20, 0, 0, 0] },
+  se_l:    { name: 'iPhone SE',         kind: 'phone',   ui: 'ios-old', w: 667,  h: 375,  r: 0,  bz: [70, 16], bars: [44, 0],   safe: [0, 0, 0, 0],   full: [0, 0, 0, 0] },
+  i15:     { name: 'iPhone 15',         kind: 'phone',   ui: 'ios',     w: 393,  h: 852,  r: 55, bz: [13, 13], bars: [54, 139], safe: [0, 0, 0, 0],   full: [59, 0, 34, 0] },
+  i15_l:   { name: 'iPhone 15',         kind: 'phone',   ui: 'ios',     w: 852,  h: 393,  r: 55, bz: [13, 13], bars: [52, 0],   safe: [0, 59, 21, 59], full: [0, 59, 21, 59] },
+  max:     { name: 'iPhone 16 Pro Max', kind: 'phone',   ui: 'ios',     w: 440,  h: 956,  r: 62, bz: [13, 13], bars: [62, 146], safe: [0, 0, 0, 0],   full: [62, 0, 34, 0] },
+  max_l:   { name: 'iPhone 16 Pro Max', kind: 'phone',   ui: 'ios',     w: 956,  h: 440,  r: 62, bz: [13, 13], bars: [52, 0],   safe: [0, 62, 21, 62], full: [0, 62, 21, 62] },
+  pixel:   { name: 'Pixel 8',           kind: 'phone',   ui: 'android', w: 412,  h: 915,  r: 48, bz: [12, 12], bars: [84, 24],  safe: [0, 0, 0, 0],   full: [28, 0, 24, 0] },
+  pixel_l: { name: 'Pixel 8',           kind: 'phone',   ui: 'android', w: 915,  h: 412,  r: 48, bz: [12, 12], bars: [56, 0],   safe: [0, 0, 0, 0],   full: [0, 0, 0, 0] },
+  mini:    { name: 'iPad mini',         kind: 'tablet',  ui: 'ipad',    w: 744,  h: 1133, r: 22, bz: [24, 24], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  mini_l:  { name: 'iPad mini',         kind: 'tablet',  ui: 'ipad',    w: 1133, h: 744,  r: 22, bz: [24, 24], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  air:     { name: 'iPad Air 11″',      kind: 'tablet',  ui: 'ipad',    w: 820,  h: 1180, r: 18, bz: [24, 24], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  air_l:   { name: 'iPad Air 11″',      kind: 'tablet',  ui: 'ipad',    w: 1180, h: 820,  r: 18, bz: [24, 24], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  pro:     { name: 'iPad Pro 13″',      kind: 'tablet',  ui: 'ipad',    w: 1032, h: 1376, r: 18, bz: [22, 22], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  pro_l:   { name: 'iPad Pro 13″',      kind: 'tablet',  ui: 'ipad',    w: 1376, h: 1032, r: 18, bz: [22, 22], bars: [74, 0],   safe: [0, 0, 20, 0],  full: [24, 0, 20, 0] },
+  laptop:  { name: 'MacBook Air 13″',   kind: 'desktop', ui: 'mac',     w: 1470, h: 956,  r: 10, bz: [18, 18], bars: [110, 0],  safe: [0, 0, 0, 0],   full: [0, 0, 0, 0] },
+  fhd:     { name: 'Desktop 1080p',     kind: 'desktop', ui: 'mac',     w: 1920, h: 1080, r: 4,  bz: [16, 16], bars: [110, 0],  safe: [0, 0, 0, 0],   full: [0, 0, 0, 0] },
+};
+const SETS = {
+  all:     { label: 'All',      ids: ['se', 'i15', 'pixel', 'mini', 'pro', 'i15_l', 'air_l', 'laptop'] },
+  phones:  { label: 'Phones',   ids: ['se', 'i15', 'max', 'pixel', 'i15_l'] },
+  tablets: { label: 'Tablets',  ids: ['mini', 'air', 'pro', 'air_l'] },
+  desktop: { label: 'Desktop',  ids: ['laptop', 'fhd'] },
+  single:  { label: 'One device', ids: [] },
+};
+const SINGLES = ['se', 'i15', 'max', 'pixel', 'mini', 'air', 'pro', 'laptop', 'fhd'];
+// [name, where the chapter starts, where its tick sits and jumps to]
+const CHAPTERS = [['Portrait', 0, 0], ['Into the eye', 0.05, 0.13], ['Tunnel', 0.22, 0.3], ['Sun', 0.66, 0.69], ['Vault', 0.72, 0.75], ['Key', 0.795, 0.86], ['Content', 1.0, 1.1]];
+const V_MAX = 1.3, EX_PER_V = 10;        // past the flight, the scrubber walks 3 screens into the content
+
+const $ = (id) => document.getElementById(id);
+const stage = $('stage'), pos = $('pos');
+const store = { get(k, d) { try { const v = localStorage.getItem('v8lab.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem('v8lab.' + k, JSON.stringify(v)); } catch (e) {} } };
+const q = new URLSearchParams(location.search);
+let set = q.get('set') in SETS ? q.get('set') : store.get('set', 'all');
+let single = DEV[q.get('device')] ? q.get('device') : store.get('single', 'i15');
+let bars = store.get('bars', true);
+let v = 0, playing = false, frames = [];
+
+// ---------- one device = a bezel, a screen, optional OS and browser chrome, and the live site in a frame ----------
+function geom(d) {
+  const top = bars ? d.bars[0] : 0, bottom = bars ? d.bars[1] : 0;
+  return { vw: d.w, vh: d.h - top - bottom, top, safe: bars ? d.safe : d.full };
+}
+function chrome(d, g) {
+  const land = d.w > d.h, el = [];
+  const status = (h, center) => `<div class="ui status" style="top:0;height:${h}px;padding:${center ? '0' : `0 ${d.ui === 'ios' ? 34 : 18}px`};${center ? 'justify-content:center;font-size:12px' : ''}">${center ? '9:41 AM' : `<span>9:41</span><span class="icons"><b style="width:17px;height:10px;opacity:.9"></b><b style="width:15px;height:10px;opacity:.9;border-radius:50% 50% 1px 1px"></b><b style="width:25px;height:11px;border-radius:3px"></b></span>`}</div>`;
+  if (d.ui === 'ios') {
+    if (!land) {
+      el.push(status(54));
+      el.push(`<div class="island" style="left:50%;top:11px;width:124px;height:36px;margin-left:-62px"></div>`);
+      if (bars) el.push(`<div class="ui bar" style="bottom:0;height:${d.bars[1]}px;flex-direction:column;justify-content:flex-start;padding:8px 14px 0;gap:14px"><div class="pill" style="width:100%">🔒 localhost</div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div>`);
+      el.push(`<div class="homebar" style="bottom:8px"></div>`);
+    } else {
+      el.push(`<div class="island" style="left:11px;top:50%;width:36px;height:124px;margin-top:-62px"></div>`);
+      if (bars) el.push(`<div class="ui bar" style="top:0;height:${d.bars[0]}px;padding:0 70px"><div class="pill" style="width:60%">🔒 localhost</div></div>`);
+      el.push(`<div class="homebar" style="bottom:7px"></div>`);
+    }
+  } else if (d.ui === 'ios-old') {
+    if (!land) {
+      el.push(`<div class="ui bar" style="top:0;height:20px;font-size:12px;font-weight:600">9:41 AM</div>`);
+      if (bars) el.push(`<div class="ui bar" style="bottom:0;height:${d.bars[1]}px;flex-direction:column;justify-content:flex-start;padding:8px 12px 0;gap:16px"><div class="pill" style="width:100%">🔒 localhost</div><div class="dots"><i></i><i></i><i></i><i></i><i></i></div></div>`);
+    } else if (bars) el.push(`<div class="ui bar" style="top:0;height:${d.bars[0]}px;padding:0 60px"><div class="pill" style="width:60%;height:30px">🔒 localhost</div></div>`);
+  } else if (d.ui === 'android') {
+    if (!land) {
+      el.push(`<div class="ui ${bars ? 'bar ' : ''}status" style="top:0;height:28px;padding:0 22px;font-size:14px"><span>9:41</span><span class="icons"><b style="width:14px;height:10px"></b><b style="width:9px;height:14px;border-radius:2px"></b></span></div>`);
+      el.push(`<div class="island" style="left:50%;top:9px;width:13px;height:13px;margin-left:-6px;border-radius:50%"></div>`);
+      if (bars) el.push(`<div class="ui bar" style="top:28px;height:56px;padding:0 10px"><div class="pill android" style="width:100%">localhost</div></div>`);
+      el.push(`<div class="ui ${bars ? 'bar' : ''}" style="bottom:0;height:24px"></div><div class="homebar" style="bottom:9px;width:108px;margin-left:-54px;height:4px"></div>`);
+    } else if (bars) el.push(`<div class="ui bar" style="top:0;height:56px;padding:0 60px"><div class="pill android" style="width:100%">localhost</div></div>`);
+  } else if (d.ui === 'ipad') {
+    el.push(`<div class="ui ${bars ? 'bar ' : ''}status" style="top:0;height:24px;padding:0 22px;font-size:13px;justify-content:space-between"><span>9:41&nbsp;&nbsp;Tue Oct 6</span><span class="icons"><b style="width:16px;height:10px;opacity:.9;border-radius:50% 50% 1px 1px"></b><b style="width:25px;height:11px;border-radius:3px"></b></span></div>`);
+    if (bars) el.push(`<div class="ui bar" style="top:24px;height:50px;padding:0 22px"><div class="pill" style="width:min(520px,62%);height:34px">🔒 localhost</div></div>`);
+    el.push(`<div class="homebar" style="bottom:7px;width:${land ? 300 : 220}px;margin-left:-${land ? 150 : 110}px"></div>`);
+  } else if (d.ui === 'mac' && bars) {
+    el.push(`<div class="ui" style="top:0;height:110px"><div class="menu"><b></b><span style="font-weight:600">Chrome</span><span>File</span><span>Edit</span><span>View</span><span style="margin-left:auto">Tue Oct 6  9:41</span></div><div class="tabs"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><em class="t">Armaan Sidhu</em></div><div class="addr"><div class="pill">realarmaansidhu.com</div></div></div>`);
+  }
+  return el.join('');
+}
+
+function frameURL(d, g, tierForce, dprCap, nointro) {
+  const p = new URLSearchParams({ embed: '1', dev: d.kind, safe: g.safe.join(','), dpr: dprCap.toFixed(2) });
+  if (tierForce) p.set('tier', tierForce);
+  if (nointro) p.set('nointro', '1');
+  return '../index.html?' + p.toString();
+}
+
+// Pack devices (in order) into rows, picking the split that shows them biggest.
+function pack(ids, W, H) {
+  const LAB = 26, GAP = 26, n = ids.length;
+  const box = ids.map((id) => { const d = DEV[id]; return { w: d.w + 2 * d.bz[0], h: d.h + 2 * d.bz[1] }; });
+  let best = null;
+  const tryRows = (rows) => {
+    let s = Infinity, hsum = 0;
+    for (const r of rows) {
+      const ws = r.reduce((a, i) => a + box[i].w, 0);
+      s = Math.min(s, (W - GAP * (r.length - 1)) / ws);
+      hsum += Math.max(...r.map((i) => box[i].h));
+    }
+    s = Math.min(s, (H - rows.length * LAB - GAP * (rows.length - 1)) / hsum);
+    if (!best || s > best.s) best = { s, rows };
+  };
+  const idx = [...Array(n).keys()];
+  tryRows([idx]);
+  for (let a = 1; a < n; a++) {
+    tryRows([idx.slice(0, a), idx.slice(a)]);
+    for (let b = a + 1; b < n; b++) tryRows([idx.slice(0, a), idx.slice(a, b), idx.slice(b)]);
+  }
+  const s = Math.min(best.s, 1);
+  const out = [];
+  const rowsH = best.rows.map((r) => Math.max(...r.map((i) => box[i].h)) * s);
+  const totalH = rowsH.reduce((a, b) => a + b, 0) + best.rows.length * LAB + GAP * (best.rows.length - 1);
+  let y = (H - totalH) / 2;
+  best.rows.forEach((r, ri) => {
+    const rw = r.reduce((a, i) => a + box[i].w * s, 0) + GAP * (r.length - 1);
+    let x = (W - rw) / 2;
+    for (const i of r) {
+      out[i] = { x, y: y + (rowsH[ri] - box[i].h * s) / 2, s, bw: box[i].w * s, bh: box[i].h * s };
+      x += box[i].w * s + GAP;
+    }
+    y += rowsH[ri] + LAB + GAP;
+  });
+  return out;
+}
+
+function ids() { return set === 'single' ? [single] : SETS[set].ids; }
+function stageRect() { const r = stage.getBoundingClientRect(); return { W: r.width - 48, H: r.height - 30, ox: 24, oy: 12 }; }
+function capFor(s) { return Math.max(0.5, Math.min(2, s * (window.devicePixelRatio || 1))); }
+
+function build({ intro = false } = {}) {
+  frames.forEach((f) => { f.dead = true; });
+  stage.innerHTML = '';
+  frames = [];
+  const list = ids(), { W, H, ox, oy } = stageRect(), lay = pack(list, W, H);
+  const many = list.length > 2;
+  list.forEach((id, i) => {
+    const d = DEV[id], g = geom(d), L = lay[i];
+    const wrap = document.createElement('div');
+    wrap.className = 'dev';
+    const body = document.createElement('div');
+    body.className = 'body' + (d.kind === 'desktop' ? ' desktop' : '');
+    body.style.cssText = `width:${d.w + 2 * d.bz[0]}px;height:${d.h + 2 * d.bz[1]}px;border-radius:${d.r + Math.min(d.bz[0], d.bz[1])}px`;
+    const screen = document.createElement('div');
+    screen.className = 'screen';
+    screen.style.cssText = `left:${d.bz[0]}px;top:${d.bz[1]}px;width:${d.w}px;height:${d.h}px;border-radius:${d.r}px`;
+    // a real phone would run its own tier; with many screens sharing one laptop GPU, all of them run light
+    const tierForce = many ? 'low' : null;
+    const iframe = document.createElement('iframe');
+    iframe.title = `${d.name} — live`;
+    iframe.style.cssText = `top:${g.top}px;width:${g.vw}px;height:${g.vh}px`;
+    iframe.src = frameURL(d, g, tierForce, capFor(L.s), !intro && v > 0.01);
+    screen.innerHTML = chrome(d, g);
+    screen.appendChild(iframe);
+    body.appendChild(screen);
+    if (d.ui === 'ios-old') {
+      const hb = document.createElement('div'); hb.className = 'home-btn';
+      const land = d.w > d.h, sz = 46;
+      hb.style.cssText = land ? `width:${sz}px;height:${sz}px;right:${(d.bz[0] - sz) / 2}px;top:${d.bz[1] + d.h / 2 - sz / 2}px` : `width:${sz}px;height:${sz}px;left:${d.bz[0] + d.w / 2 - sz / 2}px;bottom:${(d.bz[1] - sz) / 2}px`;
+      body.appendChild(hb);
+    }
+    wrap.appendChild(body);
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.innerHTML = `${d.name}<i>${g.vw}×${g.vh}</i>`;
+    wrap.appendChild(label);
+    stage.appendChild(wrap);
+    const f = { id, d, g, wrap, body, label, iframe, win: null, ready: false, expectY: -1, dead: false };
+    place(f, L, ox, oy);
+    iframe.addEventListener('load', () => attach(f));
+    frames.push(f);
+  });
+}
+function place(f, L, ox, oy) {
+  f.wrap.style.cssText = `left:${ox + L.x}px;top:${oy + L.y}px;width:${L.bw}px;height:${L.bh + 26}px`;
+  f.body.style.transform = `scale(${L.s})`;
+  f.label.style.top = `${L.bh + 8}px`;
+  f.s = L.s;
+}
+function relayout() {
+  if (!frames.length) return;
+  const { W, H, ox, oy } = stageRect(), lay = pack(frames.map((f) => f.id), W, H);
+  frames.forEach((f, i) => {
+    place(f, lay[i], ox, oy);
+    try { f.win && f.win.__v8 && f.win.__v8.setDprCap(capFor(f.s)); } catch (e) {}
+  });
+}
+
+// ---------- keeping every screen on the same moment of the flight ----------
+const vToPE = (x) => (x <= 1 ? { p: x, ex: 0 } : { p: 1, ex: (x - 1) * EX_PER_V });
+const peToV = ({ p, ex }) => (ex > 0 ? Math.min(V_MAX, 1 + ex / EX_PER_V) : p);
+function attach(f) {
+  if (f.dead) return;
+  let w;
+  try { w = f.iframe.contentWindow; } catch (e) { return; }
+  f.win = w;
+  const poll = () => {
+    if (f.dead) return;
+    const s = w.__v8 && w.__v8.state;
+    if (!s || !s.entered) { setTimeout(poll, 120); return; }
+    f.ready = true;
+    f.expectY = w.__v8.seek(vToPE(v).p, vToPE(v).ex);
+    w.addEventListener('scroll', () => onFrameScroll(f), { passive: true });
+    w.addEventListener('keydown', onKey);
+    // reaching into a screen takes the controls back from autoplay
+    w.addEventListener('wheel', () => playing && setPlaying(false), { passive: true });
+    w.addEventListener('pointerdown', () => playing && setPlaying(false), { passive: true });
+  };
+  poll();
+}
+function onFrameScroll(f) {
+  if (f.dead) return;
+  const y = f.win.scrollY;
+  if (Math.abs(y - f.expectY) <= 2) return;     // our own seek landing
+  f.expectY = -1;
+  setV(peToV(f.win.__v8.raw()), f);
+}
+function setV(x, from) {
+  v = Math.max(0, Math.min(V_MAX, x));
+  pos.value = Math.round(v * 1000);
+  paint();
+  for (const f of frames) {
+    if (f === from || !f.ready || f.dead) continue;
+    const { p, ex } = vToPE(v);
+    try { f.expectY = f.win.__v8.seek(p, ex); } catch (e) {}
+  }
+}
+function paint() {
+  pos.style.setProperty('--fill', (v / V_MAX * 100).toFixed(2) + '%');
+  let ch = CHAPTERS[0][0];
+  for (const [n, at] of CHAPTERS) if (v >= at - 0.001) ch = n;
+  $('ro-ch').textContent = ch;
+  $('ro-p').textContent = v <= 1 ? `flight ${Math.round(v * 100)}%` : `content +${((v - 1) * EX_PER_V).toFixed(1)} screens`;
+  document.querySelectorAll('#ticks button').forEach((b) => b.classList.toggle('on', b.textContent === ch));
+}
+
+// ---------- autoplay: a 40-second flight, then a slow drift into the content ----------
+let lastT = 0;
+function tick(t) {
+  if (!playing) return;
+  const dt = Math.min(0.05, (t - lastT) / 1000 || 0); lastT = t;
+  const rate = v < 0.22 ? 1 / 30 : v < 1 ? 1 / 44 : 1 / 30;
+  setV(v + dt * rate);
+  if (v >= V_MAX) { setPlaying(false); return; }
+  requestAnimationFrame(tick);
+}
+function setPlaying(on) {
+  playing = on;
+  $('play-ic').textContent = on ? '❚❚' : '▶';
+  $('play-tx').textContent = on ? 'Pause' : 'Fly';
+  if (on) { if (v >= V_MAX - 0.001) setV(0); lastT = performance.now(); requestAnimationFrame(tick); }
+}
+
+// ---------- controls ----------
+function renderSets() {
+  $('sets').innerHTML = Object.entries(SETS).map(([k, s]) => `<button type="button" data-set="${k}" aria-pressed="${k === set}">${s.label}</button>`).join('');
+  document.body.classList.toggle('single', set === 'single');
+  const base = single.replace(/_l$/, ''), land = single.endsWith('_l');
+  $('chips').innerHTML = SINGLES.map((id) => `<button type="button" data-dev="${id}" aria-pressed="${id === base}">${DEV[id].name}</button>`).join('')
+    + (DEV[base + '_l'] ? `<button type="button" class="rot" id="rot" aria-pressed="${land}">⟲ ${land ? 'Landscape' : 'Portrait'}</button>` : '');
+}
+$('sets').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-set]'); if (!b || b.dataset.set === set) return;
+  set = b.dataset.set; store.set('set', set); renderSets(); build(); relayout();
+});
+$('chips').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'rot') single = single.endsWith('_l') ? single.slice(0, -2) : single + '_l';
+  else if (b.dataset.dev) single = b.dataset.dev;
+  store.set('single', single); renderSets(); build(); relayout();
+});
+$('bars').setAttribute('aria-pressed', bars);
+$('bars').addEventListener('click', () => { bars = !bars; store.set('bars', bars); $('bars').setAttribute('aria-pressed', bars); build(); });
+$('replay').addEventListener('click', () => { setPlaying(false); setV(0); build({ intro: true }); });
+$('play').addEventListener('click', () => setPlaying(!playing));
+pos.addEventListener('input', () => { setPlaying(false); setV(+pos.value / 1000); });
+$('ticks').innerHTML = CHAPTERS.map(([n, , go]) => `<button type="button" style="left:${(go / V_MAX * 100).toFixed(2)}%" data-go="${go}">${n}</button>`).join('');
+$('ticks').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { setPlaying(false); setV(+b.dataset.go); } });
+function onKey(e) {
+  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName) && e.target !== pos) return;
+  if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+  else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+    e.preventDefault(); setPlaying(false);
+    const at = CHAPTERS.map((c) => c[2]);
+    const next = e.code === 'ArrowRight' ? at.find((a) => a > v + 0.01) : [...at].reverse().find((a) => a < v - 0.01);
+    if (next != null) setV(next); else if (e.code === 'ArrowRight') setV(V_MAX);
+  }
+}
+addEventListener('keydown', onKey);
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(relayout, 120); });
+
+renderSets();
+paint();
+build({ intro: true });
+</script>
+</body>
+</html>

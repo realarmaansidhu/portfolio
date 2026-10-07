@@ -1,2 +1,6 @@
 .gitigniore
 .vscode
+.venv
+.DS_Store
+design-previews/face-points.js
+tools/*.jpg
