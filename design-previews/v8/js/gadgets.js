@@ -1,5 +1,5 @@
-// Three gadgets drawn in stars, floating around the portrait: Meta Ray-Ban Display glasses, a DJI Osmo Pocket 3
-// and a DJI Mini 4 Pro. After the vault opens they come back and drift past behind the content.
+// Four things drawn in stars, floating around the portrait: Meta Ray-Ban Display glasses, a DJI Osmo Pocket 3,
+// a DJI Mini 4 Pro and a Tesla Model Y. After the vault opens they come back and drift past behind the content.
 import * as THREE from 'three';
 
 const SPRITE_FRAG = /* glsl */`
@@ -45,8 +45,8 @@ void main(){
   vec3 p = position;
   if (aPivot.w > .5) {
     vec3 q = p - aPivot.xyz;
-    float ang = aPivot.w < 1.5 ? uTime * 11. : aPivot.w < 2.5 ? -uTime * 11. : sin(uTime * .55) * .7;
-    q.xz = rot2(ang) * q.xz;
+    if (aPivot.w > 3.5) q.yz = rot2(uTime * 3.2) * q.yz;   // wheels roll forward
+    else q.xz = rot2(aPivot.w < 1.5 ? uTime * 11. : aPivot.w < 2.5 ? -uTime * 11. : sin(uTime * .55) * .7) * q.xz;
     p = aPivot.xyz + q;
   }
   float ui = clamp(uIntro * 1.5 - hs * .3 - .2, 0., 1.); ui = 1. - pow(1. - ui, 3.);   // every point lands by the end of the intro
@@ -66,6 +66,7 @@ void main(){
   else if (kind < 6.5){ col = vec3(.82, .9, 1.) * 1.15; sz = .032; }
   else if (kind < 7.5){ col = vec3(.6, .75, 1.) * .2; sz = .036; }
   else                { col = vec3(.36, .79, .65) * 1.3; sz = .032; }
+  if (uStyle > 2.5) col *= kind < .5 ? .7 : kind < 1.5 ? 1.2 : 1.;   // the car: faint panels, bright outline
   col *= mix(1.5, 1., ui);
 
   vec4 mv = modelViewMatrix * vec4(p, 1.);
@@ -100,12 +101,15 @@ export function createGadgets(data) {
   // the glasses are drawn from the front hinge line backwards, so shift them to rotate about their middle
   const glasses = makeOne(data.glasses, 0, 0.8);
   glasses.points.position.z = 0.55;
-  return { glasses, pocket: makeOne(data.pocket, 1, 0.72), drone: makeOne(data.drone, 2, 0.95) };
+  // the car is drawn standing on y = 0; lift it so it turns about its middle
+  const car = makeOne(data.car, 3, 1.15);
+  car.points.position.y = -0.46;
+  return { glasses, pocket: makeOne(data.pocket, 1, 0.72), drone: makeOne(data.drone, 2, 0.95), car };
 }
 
 // Draw only a share of each gadget's points (tiers) and keep their brightness steady.
 export function setGadgetBudget(gadgets, frac) {
-  for (const k of ['glasses', 'pocket', 'drone']) {
+  for (const k of ['glasses', 'pocket', 'drone', 'car']) {
     const o = gadgets[k], n = Math.max(600, Math.round(o.total * frac));
     o.geometry.setDrawRange(0, n);
     o.u.uSizeK.value = Math.sqrt(o.total / n);

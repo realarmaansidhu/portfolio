@@ -16,7 +16,7 @@ import { Post } from './post.js';
 import { Sound } from './audio.js';
 import { computeLayout } from './layout.js';
 import { PORTRAIT } from './portrait-meta.js';
-import { initSite } from './site.js';
+import { initSite, layoutTop } from './site.js';
 
 THREE.ColorManagement.enabled = false;
 
@@ -75,7 +75,7 @@ const sound = new Sound();
 if (EMBED && Q.get('safe')) Q.get('safe').split(',').forEach((v, i) => document.documentElement.style.setProperty(['--safe-t', '--safe-r', '--safe-b', '--safe-l'][i], (+v || 0) + 'px'));
 
 let mainSys = null, laptopSys = null, occluder = null, gadgets = null;
-const GADGETS = ['glasses', 'pocket', 'drone'];
+const GADGETS = ['glasses', 'pocket', 'drone', 'car'];
 
 // ---------- scroll → flight: beats anchored to the page, so the words and the flight stay in step ----------
 // [scroll y, flight progress]: the hero holds · dive into the eye · the tunnel runs under About, Work and Projects ·
@@ -85,7 +85,7 @@ let beats = [[0, 0], [1, 1]];
 const docTop = (el) => el.getBoundingClientRect().top + scrollY;
 function computeBeats() {
   const vh = innerHeight, fTop = docTop(flightEl), fEnd = fTop + flightEl.offsetHeight;
-  const k = [[0, 0], [0.25 * vh, 0.05], [fTop - 0.62 * vh, 0.22], [fEnd - 0.5 * vh, 0.66], [docTop(vaultBeat) - 0.1 * vh, 0.72], [docTop(afterEl) - 0.82 * vh, 1]];
+  const k = [[0, 0], [0.25 * vh, 0.05], [fTop - 0.62 * vh, 0.22], [fEnd - 0.35 * vh, 0.66], [docTop(vaultBeat) - 0.1 * vh, 0.72], [docTop(afterEl) - 0.82 * vh, 1]];
   for (let i = 1; i < k.length; i++) k[i][0] = Math.max(k[i][0], k[i - 1][0] + 1);
   beats = k;
 }
@@ -159,7 +159,7 @@ if (!device.coarse && !REDUCED && !SHOT && !EMBED) {
 }
 // jumping to a section flies through whatever lies between, at a pace that grows with the distance
 function scrollToTarget(target) {
-  const y = typeof target === 'number' ? target : target.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+  const y = typeof target === 'number' ? target : layoutTop(target) - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
   if (lenis) lenis.scrollTo(y, { duration: Math.min(3.4, 1 + (Math.abs(y - scrollY) / innerHeight) * 0.22) });
   else window.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
@@ -327,12 +327,13 @@ const camR = new THREE.Vector3(), camU = new THREE.Vector3(), camF = new THREE.V
 // After the vault opens, the gadgets and trilliums drift up behind the content at a fraction of the scroll speed,
 // wrapping around, so there is always something passing in the back. x is across the screen, d is depth in front of the camera.
 const FILLERS = [
-  { o: 'drone', x: 0.64, d: 7.5, ph: 0.12, sp: 0.21, size: 0.2 },
-  { o: 'trill0', x: -0.58, d: 11, ph: 0.3, sp: 0.15, size: 0.2 },
-  { o: 'glasses', x: -0.66, d: 6.5, ph: 0.5, sp: 0.24, size: 0.15 },
-  { o: 'trill1', x: 0.6, d: 12, ph: 0.68, sp: 0.13, size: 0.2 },
-  { o: 'pocket', x: 0.7, d: 7, ph: 0.86, sp: 0.2, size: 0.17 },
-  { o: 'trill2', x: -0.45, d: 13, ph: 0.98, sp: 0.12, size: 0.22 },
+  { o: 'drone', x: 0.64, d: 7.5, ph: 0.1, sp: 0.21, size: 0.2 },
+  { o: 'trill0', x: -0.58, d: 11, ph: 0.24, sp: 0.15, size: 0.2 },
+  { o: 'glasses', x: 0.6, d: 6.5, ph: 0.38, sp: 0.24, size: 0.15 },
+  { o: 'trill1', x: -0.62, d: 12, ph: 0.52, sp: 0.13, size: 0.2 },
+  { o: 'pocket', x: 0.7, d: 7, ph: 0.66, sp: 0.2, size: 0.17 },
+  { o: 'car', x: -0.6, d: 8.5, ph: 0.8, sp: 0.18, size: 0.2 },
+  { o: 'trill2', x: 0.5, d: 13, ph: 0.94, sp: 0.12, size: 0.22 },
 ];
 function fillerSpot(f, i, out) {
   const cyc = (((f.ph + extra * f.sp) % 1) + 1) % 1, ny = -1.55 + cyc * 3.1;

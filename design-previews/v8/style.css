@@ -135,17 +135,22 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- the page: full width, riding over the flight ---------- */
 .content {
-  position: relative; z-index: 20; container-type: inline-size; width: 100%; max-width: 1180px; margin: 0 auto;
+  position: relative; z-index: 20; container-type: inline-size; width: 100%; max-width: 1180px; margin: 0 auto; display: flow-root;
   padding: 0 calc(var(--gutter) + var(--safe-r)) 0 calc(var(--gutter) + var(--safe-l));
 }
 #after { padding-bottom: calc(6vh + var(--safe-b)); }
-/* the two beats where the flight has the screen to itself */
-.beat { height: calc(var(--vhs) * 1.1); }
-.beat-vault { height: calc(var(--vhs) * 2.6); }
+/* the two short beats where the flight has the screen to itself: through the sun, then the vault opens */
+.beat { height: calc(var(--vhs) * 0.7); }
+.beat-vault { height: calc(var(--vhs) * 1.5); }
 
-.sec { padding-top: 34vh; scroll-margin-top: calc(-26vh + 68px + var(--safe-t)); }
-#about { padding-top: 6vh; scroll-margin-top: calc(-2vh + 68px + var(--safe-t)); }
-#writing { padding-top: 4vh; scroll-margin-top: calc(68px + var(--safe-t)); }
+/* Each section rises into place as it arrives and settles back as it leaves. site.js sets --in (0 → 1) and
+   --out (0 → 1) from the scroll position; 2D transforms only, so the frosted cards keep their blur everywhere. */
+.sec {
+  margin-top: 30vh; scroll-margin-top: calc(68px + 4vh + var(--safe-t)); --in: 1; --out: 0; transform-origin: 50% 0;
+  transform: translate3d(0, calc((1 - var(--in)) * 24vh - var(--out) * 7vh), 0) scale(calc(1 - (1 - var(--in)) * 0.1 - var(--out) * 0.06));
+}
+#about { margin-top: 6vh; }
+#education { margin-top: 4vh; }
 .sec-head { margin-bottom: 26px; }
 .idx { font: 500 12px var(--mono); letter-spacing: 0.2em; color: var(--teal); margin-bottom: 10px; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9); }
 .idx::after { content: ''; display: inline-block; vertical-align: middle; width: 34px; height: 1px; margin-left: 12px; background: rgba(111, 224, 178, 0.55); }
@@ -189,7 +194,6 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .portrait { max-width: 380px; }
 .card.about-text p { font-size: 15.5px; line-height: 1.72; color: var(--ink-2); margin-bottom: 14px; }
 .card.about-text p:last-child { margin-bottom: 0; }
-.card.about-text .lede { font-size: clamp(18px, 4.8vw, 22px); line-height: 1.45; color: var(--ink); }
 .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; margin-top: 14px; }
 .facts dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
 .facts dd { font-size: 15px; color: var(--ink); line-height: 1.35; }
@@ -261,23 +265,35 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .content .cert .mono { font-size: 9px; letter-spacing: 0.1em; margin: 0 3px 4px; }
 .content .cert h4 { font-size: 13.5px; margin: 0 3px; }
 
-/* 08 networking: the Prime Minister photo leads */
+/* networking: both photos at the same height. On phones the Prime Minister photo is cropped wide so it doesn't tower
+   over the group shot; side by side, each card grows in proportion to its photo's width, which evens the heights out. */
 .netgrid { display: grid; gap: 14px; }
-.netgrid figure { padding: 0; overflow: hidden; }
+.netgrid figure { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
 .netgrid img { width: 100%; height: auto; display: block; }
-.pm img { aspect-ratio: 4 / 4.2; object-fit: cover; object-position: 50% 30%; }
-.netgrid figcaption { padding: 18px 20px 20px; }
-.content .pm h3 { font-size: 24px; color: var(--ink); }
+.pm img { aspect-ratio: 5 / 4; object-fit: cover; object-position: 50% 30%; }
+.netgrid figcaption { padding: 18px 20px 20px; flex: 1; }
+.content .netgrid h3 { font-size: 20px; color: var(--ink); }
 
-/* 09 contact */
-.contact { max-width: 720px; }
+/* contact: details on the left, everywhere else you can find me on the right */
+.contact { display: grid; gap: 30px; }
+.contact-links .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-2); margin-bottom: 8px; }
+.contact-links ul { list-style: none; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.content .contact-links a {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 14px; padding: 15px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-decoration: none; color: var(--ink); transition: background 0.25s, padding 0.25s;
+}
+.contact-links b { font-weight: 500; font-size: 17px; }
+.contact-links span { font: 12px var(--mono); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact-links i { font-style: normal; color: var(--teal); transition: transform 0.25s; }
+@media (hover: hover) {
+  .content .contact-links a:hover { background: rgba(111, 224, 178, 0.06); padding-left: 10px; }
+  .contact-links a:hover i { transform: translate(3px, -3px); }
+}
 .card .contact-lede { font-size: clamp(17px, 4.6vw, 21px); line-height: 1.5; color: var(--ink); margin-bottom: 18px; }
 .mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .content .mail { font-size: clamp(18px, 5.4vw, 30px); font-weight: 500; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; border-bottom: 1px solid rgba(111, 224, 178, 0.5); }
 .copy { min-height: 36px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--line); font: 11px var(--mono); letter-spacing: 0.12em; color: var(--teal-2); }
-.socials { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.content .socials a { display: inline-flex; align-items: center; min-height: 42px; padding: 0 15px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.03); text-decoration: none; color: var(--ink-2); font-size: 14px; }
-@media (hover: hover) { .content .socials a:hover, .copy:hover { border-color: rgba(111, 224, 178, 0.5); color: var(--ink); } }
+@media (hover: hover) { .copy:hover { border-color: rgba(111, 224, 178, 0.5); color: var(--ink); } }
 .site-foot { margin-top: 12vh; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 6px; font-size: 13px; color: var(--ink-3); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9); }
 .site-foot b { color: var(--ink-2); font-weight: 500; }
 .content .site-foot a { color: var(--ink-3); }
@@ -298,7 +314,14 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   .awards { grid-template-columns: 1fr 1fr; }
   .award.feature { grid-column: 1 / -1; display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; }
   .award.feature img { height: 100%; aspect-ratio: auto; min-height: 260px; }
-  .netgrid { grid-template-columns: 1.05fr 1fr; align-items: start; }
+  .netgrid { display: flex; align-items: stretch; }
+  .netgrid .pm { flex: 0.919 1 0; }
+  .netgrid .event { flex: 1.9 1 0; }
+  .pm img { aspect-ratio: 1100 / 1197; }
+  .site-foot { display: flex; justify-content: space-between; gap: 20px; }
+}
+@container (min-width: 760px) {
+  .contact { grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; padding: 40px 44px; }
 }
 @container (min-width: 860px) {
   .about-grid { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 28px; align-items: start; }
@@ -336,10 +359,11 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   .content h2 { font-size: clamp(30px, 13vh, 54px); }
   .menu-inner { padding-top: calc(62px + var(--safe-t)); }
   .menu-list a { padding: 8px 0; font-size: 17px; }
-  .sec { padding-top: 40vh; }
+  .sec { margin-top: 40vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hint i, .sound i { animation: none !important; }
   .reveal { transition: opacity 0.4s ease; transform: none; }
+  .sec { transform: none; }
 }

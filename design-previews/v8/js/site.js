@@ -44,12 +44,40 @@ export function initSite({ scrollTo, lockScroll }) {
   if (year) year.textContent = String(new Date().getFullYear());
 
   loadEssays();
+  sectionMotion();
 
   // a link straight to a section (…/#work) still plays the entrance, then flies there
   const hash = location.hash.slice(1);
   return {
     onEnter() { if (hash && document.getElementById(hash)) setTimeout(() => go(hash), 1400); },
   };
+}
+
+// Where an element sits in the page, ignoring transforms (the sections below are moved by them).
+export function layoutTop(el) { let t = 0; for (let n = el; n; n = n.offsetParent) t += n.offsetTop; return t; }
+
+// Each section rises into place as it scrolls in from the bottom, and settles back as it leaves the top.
+// Drives --in and --out on every .sec (the transform itself lives in style.css), and only writes when a value moves.
+function sectionMotion() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const secs = [...document.querySelectorAll('.sec')].map((el) => ({ el, top: 0, h: 0, i: -1, o: -1 }));
+  const measure = () => { for (const s of secs) { s.top = layoutTop(s.el); s.h = s.el.offsetHeight; } };
+  measure();
+  addEventListener('resize', measure);
+  if (window.ResizeObserver) new ResizeObserver(measure).observe(document.body);
+  const clamp = (x) => Math.min(1, Math.max(0, x));
+  const tick = () => {
+    const vh = innerHeight, y = scrollY;
+    for (const s of secs) {
+      const top = s.top - y, bottom = top + s.h;
+      const i = Math.round((1 - Math.pow(1 - clamp((vh * 0.98 - top) / (vh * 0.62)), 3)) * 1000) / 1000;
+      const o = Math.round(clamp((vh * 0.32 - bottom) / (vh * 0.5)) * 1000) / 1000;
+      if (i !== s.i) { s.el.style.setProperty('--in', i); s.i = i; }
+      if (o !== s.o) { s.el.style.setProperty('--out', o); s.o = o; }
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
 // Latest posts from Medium. The feed is untrusted text, so it only ever lands in textContent and https links.

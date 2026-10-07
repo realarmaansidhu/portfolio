@@ -347,8 +347,94 @@ function buildDrone(N, R) {
   return A;
 }
 
-export function buildGadgets({ NG = 5200, NP = 4600, ND = 6800, seed = 23 }) {
+// Tesla Model Y (the 2025 refresh): a tall fastback crossover with a glass roof, full-width light bars front and back,
+// and wheels that turn. Length runs along z with the nose at +z; the ground is y = 0.
+// pivot mode 4 spins a wheel about its axle.
+function buildCar(N, R) {
+  const A = gadgetArrays(N);
+  const prof = [[1.1, 0.44], [1.05, 0.52], [0.42, 0.6], [-0.02, 0.93], [-0.5, 0.935], [-0.95, 0.7], [-1.08, 0.665], [-1.1, 0.6]];
+  const top = (z) => {
+    for (let i = 1; i < prof.length; i++) {
+      const [z0, y0] = prof[i - 1], [z1, y1] = prof[i];
+      if (z <= z0 && z >= z1) { const t = (z0 - z) / (z0 - z1), e = t * t * (3 - 2 * t); return y0 + (y1 - y0) * (0.35 * t + 0.65 * e); }
+    }
+    return 0.5;
+  };
+  const belt = (z) => (z > 0.42 || z < -0.95 ? top(z) : 0.62 + 0.06 * ((0.42 - z) / 1.37));
+  const BOT = 0.14;
+  const halfW = (y, z) => {
+    let w = 0.46;
+    const b = belt(z), t = top(z);
+    if (y > b && t > b) w -= 0.12 * Math.min(1, (y - b) / (t - b));
+    if (z > 0.85) w *= 1 - 0.32 * ((z - 0.85) / 0.25) ** 2;
+    if (z < -0.95) w *= 1 - 0.22 * ((-0.95 - z) / 0.15) ** 2;
+    return w;
+  };
+  const wheels = [[0.67, 1], [-0.67, 1]].flatMap(([z]) => [[0.43, 0.19, z], [-0.43, 0.19, z]]);
+  const inArch = (z, y) => wheels.some((w) => Math.hypot(z - w[2], y - w[1]) < 0.245);
+  // Most points go to what makes it read as a Model Y from the side: the fastback roofline, the window outline,
+  // the light bars and the wheels. The panels in between are only a faint fill.
+  while (A.n < N) {
+    const r = R(), side = R() < 0.5 ? -1 : 1;
+    if (r < 0.17) {                       // body sides below the windows, with the wheel arches cut out
+      const z = -1.08 + R() * 2.16, y = BOT + R() * (belt(z) - BOT);
+      if (inArch(z, y)) continue;
+      put(A, R, side * halfW(y, z), y, z, 0);
+    } else if (r < 0.22) {                // hood and the short rear deck
+      const z = R() < 0.82 ? 0.42 + R() * 0.64 : -1.08 + R() * 0.13, w = halfW(top(z), z) * (R() * 2 - 1);
+      put(A, R, w, top(z) - 0.02 * (w / 0.46) ** 2, z, 0);
+    } else if (r < 0.25) {                // smooth nose (no grille)
+      const x = (R() * 2 - 1) * 0.4, y = 0.15 + R() * 0.32;
+      put(A, R, x, y, 1.1 - 0.12 * (x / 0.42) ** 2 - 0.05 * ((y - 0.3) / 0.17) ** 2, 0);
+    } else if (r < 0.27) {                // tail
+      const x = (R() * 2 - 1) * 0.4, y = 0.18 + R() * 0.46;
+      put(A, R, x, y, -1.1 + 0.08 * (x / 0.42) ** 2, 0);
+    } else if (r < 0.33) {                // windshield, glass roof and rear glass
+      const z = -0.95 + R() * 1.37, t = top(z), w = halfW(t, z) * 0.96 * (R() * 2 - 1);
+      put(A, R, w, t - 0.01, z, 2);
+    } else if (r < 0.37) {                // side windows
+      const z = -0.9 + R() * 1.27, b = belt(z), t = top(z) - 0.03, y = b + R() * Math.max(0, t - b);
+      put(A, R, side * (halfW(y, z) + 0.004), y, z, 2);
+    } else if (r < 0.46) {                // the silhouette: nose to tail along the top edge
+      const z = -1.1 + R() * 2.2, y = top(z);
+      put(A, R, side * halfW(y, z) * 0.97, y, z, 1);
+    } else if (r < 0.58) {                // character lines: beltline, window frame, pillars, rocker, door seams
+      const f = R();
+      let z, y;
+      if (f < 0.24) { z = -0.95 + R() * 1.37; y = belt(z); }
+      else if (f < 0.44) { z = -0.9 + R() * 1.27; y = top(z) - 0.03; }
+      else if (f < 0.56) { z = R() < 0.5 ? -0.22 : 0.38 - 0.2 * R(); y = belt(z) + R() * (top(z) - 0.03 - belt(z)); if (z > 0.2) z = 0.38 - (y - belt(0.38)) * 0.9; }
+      else if (f < 0.78) { z = -1.0 + R() * 2.0; y = BOT; if (inArch(z, y + 0.02)) continue; }
+      else { const zs = [0.36, -0.22, -0.66]; z = zs[Math.floor(R() * 3)]; y = BOT + R() * (belt(z) - BOT); if (inArch(z, y)) continue; }
+      put(A, R, side * (halfW(y, z) + 0.005), y, z, 1);
+    } else if (r < 0.63) {                // wheel arch outlines
+      const w = wheels[Math.floor(R() * 4)], a = R() * Math.PI, rr = 0.245;
+      const z = w[2] + Math.cos(a) * rr, y = w[1] + Math.sin(a) * rr;
+      if (y < BOT) continue;
+      put(A, R, Math.sign(w[0]) * (halfW(y, z) + 0.005), y, z, 1);
+    } else if (r < 0.67) {                // front light bar, and the headlamps below it
+      if (R() < 0.6) { const x = (R() * 2 - 1) * 0.42; put(A, R, x, 0.515 + (R() - 0.5) * 0.008, 1.075 - 0.12 * (x / 0.42) ** 2, 4); }
+      else { const x = side * (0.25 + R() * 0.15); put(A, R, x, 0.43 + (R() - 0.5) * 0.02, 1.08 - 0.12 * (x / 0.42) ** 2, 4); }
+    } else if (r < 0.7) {                 // rear light bar, red
+      const x = (R() * 2 - 1) * 0.43; put(A, R, x, 0.625 + (R() - 0.5) * 0.012, -1.095 + 0.08 * (x / 0.42) ** 2, 5, 0);
+    } else if (r < 0.71) {                // mirrors
+      const [a, b] = disc(R, 0.035); put(A, R, side * (0.5 + R() * 0.04), 0.64 + b, 0.33 + a, R() < 0.4 ? 1 : 0);
+    } else {                              // wheels: tyre, rim and five spokes, all turning about the axle
+      const w = wheels[Math.floor(R() * 4)], out = Math.sign(w[0]), pv = [w[0], w[1], w[2], 4], f = R();
+      if (f < 0.24) { const a = R() * 6.2832; put(A, R, w[0] + (R() - 0.5) * 0.12, w[1] + Math.sin(a) * 0.19, w[2] + Math.cos(a) * 0.19, 0, 0, 0, pv); }
+      else if (f < 0.42) { const a = R() * 6.2832, rr = 0.15 + R() * 0.04; put(A, R, w[0] + out * 0.06, w[1] + Math.sin(a) * rr, w[2] + Math.cos(a) * rr, 0, 0, 0, pv); }
+      else if (f < 0.64) { const a = R() * 6.2832, rr = 0.145 + R() * 0.01; put(A, R, w[0] + out * 0.062, w[1] + Math.sin(a) * rr, w[2] + Math.cos(a) * rr, 1, 0, 0, pv); }
+      else if (f < 0.94) {
+        const k = Math.floor(R() * 5), a = (k / 5) * 6.2832 + (R() - 0.5) * 0.12, rr = 0.03 + R() * 0.11;
+        put(A, R, w[0] + out * 0.064, w[1] + Math.sin(a) * rr, w[2] + Math.cos(a) * rr, 4, 0, 0, pv);
+      } else { const [a, b] = disc(R, 0.03); put(A, R, w[0] + out * 0.066, w[1] + b, w[2] + a, 4, 0, 0, pv); }
+    }
+  }
+  return A;
+}
+
+export function buildGadgets({ NG = 5200, NP = 4600, ND = 6800, NC = 9000, seed = 23 }) {
   const R = mulberry32(seed);
   const strip = (A) => ({ pos: A.pos, part: A.part, pivot: A.pivot, scat: A.scat });
-  return { glasses: strip(buildGlasses(NG, R)), pocket: strip(buildPocket(NP, R)), drone: strip(buildDrone(ND, R)) };
+  return { glasses: strip(buildGlasses(NG, R)), pocket: strip(buildPocket(NP, R)), drone: strip(buildDrone(ND, R)), car: strip(buildCar(NC, mulberry32(seed + 7))) };
 }

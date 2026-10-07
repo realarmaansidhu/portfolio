@@ -63,10 +63,12 @@ export function computeLayout(w, h, S0, vault, measured = {}) {
     const dz = hero.pos.z - z;
     return { pos: new THREE.Vector3(hero.pos.x + nx * dz * tH * aspect, hero.pos.y + ny * dz * tH, z), world: size * dz * tH, rot };
   };
+  // Upright: the car takes the wide spot above your head, the glasses and the Pocket 3 the two narrow strips beside it.
   const gadgets = {
-    drone: spot([0.6, 0.64, -1.0, 0.17], phoneLand ? [0.74, 0.58, -1.5, 0.22] : [0.74, 0.68, -1.5, 0.2], new THREE.Euler(0.85, -0.55, 0.1)),
-    glasses: spot([0.02, 0.79, 0.6, 0.12], phoneLand ? [0.16, 0.7, 0.2, 0.15] : [0.16, 0.74, 0.2, 0.14], new THREE.Euler(0.14, 0.62, 0.05)),
-    pocket: spot([0.8, 0.24, 0.6, 0.13], phoneLand ? [-0.52, -0.56, 0.6, 0.2] : [-0.56, -0.6, 0.6, 0.18], new THREE.Euler(0.08, -0.35, 0.16)),
+    car: spot([0.0, 0.77, 0.4, 0.17], phoneLand ? [-0.56, 0.6, 0.4, 0.19] : [-0.6, 0.68, 0.4, 0.17], new THREE.Euler(0.2, -1.15, 0.0)),
+    drone: spot([0.6, 0.62, -1.0, 0.16], phoneLand ? [0.74, 0.58, -1.5, 0.22] : [0.74, 0.68, -1.5, 0.2], new THREE.Euler(0.85, -0.55, 0.1)),
+    glasses: spot([0.72, 0.27, 0.6, 0.09], phoneLand ? [0.16, 0.7, 0.2, 0.15] : [0.16, 0.74, 0.2, 0.14], new THREE.Euler(0.14, 0.62, 0.05)),
+    pocket: spot([-0.82, 0.3, 0.6, 0.11], phoneLand ? [-0.52, -0.56, 0.6, 0.2] : [-0.56, -0.6, 0.6, 0.18], new THREE.Euler(0.08, 0.35, -0.12)),
   };
 
   // the vault, centred for the key ceremony; once it opens the page scrolls over it
