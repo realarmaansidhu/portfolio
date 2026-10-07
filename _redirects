@@ -1,0 +1,3 @@
+# Netlify. The design archive and the device lab are for local work only.
+/design-previews/*  /404.html  404!
+/dev/*              /404.html  404!

@@ -1,6 +1,6 @@
 // Tunnel and vault effects: Matrix glyph rain flowing down the tunnel, three trilliums
 // that bloom open as you pass, and the shockwave ring when the vault locks.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 import { PATH_GLSL, TUN } from './path.js';
 
 const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ0123456789Z:=*+<>';

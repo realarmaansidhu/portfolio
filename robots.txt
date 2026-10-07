@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /design-previews/
+Disallow: /dev/
+
+Sitemap: https://realarmaansidhu.com/sitemap.xml

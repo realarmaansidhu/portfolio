@@ -15,6 +15,7 @@ export function initSite({ scrollTo, lockScroll }) {
     lockScroll(open);
     if (open) menu.querySelector('a').focus({ preventScroll: true });
   };
+  window.__siteMenu = true;   // tells boot.js the full menu is wired up
   btn.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
   menu.addEventListener('click', (e) => { if (e.target === menu) setMenu(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) { setMenu(false); btn.focus(); } });
@@ -45,6 +46,8 @@ export function initSite({ scrollTo, lockScroll }) {
 
   loadEssays();
   sectionMotion();
+  cardGlow();
+  hello();
 
   // a link straight to a section (…/#work) still plays the entrance, then flies there
   const hash = location.hash.slice(1);
@@ -78,6 +81,29 @@ function sectionMotion() {
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
+}
+
+// On a mouse or trackpad, a soft light follows the pointer across whichever card it's over.
+function cardGlow() {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  let card = null;
+  addEventListener('pointermove', (e) => {
+    const c = e.target.closest && e.target.closest('.card');
+    if (c !== card) card = c;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${(e.clientX - r.left).toFixed(0)}px`);
+    card.style.setProperty('--my', `${(e.clientY - r.top).toFixed(0)}px`);
+  }, { passive: true });
+}
+
+// For anyone who opens the console.
+function hello() {
+  console.log(
+    '%cHello, curious one.%c\nThis site is hand-built: no framework, no build step, just three.js, a few shaders and a lot of stars.\nFound a security issue? /.well-known/security.txt has the details. Or just say hi: justarmaansidhu@gmail.com',
+    'font: 600 15px "Space Grotesk", system-ui, sans-serif; color: #6fe0b2;',
+    'font: 12px "JetBrains Mono", ui-monospace, monospace; color: #8f9bb3;',
+  );
 }
 
 // Latest posts from Medium. The feed is untrusted text, so it only ever lands in textContent and https links.

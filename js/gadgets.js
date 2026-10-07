@@ -1,6 +1,6 @@
 // Four things drawn in stars, floating around the portrait: Meta Ray-Ban Display glasses, a DJI Osmo Pocket 3,
 // a DJI Mini 4 Pro and a Tesla Model Y. After the vault opens they come back and drift past behind the content.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const SPRITE_FRAG = /* glsl */`
 varying vec3 vColor;

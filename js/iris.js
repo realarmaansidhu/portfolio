@@ -1,6 +1,6 @@
 // The iris: a disc of starlight that kindles inside your eye as the camera dives in,
 // then opens like an aperture — the tunnel waits behind the pupil.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const VERT = /* glsl */`
 attribute vec4 aIr;   // radius (pupil edge .37 → limbus 1), angle, kind, hash

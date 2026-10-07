@@ -1,5 +1,5 @@
 // The solar system: a sun that actually blazes (core + corona + rays), eight planets, orbit trails.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const SOFT_VERT = /* glsl */`
 uniform float uTime, uPxScale, uOp, uMaxPt;

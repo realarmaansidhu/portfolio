@@ -1,7 +1,7 @@
 // Post-processing: the difference between "digital" and "dreamlike".
 // Bloom (dual-filter, cheap enough for phones), sun streak + flares, speed zoom-blur with
 // spectral fringing, shockwave ripple, act-by-act colour grade, vignette, film grain.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const VS = /* glsl */`varying vec2 vUv; void main(){ vUv = position.xy * .5 + .5; gl_Position = vec4(position.xy, 0., 1.); }`;
 

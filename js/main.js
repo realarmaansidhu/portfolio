@@ -1,8 +1,8 @@
 // v8 — the conductor. Maps scroll to a five-act flight that runs underneath the page:
 //   portrait → dive into the eye → tunnel (under About, Work, Projects) → through the sun → the vault opens → the rest of the page
 // and keeps every screen size, from a phone held upright to a wide desktop, composed.
-import * as THREE from 'three';
-import Lenis from 'lenis';
+import * as THREE from './vendor/three.module.min.js';
+import Lenis from './vendor/lenis.mjs';
 import { TUN, pathPos, pathBank } from './path.js';
 import { TIERS, detectDevice, AdaptiveQuality } from './quality.js';
 import { mulberry32, buildMain, buildLaptop, buildGadgets } from './build-data.js';
@@ -19,6 +19,10 @@ import { PORTRAIT } from './portrait-meta.js';
 import { initSite, layoutTop } from './site.js';
 
 THREE.ColorManagement.enabled = false;
+
+// boot.js waits for this; if it already fell back to the plain page, the scene stays off
+window.__siteLive = true;
+if (window.__siteStatic) await new Promise(() => {});
 
 const Q = new URLSearchParams(location.search);
 const SHOT = Q.has('shot') && !Q.has('live');
@@ -42,6 +46,9 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: fals
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 renderer.setClearColor(0x04060c, 1);
 const gl = renderer.getContext();
+// Software-only graphics (a remote desktop, a VM, a blocklisted GPU) draw the scene on the CPU, so start at the lightest tier
+const gpuName = (() => { const x = gl.getExtension('WEBGL_debug_renderer_info'); return x ? String(gl.getParameter(x.UNMASKED_RENDERER_WEBGL)) : ''; })();
+if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpuName) && !Q.get('tier')) { device.start = 'low'; device.sample = 'low'; device.canPromote = false; }
 const hdrType = gl.getExtension('EXT_color_buffer_float') || gl.getExtension('EXT_color_buffer_half_float') ? THREE.HalfFloatType : THREE.UnsignedByteType;
 const maxPointHW = (gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE) || [1, 64])[1];
 
@@ -127,7 +134,8 @@ function resize(force) {
   computeBeats();
 }
 addEventListener('resize', () => resize(false));
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => resize(true));
+// the web fonts arrive after first paint (boot.js loads them without blocking), so re-frame the portrait when they land
+if (document.fonts) { document.fonts.ready.then(() => resize(true)); document.fonts.addEventListener('loadingdone', () => resize(true)); }
 addEventListener('orientationchange', () => setTimeout(() => resize(true), 250));
 resize(true);
 
@@ -230,8 +238,8 @@ let ready = false;
     else setTimeout(enter, 1000);   // "Look closer." has a moment on screen, then the stars condense into the portrait
   } catch (err) {
     console.error(err);
-    $('gate-text').textContent = 'Something went wrong. Refresh to try again.';
-    gatePct.textContent = ''; gateCount.textContent = '';
+    paused = true;
+    if (window.__siteFallback) window.__siteFallback('the scene could not be built');
   }
 })();
 
@@ -249,6 +257,7 @@ function enableTilt() {
 function enter() {
   if (entered || !ready) return;
   entered = true;
+  window.__siteEntered = true;
   if (device.coarse && !SHOT && !EMBED) enableTilt();
   $('gate').classList.add('gone');
   if (SHOT) $('gate').style.display = 'none';
@@ -260,15 +269,25 @@ function enter() {
 // Sound is on unless the visitor turned it off before. Browsers only let audio start from a tap, click or key press,
 // so the first one anywhere on the page wakes it.
 let soundWanted = !SHOT && !EMBED && (() => { try { return localStorage.getItem('v8.sound') !== '0'; } catch (e) { return true; } })();
-function setSoundUI(on) { const b = $('sound'); b.dataset.on = on ? '1' : '0'; b.setAttribute('aria-label', on ? 'Mute sound' : 'Turn sound on'); }
-setSoundUI(soundWanted);
+// The button shows what you'd actually hear: bars dancing once audio is playing, steady while it waits for that first
+// tap or key press, and flat when it's off.
+let soundUI = '';
+function setSoundUI(state) {
+  if (state === soundUI) return;
+  soundUI = state;
+  const b = $('sound');
+  b.dataset.on = state === 'on' ? '1' : state === 'armed' ? 'armed' : '0';
+  b.setAttribute('aria-label', state === 'off' ? 'Turn sound on' : 'Mute sound');
+}
+const soundState = () => (!soundWanted ? 'off' : sound.ctx && sound.ctx.state === 'running' && !sound.muted ? 'on' : 'armed');
+setSoundUI(soundState());
 const wakeSound = () => { if (soundWanted) sound.start(); };
 ['pointerdown', 'touchstart', 'touchend', 'keydown'].forEach((ev) => addEventListener(ev, wakeSound, { capture: true, passive: true }));
 $('sound').addEventListener('click', () => {
   soundWanted = !soundWanted;
   try { localStorage.setItem('v8.sound', soundWanted ? '1' : '0'); } catch (e) { /* private mode */ }
-  setSoundUI(soundWanted);
   if (soundWanted) { sound.start(); sound.setMuted(false); } else sound.setMuted(true);
+  setSoundUI(soundState());
 });
 
 // ---------- your touch ----------
@@ -308,6 +327,7 @@ function pointerWorld(out) {
 
 // ---------- DOM bits ----------
 const hintEl = $('hint');
+if (device.coarse) hintEl.firstElementChild.textContent = 'Swipe to explore';
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add('in')), { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 
@@ -603,12 +623,16 @@ function update(dt) {
   // --- sound follows the flight
   if (entered && introT > 0.85 && !cues.chime) { cues.chime = true; sound.chime(); }
   sound.update({ act, speed: spd, tunnel: tunnelGate, sun: heat });
+  setSoundUI(soundState());
 
   // --- words on screen
   const heroOp = sm(0.55, 1, introT) * (1 - sm(0.02, 0.075, pS));
   heroEl.style.opacity = heroOp.toFixed(3);
   heroEl.style.transform = `translate3d(0,${(-50 * sm(0.02, 0.075, pS)).toFixed(1)}px,0)`;
   heroEl.style.visibility = heroOp > 0.001 ? 'visible' : 'hidden';
+  // the name is swept onto the screen as the stars settle into the portrait, then the title follows
+  heroEl.style.setProperty('--type', sm(0.5, 0.92, introT).toFixed(3));
+  heroEl.style.setProperty('--title', sm(0.78, 1, introT).toFixed(3));
   hintEl.style.opacity = (entered ? sm(0.9, 1, introT) * (1 - sm(0.0, 0.02, pS)) : 0).toFixed(3);
   document.documentElement.classList.toggle('reading', pS > 0.19);
 }

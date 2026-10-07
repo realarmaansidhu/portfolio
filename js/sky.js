@@ -1,6 +1,6 @@
 // The living sky: a Milky Way with dust lanes and nebula clouds (baked once into a texture),
 // crisp twinkling stars, an endless dust field for parallax, and occasional shooting stars.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const NOISE = /* glsl */`
 vec3 mod289(vec3 x){ return x - floor(x * (1. / 289.)) * 289.; }

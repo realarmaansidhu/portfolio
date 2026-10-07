@@ -1,6 +1,6 @@
 // The flight path through the tunnel. The same curve exists twice — once in JS
 // (camera) and once in GLSL (tunnel particles) — so the two can never drift apart.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 export const TUN = {
   L: 150,        // tunnel length in world units

@@ -1,58 +1,42 @@
-# Portfolio - Armaan Sidhu
+# Armaan Sidhu
 
-![Portfolio Landing Page](assets/images/landing_page.png)
+![The landing screen: a portrait drawn in stars beside the name Armaan Sidhu](assets/og.jpg)
 
-## Overview
-This project is a high-performance, interactive digital resume and professional showcase for Armaan Sidhu. Built with a specialized "cyber-aesthetic," the portfolio highlights expertise across three core domains: **Generative AI Engineering**, **Cybersecurity Analysis**, and **OSINT Investigation**.
+My portfolio, live at **[realarmaansidhu.com](https://realarmaansidhu.com)**.
 
-The application moves beyond a static document by utilizing real-time canvas animations, embedded data applications, and a responsive design tailored for technical recruitment and networking.
+The page is one continuous flight. A galaxy condenses into a portrait drawn from 180,000 stars, the camera dives into the eye, rides a data tunnel past the work and projects, flies through a sun, and turns a key to open a vault. The rest of the page scrolls over the open vault while the stars keep moving behind it.
 
-## Key Features
+## How it's built
 
-### 1. Interactive Terminal Aesthetic
-The portfolio employs a "Matrix" inspired visual language, utilizing a custom-built canvas engine to render falling character streams and interactive node-link grids.
+No framework and no build step: hand-written HTML, CSS and ES modules on top of [three.js](https://threejs.org).
 
-*   **Dynamic Role Typing**: An automated typing effect cycles through primary professional roles, providing an immediate overview of core competencies.
-*   **Responsive "Cyber-Cards"**: Professional experiences and certifications are housed in custom-styled containers that react to user hovering with neon-glow transitions and transformations.
+- **One set of stars, many shapes.** Every star carries several target positions (galaxy, portrait, tunnel, padlock), and the vertex shader moves between them as you scroll. The laptop, glasses, drone, gimbal camera and car are drawn in code as point clouds.
+- **The portrait is sampled at load time** from a 242 KB image whose channels encode brightness, sampling weight and a silhouette mask, inside a web worker so the page stays responsive.
+- **Scroll is anchored to the content.** The flight's beats are pinned to the sections, so About, Work and Projects always pass over the tunnel, whatever the screen size.
+- **Built for phones and tablets first.** A layout solver frames the portrait around the real position of the text on each screen, and the number of stars adapts to the device and to measured frame times.
+- **Post-processing:** bloom, a sun streak, zoom blur, colour grading and film grain, in a custom pass.
+- **Sound** is synthesized live with Web Audio. No audio files.
+- **Works without the 3D too.** With no WebGL, an old browser, or JavaScript turned off, the same content shows on a still starfield.
+- **Security headers:** a strict Content Security Policy and friends in [`_headers`](_headers), plus [`/.well-known/security.txt`](.well-known/security.txt).
 
-### 2. Integrated Project Ecosystem
-Unlike standard portfolios that link away to external sites, this project features integrated wrappers for specialized tools. These are embedded via high-performance iframes to maintain a seamless user experience:
+## Layout
 
-*   **Knowledge Tree**: A centralized hub for data-driven insights.
-*   **SentinelXC**: A cybersecurity-focused toolset.
-*   **Whimsical**: A showcase for creative or experimental AI implementations.
-*   **Nuestra Bóveda**: A specialized project vault.
+| Path | What's there |
+| --- | --- |
+| `index.html`, `style.css` | The page |
+| `js/` | The scene (`main.js` conducts it), the content layer (`site.js`), and vendored libraries in `js/vendor/` |
+| `assets/` | Photos, the portrait data, icons and the resume |
+| `tapedeck/`, `tactracer/`, … | Full-screen pages for each project's live app |
+| `tools/` | `serve.py` (local server) and `build-portrait.py` (regenerates the portrait data from a photo) |
+| `dev/devices.html` | A device lab that runs the site on many screen sizes at once (local only) |
+| `design-previews/` | The design directions explored before this one (local only) |
 
-### 3. Immersive Visual Layering
-The site utilizes a multi-layered background system to create depth:
+## Running it locally
 
-*   **Base Layer**: High-definition looping video background (`in_downtown.mp4`).
-*   **Matrix Layer**: A canvas-based character rain effect.
-*   **Web-Grid Layer**: A mouse-interactive particle system that connects nodes based on proximity.
+```bash
+python3 tools/serve.py 8642
+```
 
-## Navigation & Usage
-The portfolio is structured as a single-page application (SPA) for speed, utilizing smooth-scroll navigation to move between sections:
+Then open <http://localhost:8642>. The server mirrors the production headers and serves the 404 page.
 
-| Section | Description |
-| :--- | :--- |
-| **Home** | The landing hero with dynamic role typing and interactive background. |
-| **About** | Professional summary and core philosophy. |
-| **Experience** | Chronological career history styled in high-visibility cards. |
-| **Projects** | A dropdown-enabled menu linking to embedded Streamlit applications. |
-| **Awards** | Recognition and industry-specific honors. |
-| **Contact** | Direct communication channels via social icons and email. |
-
-## Technical Architecture
-For developers or recruiters interested in the "under-the-hood" performance:
-
-*   **Frontend**: HTML5, Tailwind CSS (Utility-first styling), and custom CSS for the "cyber" UI.
-*   **Animations**: AOS (Animate on Scroll) for element entry, and native Canvas API for background effects.
-*   **Embeds**: Seamless Streamlit integration using optimized `<iframe>` configurations to prevent layout shifting and white flashes in dark mode.
-*   **Internationalization (i18n)**: Comprehensive, zero-dependency translation system supporting English, French, Mandarin, and Spanish. It features dynamic content replacement for text, placeholders, and SEO meta tags without page reloads.
-
-## Interaction Tips
-*   **Node Interaction**: In the header and footer sections, moving your mouse will repel or attract the "Web Grid" nodes, simulating an active network.
-*   **Project Viewing**: When accessing projects like SentinelXC or Knowledge Tree, the interface automatically optimizes for the embedded Streamlit theme to ensure visual consistency with the main portfolio.
-
-## Copyright
-© 2025 Armaan Sidhu. All rights reserved.
+© 2026 Armaan Sidhu. All rights reserved.

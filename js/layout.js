@@ -1,7 +1,7 @@
 // Composition for any screen. Instead of fixed coordinates, every key element is given a
 // target rectangle on screen and the camera is solved to put it there.
 // Upright phones/tablets: face up top, words below. Landscape: words left, face right.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const sm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };

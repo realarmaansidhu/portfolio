@@ -1,6 +1,6 @@
 // The star system: one set of particles that is your portrait, then the tunnel, then the padlock.
 // Plus the laptop (drawn in code) and a soft silhouette that keeps the sky from showing through your face.
-import * as THREE from 'three';
+import * as THREE from './vendor/three.module.min.js';
 import { PATH_GLSL, TUN } from './path.js';
 
 const SPRITE_FRAG = /* glsl */`

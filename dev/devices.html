@@ -107,7 +107,7 @@ body.single #stage { top: 104px; }
   <div class="tools">
     <button class="tool" id="bars" type="button" aria-pressed="true" title="Draw the phone's status bar and the browser's address bar, and shrink the page to what a visitor really sees"><span class="box"></span><span class="lbl">Browser bars</span></button>
     <button class="tool" id="replay" type="button" title="Reload every screen and play the entrance"><span>↻</span><span class="lbl">Replay entrance</span></button>
-    <a class="tool" href="index.html" target="_blank" rel="noopener" title="Open v8 full screen in a new tab"><span class="lbl">Open v8</span><span>↗</span></a>
+    <a class="tool" href="../index.html" target="_blank" rel="noopener" title="Open the site full screen in a new tab"><span class="lbl">Open the site</span><span>↗</span></a>
   </div>
 </header>
 <nav class="chips" id="chips" aria-label="Device"></nav>
@@ -202,7 +202,7 @@ function chrome(d, g) {
     if (bars) el.push(`<div class="ui bar" style="top:24px;height:50px;padding:0 22px"><div class="pill" style="width:min(520px,62%);height:34px">🔒 localhost</div></div>`);
     el.push(`<div class="homebar" style="bottom:7px;width:${land ? 300 : 220}px;margin-left:-${land ? 150 : 110}px"></div>`);
   } else if (d.ui === 'mac' && bars) {
-    el.push(`<div class="ui" style="top:0;height:110px"><div class="menu"><b></b><span style="font-weight:600">Chrome</span><span>File</span><span>Edit</span><span>View</span><span style="margin-left:auto">Tue Oct 6  9:41</span></div><div class="tabs"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><em class="t">Armaan Sidhu</em></div><div class="addr"><div class="pill">localhost:8642/design-previews/v8/</div></div></div>`);
+    el.push(`<div class="ui" style="top:0;height:110px"><div class="menu"><b></b><span style="font-weight:600">Chrome</span><span>File</span><span>Edit</span><span>View</span><span style="margin-left:auto">Tue Oct 6  9:41</span></div><div class="tabs"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><em class="t">Armaan Sidhu</em></div><div class="addr"><div class="pill">realarmaansidhu.com</div></div></div>`);
   }
   return el.join('');
 }
@@ -211,7 +211,7 @@ function frameURL(d, g, tierForce, dprCap, nointro) {
   const p = new URLSearchParams({ embed: '1', dev: d.kind, safe: g.safe.join(','), dpr: dprCap.toFixed(2) });
   if (tierForce) p.set('tier', tierForce);
   if (nointro) p.set('nointro', '1');
-  return 'index.html?' + p.toString();
+  return '../index.html?' + p.toString();
 }
 
 // Pack devices (in order) into rows, picking the split that shows them biggest.

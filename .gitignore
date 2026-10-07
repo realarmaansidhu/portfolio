@@ -3,4 +3,4 @@
 .venv
 .DS_Store
 design-previews/face-points.js
-design-previews/v8/tools/*.jpg
+tools/*.jpg

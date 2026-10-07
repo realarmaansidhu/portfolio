@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # the source photo is kept locally and not committed; pass another path as the first argument if needed
-SUBJECT_SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'v8', 'tools', 'img-6.jpg')
+SUBJECT_SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '..', 'tools', 'img-6.jpg')
 OUT_JS = os.path.join(HERE, 'face-points.js')
 SCRATCH = tempfile.gettempdir()
 

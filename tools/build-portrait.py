@@ -1,7 +1,7 @@
 """Builds the v8 portrait asset: one small PNG the browser samples at runtime.
 
 Channels:  R = luminance   G = sqrt-encoded sampling weight   B = soft silhouette mask
-Run:       .venv/bin/python design-previews/v8/tools/build-portrait.py
+Run:       .venv/bin/python tools/build-portrait.py
 """
 import json, os
 import numpy as np
