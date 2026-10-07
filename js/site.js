@@ -49,10 +49,12 @@ export function initSite({ scrollTo, lockScroll }) {
   cardGlow();
   hello();
 
-  // a link straight to a section (…/#work) still plays the entrance, then flies there
-  const hash = location.hash.slice(1);
+  // a link straight to a section (…/#work) still plays the entrance, then flies there.
+  // Anchors from the 2025 site still land in the right place.
+  const OLD = { home: 'top', experience: 'work', publications: 'writing', insights: 'writing', book: 'novel' };
+  const raw = location.hash.slice(1), hash = OLD[raw] || raw;
   return {
-    onEnter() { if (hash && document.getElementById(hash)) setTimeout(() => go(hash), 1400); },
+    onEnter() { if (hash && (hash === 'top' || document.getElementById(hash))) setTimeout(() => go(hash), 1400); },
   };
 }
 
