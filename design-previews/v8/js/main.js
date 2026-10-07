@@ -166,8 +166,14 @@ function scrollToTarget(target) {
 const site = initSite({ scrollTo: scrollToTarget, lockScroll: (on) => { if (lenis) { if (on) lenis.stop(); else lenis.start(); } } });
 
 // ---------- loading: fetch the portrait image with real progress, build in a worker ----------
-const gateFill = $('gate-fill'), gatePct = $('gate-pct');
-function progress(f) { const p = Math.round(f * 100); gateFill.style.transform = `scaleX(${f})`; gatePct.textContent = p + '%'; }
+const gateFill = $('gate-fill'), gatePct = $('gate-pct'), gateCount = $('gate-count');
+const STARS = tier.count, fmtN = (n) => n.toLocaleString('en-US');
+$('gate-n').textContent = fmtN(STARS);
+function progress(f) {
+  gateFill.style.transform = `scaleX(${f})`;
+  gatePct.textContent = Math.round(f * 100) + '%';
+  gateCount.textContent = `${fmtN(Math.round(f * STARS))} / ${fmtN(STARS)}`;
+}
 
 async function loadPortrait() {
   const res = await fetch('assets/portrait.png');
@@ -221,11 +227,11 @@ let ready = false;
     ready = true;
     $('gate').classList.add('ready');
     if (SHOT || LIVE || EMBED) { if (!Q.has('gate')) enter(); }
-    else setTimeout(enter, 380);   // let the bar land, then the stars condense into the portrait
+    else setTimeout(enter, 1000);   // "Look closer." has a moment on screen, then the stars condense into the portrait
   } catch (err) {
     console.error(err);
     $('gate-text').textContent = 'Something went wrong. Refresh to try again.';
-    gatePct.textContent = '';
+    gatePct.textContent = ''; gateCount.textContent = '';
   }
 })();
 
