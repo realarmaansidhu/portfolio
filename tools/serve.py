@@ -1,6 +1,6 @@
 """Local preview server for the site. Like `python -m http.server`, with three differences:
 caching is off so every reload shows the latest code, the response headers in _headers are applied
-the way Netlify applies them (so the Content-Security-Policy is exercised locally), and missing pages get 404.html.
+the way Cloudflare Pages applies them (so the Content-Security-Policy is exercised locally), and missing pages get 404.html.
 usage: python3 tools/serve.py [port]   (serves the project root)
 """
 import http.server, os, sys
@@ -10,7 +10,7 @@ os.chdir(root)
 
 
 def load_rules(path='_headers'):
-    """Parse Netlify's _headers format: a path pattern, then indented 'Name: value' lines."""
+    """Parse the _headers format: a path pattern, then indented 'Name: value' lines ('! Name' removes a default)."""
     rules, current = [], None
     try:
         lines = open(path, encoding='utf-8').read().splitlines()
