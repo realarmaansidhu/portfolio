@@ -50,16 +50,28 @@ export function computeLayout(w, h, S0, vault, measured = {}) {
   // the little solar system on the landing screen, kept off your name
   const solarDepth = -7;
   const sd = hero.dist - solarDepth;
-  const sN = { nx: lerp(-0.5, -0.1, t), ny: lerp(0.79, 0.74, t) };
+  const sN = { nx: lerp(-0.64, -0.1, t), ny: lerp(0.83, 0.74, t) };
   const solarHero = {
     pos: new THREE.Vector3(hero.pos.x + sN.nx * sd * tH * aspect, hero.pos.y + sN.ny * sd * tH, solarDepth),
     scale: (lerp(0.09, 0.16, t) * sd * tH * Math.min(1, aspect * 1.6)) / 4.05,
   };
 
-  // the vault: centred for the key ceremony, moved aside when the words arrive
-  const box = { cx: vault.x, cy: vault.y + 0.5, hx: 1.9, hy: 2.7, planeZ: vault.z };
-  const vaultCentered = fit(box, { nx: 0, ny: lerp(0.06, 0.0, t), nh: lerp(0.38, 0.52, t), maxW: lerp(0.9, 0.8, t) }, fov, aspect);
-  const vaultAside = fit(box, { nx: lerp(0, 0.5, t), ny: lerp(0.68, 0.0, t), nh: lerp(0.14, 0.36, t), maxW: lerp(0.5, 0.42, t) }, fov, aspect);
+  // the gadgets float in the empty corners around you: a screen spot (nx, ny), a depth, and a size as a share of
+  // the screen's half-height. Upright screens and landscape ones each get their own spots.
+  const spot = (u, l, rot) => {
+    const nx = lerp(u[0], l[0], t), ny = lerp(u[1], l[1], t), z = lerp(u[2], l[2], t), size = lerp(u[3], l[3], t);
+    const dz = hero.pos.z - z;
+    return { pos: new THREE.Vector3(hero.pos.x + nx * dz * tH * aspect, hero.pos.y + ny * dz * tH, z), world: size * dz * tH, rot };
+  };
+  const gadgets = {
+    drone: spot([0.6, 0.64, -1.0, 0.17], phoneLand ? [0.74, 0.58, -1.5, 0.22] : [0.74, 0.68, -1.5, 0.2], new THREE.Euler(0.85, -0.55, 0.1)),
+    glasses: spot([0.02, 0.79, 0.6, 0.12], phoneLand ? [0.16, 0.7, 0.2, 0.15] : [0.16, 0.74, 0.2, 0.14], new THREE.Euler(0.14, 0.62, 0.05)),
+    pocket: spot([0.8, 0.24, 0.6, 0.13], phoneLand ? [-0.52, -0.56, 0.6, 0.2] : [-0.56, -0.6, 0.6, 0.18], new THREE.Euler(0.08, -0.35, 0.16)),
+  };
 
-  return { aspect, t, fov, hero, laptop, solarHero, vaultCentered, vaultAside, upright: t < 0.5 };
+  // the vault, centred for the key ceremony; once it opens the page scrolls over it
+  const box = { cx: vault.x, cy: vault.y + 0.5, hx: 1.9, hy: 2.7, planeZ: vault.z };
+  const vaultCentered = fit(box, { nx: 0, ny: lerp(0.04, -0.02, t), nh: lerp(0.44, 0.68, t), maxW: lerp(0.92, 0.86, t) }, fov, aspect);
+
+  return { aspect, t, fov, hero, laptop, solarHero, gadgets, vaultCentered, upright: t < 0.5 };
 }

@@ -1,4 +1,4 @@
-// Sound, synthesized live — no audio files. Off until the visitor chooses it at the gate.
+// Sound, synthesized live — no audio files. On by default; it wakes on the visitor's first tap, click or key press.
 // Drone that shifts per act · wind that follows scroll speed · tunnel shimmer · sun approach + boom ·
 // portrait chime · tap blips · key scrape, tumbler clicks, the heavy clunk, and an "access granted" chord.
 
@@ -17,12 +17,14 @@ function silentWavURI() {
 export class Sound {
   constructor() { this.ctx = null; this.on = false; this.muted = false; }
 
-  async start() {
+  // Safe to call on every tap: the first call builds the sound, later calls just make sure it's running.
+  // It has to run inside the tap/click/key handler itself, which is why nothing here waits on a promise first.
+  start() {
+    if (this.ctx) { this.wake(); return true; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
     this.ctx = new AC();
-    try { await this.ctx.resume(); } catch (e) { /* resumes on next gesture */ }
-    try { this.unlock = new Audio(silentWavURI()); this.unlock.loop = true; this.unlock.volume = 0.01; await this.unlock.play(); } catch (e) { /* not iOS, or blocked */ }
+    this.wake();
     this.build();
     this.on = true;
     document.addEventListener('visibilitychange', () => {
@@ -30,6 +32,14 @@ export class Sound {
       if (document.hidden) this.ctx.suspend(); else if (this.on && !this.muted) this.ctx.resume();
     });
     return true;
+  }
+
+  // resume the context, and play the silent clip that moves iOS audio past the silent switch
+  wake() {
+    if (!this.ctx || this.muted) return;
+    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
+    if (!this.unlock) { this.unlock = new Audio(silentWavURI()); this.unlock.loop = true; this.unlock.volume = 0.01; }
+    if (this.unlock.paused) this.unlock.play().catch(() => {});
   }
 
   build() {
@@ -100,7 +110,7 @@ export class Sound {
   setMuted(m) {
     this.muted = m;
     if (!this.ctx) return;
-    if (!m) this.ctx.resume();
+    if (!m) this.wake();
     this.master.gain.setTargetAtTime(m ? 0 : 0.85, this.ctx.currentTime, 0.25);
   }
 

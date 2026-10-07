@@ -188,3 +188,167 @@ export function buildLaptop({ N, seed = 11 }) {
   }
   return { pos, uvk, scat };
 }
+
+// ---------- three gadgets, drawn in code: Meta Ray-Ban Display glasses, DJI Osmo Pocket 3, DJI Mini 4 Pro ----------
+// Every point: local position, part = [kind, hash, u, v], pivot = [x, y, z, mode], scat = where the intro starts it.
+// kind: 0 shell · 1 edge · 2 glass · 3 screen · 4 lens ring · 5 light · 6 prop blade · 7 prop blur · 8 accent
+// pivot mode: 0 fixed · 1 spins one way · 2 spins the other · 3 pans side to side
+// Parts are picked at random per point, so drawing only the first n points still shows the whole object.
+function gadgetArrays(N) {
+  return { pos: new Float32Array(N * 3), part: new Float32Array(N * 4), pivot: new Float32Array(N * 4), scat: new Float32Array(N * 3), n: 0 };
+}
+function put(A, R, x, y, z, kind, u = 0, v = 0, pv = null) {
+  const i = A.n++;
+  A.pos[i * 3] = x; A.pos[i * 3 + 1] = y; A.pos[i * 3 + 2] = z;
+  A.part[i * 4] = kind; A.part[i * 4 + 1] = R(); A.part[i * 4 + 2] = u; A.part[i * 4 + 3] = v;
+  if (pv) { A.pivot[i * 4] = pv[0]; A.pivot[i * 4 + 1] = pv[1]; A.pivot[i * 4 + 2] = pv[2]; A.pivot[i * 4 + 3] = pv[3]; }
+  const a = R() * 6.2832, rr = 2.5 + R() * 3.5;
+  A.scat[i * 3] = Math.cos(a) * rr; A.scat[i * 3 + 1] = Math.sin(a) * rr * 0.7; A.scat[i * 3 + 2] = (R() - 0.5) * 4;
+}
+const ring = (R, r0, r1) => { const a = R() * 6.2832, r = r0 + (r1 - r0) * R(); return [Math.cos(a) * r, Math.sin(a) * r]; };
+const disc = (R, r) => { const a = R() * 6.2832, q = Math.sqrt(R()) * r; return [Math.cos(a) * q, Math.sin(a) * q]; };
+// a point on the outline of a rounded rectangle (half sizes hx, hz, corner radius rad) → [x, z]
+function rrect(R, hx, hz, rad) {
+  const sx = 2 * (hx - rad), sz = 2 * (hz - rad), arc = (Math.PI * rad) / 2, tot = 2 * sx + 2 * sz + 4 * arc;
+  let d = R() * tot;
+  if (d < sx) return [-hx + rad + d, hz]; d -= sx;
+  if (d < sx) return [-hx + rad + d, -hz]; d -= sx;
+  if (d < sz) return [hx, -hz + rad + d]; d -= sz;
+  if (d < sz) return [-hx, -hz + rad + d]; d -= sz;
+  const c = Math.floor(d / arc), a = ((d - c * arc) / arc) * (Math.PI / 2) + (c * Math.PI) / 2;
+  const cx = c === 0 || c === 3 ? hx - rad : -hx + rad, cz = c < 2 ? hz - rad : -hz + rad;
+  return [cx + Math.cos(a) * rad, cz + Math.sin(a) * rad];
+}
+// a point on the surface of a box (centre c, half sizes h); edge = true when it sits on one of the 12 edges
+function boxSurface(R, c, h, edgeFrac) {
+  if (R() < edgeFrac) {
+    const e = Math.floor(R() * 12), t = R() * 2 - 1, s1 = e & 1 ? 1 : -1, s2 = e & 2 ? 1 : -1, ax = e >> 2;
+    const p = ax === 0 ? [t * h[0], s1 * h[1], s2 * h[2]] : ax === 1 ? [s1 * h[0], t * h[1], s2 * h[2]] : [s1 * h[0], s2 * h[1], t * h[2]];
+    return [c[0] + p[0], c[1] + p[1], c[2] + p[2], true];
+  }
+  const ax = Math.floor(R() * 3), sg = R() < 0.5 ? -1 : 1, u = R() * 2 - 1, v = R() * 2 - 1;
+  const p = ax === 0 ? [sg * h[0], u * h[1], v * h[2]] : ax === 1 ? [u * h[0], sg * h[1], v * h[2]] : [u * h[0], v * h[1], sg * h[2]];
+  return [c[0] + p[0], c[1] + p[1], c[2] + p[2], false];
+}
+
+// Meta Ray-Ban Display: Wayfarer-style frames facing +z, the in-lens display in the wearer's right lens.
+function buildGlasses(N, R) {
+  const A = gadgetArrays(N), LX = 0.37, BH = 0.2;
+  const contour = (side, t, k) => {
+    const c = Math.cos(t), s = Math.sin(t);
+    const ex = Math.sign(c) * Math.sqrt(Math.abs(c)), ey = Math.sign(s) * Math.sqrt(Math.abs(s));
+    const w = 0.27 + 0.06 * (ey * 0.5 + 0.5);
+    let x = ex * w * k, y = ey * BH * k;
+    const out = ex * side; if (out > 0 && ey > 0) y += 0.04 * out * ey * k;
+    return [side * LX + x, y];
+  };
+  while (A.n < N) {
+    const r = R(), side = R() < 0.5 ? -1 : 1;
+    if (r < 0.42) {                       // the rims, thick across the brow like a Wayfarer
+      const t = R() * 6.2832, top = Math.sin(t) > 0.25, kmax = top ? 1.3 : 1.16, k = 1 + R() * (kmax - 1);
+      const [x, y] = contour(side, t, k), z = R() < 0.8 ? 0.045 : R() * 0.045;
+      put(A, R, x, y, z, k > kmax - 0.025 || k < 1.018 ? 1 : 0);
+    } else if (r < 0.46) {                // bridge
+      const t = R(); put(A, R, -0.08 + 0.16 * t, 0.075 + 0.035 * Math.sin(Math.PI * t) + (R() - 0.5) * 0.05, 0.02 + R() * 0.025, R() < 0.35 ? 1 : 0);
+    } else if (r < 0.49) {                // hinges
+      put(A, R, side * (0.68 + R() * 0.07), 0.06 + R() * 0.12, -0.06 + R() * 0.1, R() < 0.4 ? 1 : 0);
+    } else if (r < 0.71) {                // temples: thick near the hinge (that's where the tech lives), curling down at the ear
+      const t = R(), z = 0.0 - 1.25 * t, xs = side * (0.73 - 0.05 * t);
+      const yb = 0.12 - 0.015 * t - (t > 0.8 ? 0.22 * Math.pow((t - 0.8) / 0.2, 1.6) : 0), hgt = 0.09 - 0.045 * t;
+      if (R() < 0.5) put(A, R, xs + (R() < 0.5 ? -0.016 : 0.016), yb + (R() - 0.5) * hgt, z, 0);
+      else put(A, R, xs + (R() - 0.5) * 0.032, yb + (R() < 0.5 ? -0.5 : 0.5) * hgt, z, 1);
+    } else if (r < 0.85) {                // tinted lenses
+      const t = R() * 6.2832, k = Math.sqrt(R()) * 0.97, [x, y] = contour(side, t, k);
+      put(A, R, x, y, 0.025 + 0.015 * (1 - k * k), 2);
+    } else if (r < 0.965) {               // the display, in the wearer's right lens
+      const u = R(), v = R();
+      put(A, R, -LX + 0.02 + (u - 0.5) * 0.21, -0.035 + (v - 0.5) * 0.13, 0.043, 3, u, v);
+    } else if (r < 0.99) {                // camera on one corner
+      if (R() < 0.65) { const [a, b] = ring(R, 0.024, 0.032); put(A, R, 0.62 + a, 0.13 + b, 0.05, 4); }
+      else { const [a, b] = disc(R, 0.016); put(A, R, 0.62 + a, 0.13 + b, 0.05, 2); }
+    } else {                              // capture LED on the other
+      const [a, b] = disc(R, 0.012); put(A, R, -0.62 + a, 0.13 + b, 0.05, 5, 2);
+    }
+  }
+  return A;
+}
+
+// DJI Osmo Pocket 3: a slim handle with its 2-inch screen, and a 3-axis gimbal head that pans on top.
+function buildPocket(N, R) {
+  const A = gadgetArrays(N), hx = 0.21, hz = 0.165, rad = 0.08, PAN = [0, 0, 0, 3];
+  while (A.n < N) {
+    const r = R();
+    if (r < 0.3) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, -0.72 + R() * 1.0, z, 0); }
+    else if (r < 0.37) { const [x, z] = rrect(R, hx, hz, rad); put(A, R, x, R() < 0.5 ? -0.72 : 0.28, z, 1); }
+    else if (r < 0.4) { put(A, R, (R() * 2 - 1) * (hx - 0.02), R() < 0.5 ? -0.72 : 0.28, (R() * 2 - 1) * (hz - 0.02), 0); }
+    else if (r < 0.57) { const u = R(), v = R(); put(A, R, (u - 0.5) * 0.32, -0.06 + v * 0.3, hz + 0.003, 3, u, v); }
+    else if (r < 0.6) {
+      const e = Math.floor(R() * 4), t = R();
+      const p = e === 0 ? [(t - 0.5) * 0.34, -0.07] : e === 1 ? [(t - 0.5) * 0.34, 0.25] : e === 2 ? [-0.17, -0.07 + t * 0.32] : [0.17, -0.07 + t * 0.32];
+      put(A, R, p[0], p[1], hz + 0.004, 1);
+    } else if (r < 0.62) { const [a, b] = ring(R, 0.03, 0.042); put(A, R, a, -0.23 + b, hz + 0.004, 5, 0); }
+    else if (r < 0.635) { const [a, b] = ring(R, 0.02, 0.028); put(A, R, a, -0.38 + b, hz + 0.004, 1); }
+    // everything above the handle pans with the gimbal
+    else if (r < 0.68) { const [a, b] = ring(R, 0.095, 0.105); put(A, R, a, 0.28 + R() * 0.06, b, R() < 0.3 ? 1 : 0, 0, 0, PAN); }
+    else if (r < 0.74) { const [x, y, z, ed] = boxSurface(R, [0.2, 0.47, 0], [0.03, 0.17, 0.045], 0.4); put(A, R, x, y, z, ed ? 1 : 0, 0, 0, PAN); }
+    else if (r < 0.76) { const [a, b] = ring(R, 0.055, 0.07); put(A, R, 0.168, 0.52 + a, b, 1, 0, 0, PAN); }
+    else if (r < 0.88) { const [x, y, z, ed] = boxSurface(R, [-0.03, 0.52, 0], [0.14, 0.12, 0.12], 0.3); put(A, R, x, y, z, ed ? 1 : 0, 0, 0, PAN); }
+    else if (r < 0.91) { const [a, b] = ring(R, 0.098, 0.108); put(A, R, -0.03 + a, 0.52 + b, 0.122, 1, 0, 0, PAN); }
+    else if (r < 0.96) { const [a, b] = ring(R, 0.07, 0.082); put(A, R, -0.03 + a, 0.52 + b, 0.124, 4, 0, 0, PAN); }
+    else { const [a, b] = disc(R, 0.066); put(A, R, -0.03 + a, 0.52 + b, 0.126, R() < 0.12 ? 4 : 2, 0, 0, PAN); }
+  }
+  return A;
+}
+
+// DJI Mini 4 Pro: a slim tapered body, four folding arms (front ones high, rear ones low), spinning props, gimbal under the nose.
+function buildDrone(N, R) {
+  const A = gadgetArrays(N);
+  const motors = [[0.56, 0.05, 0.42, 1], [-0.56, 0.05, 0.42, 2], [0.53, -0.05, -0.44, 2], [-0.53, -0.05, -0.44, 1]];
+  const roots = [[0.15, 0.03, 0.2], [-0.15, 0.03, 0.2], [0.15, -0.03, -0.22], [-0.15, -0.03, -0.22]];
+  const halfW = (z) => 0.17 - 0.06 * Math.max(0, (z - 0.08) / 0.3);
+  while (A.n < N) {
+    const r = R();
+    if (r < 0.26) {
+      const f = R(), z = -0.42 + R() * 0.8, w = halfW(z);
+      if (f < 0.4) { const x = (R() * 2 - 1) * w; put(A, R, x, 0.085 + 0.015 * (1 - (x / w) ** 2), z, 0); }
+      else if (f < 0.6) put(A, R, (R() * 2 - 1) * w, -0.08, z, 0);
+      else if (f < 0.85) put(A, R, (R() < 0.5 ? -1 : 1) * w, -0.08 + R() * 0.165, z, 0);
+      else { const zz = R() < 0.5 ? 0.38 : -0.42; put(A, R, (R() * 2 - 1) * halfW(zz), -0.08 + R() * 0.165, zz, 0); }
+    } else if (r < 0.34) {
+      const z = -0.42 + R() * 0.8, w = halfW(z), top = R() < 0.6;
+      put(A, R, (R() < 0.5 ? -1 : 1) * w, top ? 0.085 : -0.08, z, 1);
+    } else if (r < 0.37) { put(A, R, (R() < 0.5 ? -1 : 1) * 0.07, 0.1, -0.3 + R() * 0.4, 8); }
+    else if (r < 0.47) {
+      const m = Math.floor(R() * 4), t = R(), a = roots[m], b = motors[m], [oy, oz] = ring(R, 0.024, 0.03);
+      put(A, R, a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t + oy, a[2] + (b[2] - a[2]) * t + oz * 0.6, oy > 0.02 ? 1 : 0);
+    } else if (r < 0.53) {
+      const m = motors[Math.floor(R() * 4)], [a, b] = ring(R, 0.05, 0.058), y = m[1] - 0.03 + R() * 0.08;
+      put(A, R, m[0] + a, y, m[2] + b, y > m[1] + 0.04 || y < m[1] - 0.02 ? 1 : 0);
+    } else if (r < 0.86) {
+      const m = motors[Math.floor(R() * 4)], pv = [m[0], m[1] + 0.06, m[2], m[3]];
+      if (R() < 0.6) {
+        const rr = 0.05 + R() * 0.29, w = 0.045 * (1 - (0.55 * (rr - 0.05)) / 0.29), side = (R() - 0.5) * w;
+        const a = (R() < 0.5 ? 0 : Math.PI) + 0.25 * (rr / 0.34) ** 2 * (m[3] === 1 ? 1 : -1);
+        put(A, R, pv[0] + Math.cos(a) * rr - Math.sin(a) * side, pv[1], pv[2] + Math.sin(a) * rr + Math.cos(a) * side, 6, 0, 0, pv);
+      } else {
+        const a = R() * 6.2832, rr = Math.sqrt(R() * (0.34 ** 2 - 0.05 ** 2) + 0.05 ** 2);
+        put(A, R, pv[0] + Math.cos(a) * rr, pv[1], pv[2] + Math.sin(a) * rr, 7, 0, 0, pv);
+      }
+    } else if (r < 0.94) {
+      const f = R();
+      if (f < 0.55) { const [x, y, z, ed] = boxSurface(R, [0, -0.11, 0.43], [0.055, 0.05, 0.05], 0.35); put(A, R, x, y, z, ed ? 1 : 0); }
+      else if (f < 0.85) { const [a, b] = ring(R, 0.026, 0.034); put(A, R, a, -0.11 + b, 0.482, 4); }
+      else { const [a, b] = disc(R, 0.024); put(A, R, a, -0.11 + b, 0.483, 2); }
+    } else {
+      const k = Math.floor(R() * 4), m = motors[k], [a, b] = disc(R, 0.016);
+      put(A, R, m[0] + a, m[1] - 0.045, m[2] + b, 5, k === 0 ? 1 : k === 1 ? 0 : 2);
+    }
+  }
+  return A;
+}
+
+export function buildGadgets({ NG = 5200, NP = 4600, ND = 6800, seed = 23 }) {
+  const R = mulberry32(seed);
+  const strip = (A) => ({ pos: A.pos, part: A.part, pivot: A.pivot, scat: A.scat });
+  return { glasses: strip(buildGlasses(NG, R)), pocket: strip(buildPocket(NP, R)), drone: strip(buildDrone(ND, R)) };
+}

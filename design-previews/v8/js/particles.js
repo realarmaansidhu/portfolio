@@ -20,6 +20,7 @@ attribute vec4 aLock;
 attribute vec2 aMisc;
 uniform float uTime, uIntro, uIris, uT1, uT2, uLock, uOp, uSizeK, uPxScale, uMaxPt;
 uniform float uFogNear, uFogFar, uScreenGlow, uSheen, uFaceX, uLockFlash, uInteract, uSpin;
+uniform float uAfter, uGalRot, uLockDim;
 uniform vec3 uV;
 uniform mat3 uLockRot, uHaloRot;
 uniform vec4 uMouse, uRipple;
@@ -41,7 +42,7 @@ vec3 lockWorld(vec4 L, out vec3 lpOut){
     lp.xz = rot2((1. - kIn) * 1.4) * lp.xz;
     lp += vec3(0., -.69, 1.035) + vec3(0., 0., (1. - kPush) * .74) + (1. - kIn) * vec3(3.4, 1.6, 2.6);
   } else if (g > .5) {
-    float so = 1. - smoothstep(.80, .95, uLock);
+    float so = smoothstep(.80, .95, uLock);
     vec3 q = lp - vec3(1.265, 0., 0.);
     q.xz = rot2(so * 1.25) * q.xz;
     lp = q + vec3(1.265, 0., 0.);
@@ -117,6 +118,24 @@ void main(){
     if (g < 2.5) {
       float band = exp(-pow(lp.x * .7 + lp.y * .7 - uSheen, 2.) * 5.);
       lc += vec3(.6, .8, 1.) * band * .55 + uLockFlash * .8;
+    }
+    // once it's open, the halo, the drifting shell and a share of the body burst out into a galaxy around the lock
+    if (uAfter > 0.) {
+      if (g > 2.5 || (g < 1.5 && hash < .4)) {
+        float ua = clamp(uAfter * 1.5 - fract(hash * 13.7) * .5, 0., 1.); ua = ua * ua * (3. - 2. * ua);
+        vec2 gxy = vec2(aScat.x - .5, aScat.y / .62);
+        float rr = length(gxy);
+        vec3 gp = vec3(gxy.x, (aScat.z + 2.) * .8, gxy.y) * .66;
+        gp.xz = rot2(uGalRot - rr * .05) * gp.xz;
+        gp.yz = rot2(-.78) * gp.yz;
+        gp += uV + vec3(0., .1, -1.2);
+        vec3 gc = mix(mix(TEAL, PURP, fract(hash * 7.3)), vec3(1., .74, .46), 1. - smoothstep(1.2, 4.2, rr));
+        gc *= .55 + .5 * fract(hash * 31.);
+        // the galaxy is seen from much further away than the lock, so its stars are drawn much bigger
+        float gs = (.13 + .12 * fract(hash * 17.)) * (fract(hash * 91.) < .03 ? 2.4 : 1.);
+        lw = mix(lw, gp, ua) + normalize(lw - uV + 1e-4) * sin(ua * 3.1416) * 1.6;
+        lc = mix(lc, gc, ua); ls = mix(ls, gs, ua);
+      } else lc *= mix(1., uLockDim, uAfter);
     }
     p = mix(p, lw, u2); col = mix(col, lc, u2); sz = mix(sz, ls, u2);
   }
@@ -195,7 +214,7 @@ export function createMainSystem(data, N, eye) {
     uTime: { value: 0 }, uIntro: { value: 0 }, uIris: { value: 0 }, uT1: { value: 0 }, uT2: { value: 0 }, uLock: { value: 0 },
     uOp: { value: 0 }, uSizeK: { value: 1 }, uPxScale: { value: 100 }, uMaxPt: { value: 64 },
     uFogNear: { value: 30 }, uFogFar: { value: 60 }, uScreenGlow: { value: 1 }, uSheen: { value: -9 }, uFaceX: { value: 0 },
-    uLockFlash: { value: 0 }, uInteract: { value: 1 }, uSpin: { value: 0 },
+    uLockFlash: { value: 0 }, uInteract: { value: 1 }, uSpin: { value: 0 }, uAfter: { value: 0 }, uGalRot: { value: 0 }, uLockDim: { value: 0.6 },
     uEye: { value: eye.clone() }, uLt: { value: TUN.L }, uV: { value: new THREE.Vector3() },
     uLockRot: { value: new THREE.Matrix3() }, uHaloRot: { value: new THREE.Matrix3() },
     uMouse: { value: new THREE.Vector4(0, 0, 0, 0) }, uRipple: { value: new THREE.Vector4(0, 0, 0, -1) },

@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#04060c">
-<title>Armaan Sidhu — Constellation (v8)</title>
-<meta name="description" content="Armaan Sidhu — cybersecurity, GenAI, and a debut novel. A portfolio you fly through.">
+<title>Armaan Sidhu — AI Security Engineer</title>
+<meta name="description" content="Armaan Sidhu, AI security engineer. Final semester of an M.Eng in Information Systems Security at Concordia University in Montréal, with security internships at American Express and TMX Group, and a debut novel on the way.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Armaan Sidhu — AI Security Engineer">
+<meta property="og:description" content="Cybersecurity and generative AI, from the Toronto Stock Exchange to American Express. Scroll through it.">
+<link rel="icon" href="../../assets/images/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -22,69 +26,342 @@
 <canvas id="gl" aria-hidden="true"></canvas>
 <div id="lvh" aria-hidden="true"></div>
 
-<div id="gate" role="dialog" aria-label="Loading">
+<div id="gate" role="status" aria-live="polite">
   <div class="gate-inner">
-    <p class="gate-kicker">ARMAAN SIDHU</p>
-    <p class="gate-status"><span class="blink">▍</span><span id="gate-text">INITIALIZING CONSTELLATION</span></p>
+    <p class="gate-name">Armaan Sidhu</p>
     <div class="gate-bar"><i id="gate-fill"></i></div>
-    <p class="gate-pct" id="gate-pct">0%</p>
-    <div class="gate-actions">
-      <button id="enter-sound" class="btn primary" type="button"><span>Enter with sound</span></button>
-      <button id="enter-quiet" class="btn" type="button"><span>Enter in silence</span></button>
-    </div>
-    <p class="gate-note">Headphones recommended · scroll or swipe to fly</p>
+    <p class="gate-status"><span id="gate-text">Setting the scene</span><span id="gate-pct">0%</span></p>
   </div>
 </div>
 
 <header class="chrome">
-  <a class="back" href="../index.html">← All designs</a>
-  <button id="sound" class="sound" type="button" data-on="0" aria-label="Turn sound on"><i></i><i></i><i></i><i></i></button>
+  <a class="brand" href="#top" data-go aria-label="Armaan Sidhu — back to the top"><b>AS</b><span>Armaan Sidhu</span></a>
+  <div class="chrome-r">
+    <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span>Menu</span><i aria-hidden="true"></i></button>
+    <button id="sound" class="sound" type="button" data-on="1" aria-label="Mute sound"><i></i><i></i><i></i><i></i></button>
+  </div>
 </header>
 
-<nav id="rail" aria-label="Flight progress">
-  <span data-at="0"><b>Portrait</b></span>
-  <span data-at="0.06"><b>Into the mind</b></span>
-  <span data-at="0.22"><b>The tunnel</b></span>
-  <span data-at="0.66"><b>The sun</b></span>
-  <span data-at="0.72"><b>The vault</b></span>
-</nav>
+<div id="menu" class="menu" aria-hidden="true">
+  <nav class="menu-inner" aria-label="Sections">
+    <ol class="menu-list">
+      <li><a href="#about" data-go><span>01</span>About</a></li>
+      <li><a href="#work" data-go><span>02</span>Work</a></li>
+      <li><a href="#projects" data-go><span>03</span>Projects</a></li>
+      <li><a href="#writing" data-go><span>04</span>Research &amp; writing</a></li>
+      <li><a href="#novel" data-go><span>05</span>The novel</a></li>
+      <li><a href="#education" data-go><span>06</span>Education</a></li>
+      <li><a href="#recognition" data-go><span>07</span>Awards &amp; certifications</a></li>
+      <li><a href="#networking" data-go><span>08</span>Networking</a></li>
+      <li><a href="#contact" data-go><span>09</span>Contact</a></li>
+    </ol>
+    <div class="menu-foot">
+      <a href="#top" data-go>Back to the top ↑</a>
+      <a href="assets/Armaan-Sidhu-Resume.pdf" download>Resume (PDF) ↓</a>
+    </div>
+  </nav>
+</div>
 
-<div class="hint" id="hint"><span>Scroll to dive in</span><i></i></div>
-
-<div class="hud" id="hud1"><div class="h-line"></div><p class="h-main">&gt; DESCENDING · SECURITY LAYER</p><p class="h-sub">TMX GROUP — TORONTO STOCK EXCHANGE</p></div>
-<div class="hud right" id="hud2"><div class="h-line"></div><p class="h-main">&gt; TRACING THREAT VECTORS</p><p class="h-sub">OSINT · KRI ANALYSIS · SOC OPERATIONS</p></div>
-<div class="hud" id="hud3"><div class="h-line"></div><p class="h-main">&gt; HARDENING AI PIPELINES</p><p class="h-sub">AMERICAN EXPRESS — GENAI SECURITY · PQC</p></div>
-
-<div id="granted" aria-live="polite"><span>ACCESS GRANTED</span></div>
+<div class="hint" id="hint"><span>Scroll to explore</span><i></i></div>
 <div id="q" class="q" aria-hidden="true" hidden></div>
 
-<main>
+<main id="top">
   <section id="journey" aria-label="Introduction">
     <div class="hero" id="hero">
-      <p class="eyebrow">[ CONSTELLATION ONLINE — 2026 ]</p>
       <h1>ARMAAN<br><span class="thin">SIDHU</span></h1>
-      <p class="lede">That's me at my desk, drawn in starlight from a real photograph. Scroll, and the camera dives into my eye — down a data tunnel, through the sun, all the way to the vault.</p>
-      <p class="roles">CYBERSECURITY × GENAI × AUTHOR</p>
+      <p class="title">AI Security Engineer</p>
     </div>
   </section>
 
-  <section id="vault-content" class="vault">
-    <p class="eyebrow reveal">[ ACCESS GRANTED — STATION 02 ]</p>
-    <h2 class="reveal">THE VAULT</h2>
-    <p class="lede reveal">The stars you flew through just became this padlock. In the full site every section is a station on this flight path — the constellation re-forms into a new shape for each chapter.</p>
-    <div class="cards">
-      <article class="card reveal"><p class="mono">$ cat tmx_group.log</p><h3>SOC — TMX Group</h3><p>Social engineering campaigns, KRI analysis and human-layer defense for the Toronto Stock Exchange's critical market infrastructure.</p></article>
-      <article class="card reveal"><p class="mono">$ cat american_express.log</p><h3>GenAI Security — Amex</h3><p>LLMOps hardening, secure AI/ML pipeline integration and risk mitigation across production systems at American Express.</p></article>
-      <article class="card reveal"><p class="mono">$ ./pqc_research.sh</p><h3>Post-Quantum R&amp;D</h3><p>Post-quantum cryptography readiness — preparing enterprise cryptography for the next era of computing.</p></article>
-    </div>
-    <p class="eyebrow reveal spaced">[ CONTENT LAYER — PHOTOS &amp; TEXT OVER THE SKY ]</p>
-    <div class="media">
-      <figure class="shot tilt-l reveal"><img src="../../assets/images/Headshot.jpeg" alt="Armaan Sidhu" loading="lazy"><figcaption>glass frames keep the sky visible around every photo</figcaption></figure>
-      <div class="panel reveal"><h3>Text panels stay translucent</h3><p>Real content sits on frosted glass — blurred, never solid. The constellation keeps moving behind every panel, photo and caption, and nothing ever covers the whole screen, so the sky always breathes around the edges.</p></div>
-      <figure class="shot tilt-r reveal"><img src="../../assets/images/athack-wwf.jpg" alt="Armaan receiving the Interac Challenge prize at the @Hack hackathon" loading="lazy"><figcaption>photos float as tilted cards</figcaption></figure>
-    </div>
-    <p class="foot reveal">Next in the full build: <b>Station 03</b> a neural core (GenAI) · <b>Station 04</b> an open book (One Night in Trombay) · <b>Station 05</b> a maple leaf (Canada &amp; networking) · <b>Station 06</b> a beacon (contact). One continuous flight, no page loads.</p>
-  </section>
+  <!-- these three ride over the tunnel -->
+  <div id="flight" class="content">
+    <!-- 01 ABOUT -->
+    <section class="sec" id="about" aria-labelledby="about-h">
+      <div class="sec-head reveal"><p class="idx">01</p><h2 id="about-h">About</h2></div>
+      <div class="about-grid">
+        <figure class="shot portrait tilt-l reveal"><img src="assets/img/headshot.webp" width="900" height="1052" alt="Illustrated portrait of Armaan Sidhu" loading="lazy" decoding="async"></figure>
+        <div class="about-text card reveal">
+          <p class="lede">I'm in my final semester of a Master of Engineering in Information Systems Security at Concordia University in Montréal, with a 3.97/4.30 GPA. My core interests lie where cybersecurity meets artificial intelligence.</p>
+          <p>In fall 2025 I was a Junior Security Operations Analyst Intern at TMX Group, the operator of the Toronto Stock Exchange, working with enterprise-grade security tools to monitor, investigate and strengthen the security posture of critical financial market infrastructure.</p>
+          <p>I've also interned at American Express twice. In summer 2025 I was an Information Security Analyst Intern on the Generative AI Security team, working hands-on with LLMOps, secure AI/ML pipeline integration and risk mitigation across production systems. In summer 2026 I returned to document identity and access management workflows and build agentic workflows on policy engines, so AI actions stay stable and deterministic.</p>
+          <p>Outside of tech, I love reading and writing books, travelling (India, the UAE, Mexico and Peru so far) and learning new languages. I'm writing my first novel, <a href="#novel" data-go><i>One Night in Trombay</i></a>, publishing articles on X and Medium, and learning French.</p>
+        </div>
+      </div>
+      <dl class="facts card reveal">
+        <div><dt>Based in</dt><dd>Montréal, Canada</dd></div>
+        <div><dt>Studying</dt><dd>M.Eng, Information Systems Security</dd></div>
+        <div><dt>GPA</dt><dd>3.97 / 4.30</dd></div>
+        <div><dt>Writing</dt><dd>One Night in Trombay</dd></div>
+      </dl>
+      <div class="toolkit card reveal">
+        <h3>Toolkit</h3>
+        <div class="kit"><p class="k">Focus</p><ul class="chips"><li>GenAI security</li><li>Security governance</li><li>Threat intelligence &amp; incident response</li><li>Key risk indicators</li><li>Emerging technology risk</li></ul></div>
+        <div class="kit"><p class="k">Practice</p><ul class="chips"><li>Vulnerability management</li><li>Security investigations</li><li>Risk reporting</li><li>Social engineering assessments</li><li>OSINT</li></ul></div>
+        <div class="kit"><p class="k">Tools</p><ul class="chips"><li>MCP</li><li>LangChain</li><li>LangGraph</li><li>Splunk</li><li>Jira</li><li>Confluence</li><li>Cloud security tools</li><li>Excel (advanced)</li></ul></div>
+        <div class="kit"><p class="k">Code</p><ul class="chips"><li>Python</li><li>SQL</li><li>Bash</li><li>JavaScript</li></ul></div>
+        <div class="kit"><p class="k">Systems</p><ul class="chips"><li>Windows</li><li>macOS</li><li>Linux</li></ul></div>
+      </div>
+    </section>
+
+    <!-- 02 WORK -->
+    <section class="sec" id="work" aria-labelledby="work-h">
+      <div class="sec-head reveal"><p class="idx">02</p><h2 id="work-h">Work</h2></div>
+      <ol class="jobs">
+        <li class="job card has-shot reveal">
+          <div class="job-body">
+            <p class="org-meta">TORONTO · 2025 — 2026</p>
+            <h3>American Express</h3>
+            <div class="stint">
+              <p class="job-meta">SUMMER 2026 · MAY — AUG</p>
+              <p class="role">Intern I</p>
+              <ul class="ticks">
+                <li>Studied the company's existing identity and access management workflows and documented them for use across the enterprise.</li>
+                <li>Analyzed policy engines and built agentic workflows integrated with them, so agentic AI actions stay stable and deterministic.</li>
+              </ul>
+            </div>
+            <div class="stint">
+              <p class="job-meta">SUMMER 2025 · MAY — AUG</p>
+              <p class="role">Information Security Analyst Intern I</p>
+              <ul class="ticks">
+                <li>Worked in the Generative AI Security team on LLMOps, secure AI/ML pipeline integration and risk mitigation across production systems.</li>
+                <li>Delivered cybersecurity initiatives across threat intelligence, incident response, data loss prevention, identity and access management, and cryptography services.</li>
+                <li>Led research and development on post-quantum cryptography and GenAI security enablement.</li>
+              </ul>
+            </div>
+          </div>
+          <figure class="job-shot"><img src="assets/img/amex.webp" width="800" height="910" alt="Armaan at the American Express office in Toronto" loading="lazy" decoding="async"></figure>
+        </li>
+        <li class="job card has-shot reveal">
+          <div class="job-body">
+            <p class="org-meta">TORONTO · FALL 2025</p>
+            <h3>TMX Group</h3>
+            <div class="stint">
+              <p class="job-meta">SEP — DEC 2025 · TORONTO STOCK EXCHANGE</p>
+              <p class="role">Jr. Security Operations Analyst Intern</p>
+              <ul class="ticks">
+                <li>Worked with enterprise-grade security tools to monitor, investigate and strengthen the security posture of critical financial market infrastructure.</li>
+                <li>Designed and ran context-aware social engineering campaigns, including whaling and credential harvesting, to test and strengthen the human layer of defence against financial-sector threats.</li>
+                <li>Analyzed key risk indicators to find vulnerability patterns among the C-suite and critical staff, then rolled out targeted training that reduced credential compromise rates.</li>
+              </ul>
+            </div>
+          </div>
+          <figure class="job-shot"><img src="assets/img/tmx.webp" width="900" height="996" alt="Armaan on stage at the TMX Group market open ceremony in October 2025" loading="lazy" decoding="async"></figure>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 03 PROJECTS -->
+    <section class="sec" id="projects" aria-labelledby="projects-h">
+      <div class="sec-head reveal"><p class="idx">03</p><h2 id="projects-h">Projects</h2></div>
+      <div class="projects">
+        <article class="proj card reveal">
+          <p class="mono">LANGCHAIN · MCP · OPENBB</p>
+          <h3>TapeDeck <span aria-hidden="true">📈</span></h3>
+          <p>A personal equity research terminal. A LangChain agent drives 127 live financial tools through the OpenBB MCP server, falling back across data providers and eight LLMs so long research runs finish.</p>
+          <p class="links"><a href="../../tapedeck/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/TapeDeck" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+        <article class="proj card reveal">
+          <p class="mono">RAG · FAISS · MITRE ATT&amp;CK</p>
+          <h3>TacTracer <span aria-hidden="true">🔬</span></h3>
+          <p>An autonomous IoT threat hunter. Upload network logs and get a forensic report grounded in MITRE ATT&amp;CK: guardrails reject anything that isn't a log, FAISS retrieves the matching techniques, and Llama 3.3 70B writes the findings. Built for IoT Security at Concordia.</p>
+          <p class="links"><a href="../../tactracer/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/TacTracer" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+        <article class="proj card reveal">
+          <p class="mono">GENAI · ZXCVBN · LLM FAILOVER</p>
+          <h3>SentinelXC <span aria-hidden="true">🛡️</span></h3>
+          <p>A password architect and auditor. It turns a theme into a strong, memorable passphrase, then audits passwords with zxcvbn and an LLM red-team persona that roasts weak choices. A model ladder of Gemini, Llama 3 and Mistral keeps it running when a provider fails.</p>
+          <p class="links"><a href="../../sentinelxc/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/SentinelXC" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+        <article class="proj card reveal">
+          <p class="mono">GEMINI · LLM ENSEMBLE · STREAMLIT</p>
+          <h3>Nuestra Bóveda <span aria-hidden="true">🌹</span></h3>
+          <p>A private AI time capsule disguised as a time-zone dashboard. Behind a hidden date-key unlock sit a memory oracle that picks a shared memory to match your mood, and a ghost writer that learns a person's tone from old chat logs.</p>
+          <p class="links"><a href="../../nuestrab%C3%B3veda/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/NuestraBoveda" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+        <article class="proj card reveal">
+          <p class="mono">MISTRALAI · IMAGE GENERATION</p>
+          <h3>Whimsical <span aria-hidden="true">🦄</span></h3>
+          <p>A children's storybook generator. MistralAI writes the story, AI image generation illustrates every page, and a character-memory system keeps the characters looking the same from page to page.</p>
+          <p class="links"><a href="../../whimsical/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/whimsical" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+        <article class="proj card reveal">
+          <p class="mono">NLP · KNOWLEDGE GRAPHS</p>
+          <h3>Knowledge Tree</h3>
+          <p>Paste any text and get a knowledge graph. It summarizes the input, extracts factual triples chunk by chunk, and draws how everything connects.</p>
+          <p class="links"><a href="../../knowledgetree/" target="_blank" rel="noopener">Open the app ↗</a><a href="https://github.com/realarmaansidhu/KnowledgeTree" target="_blank" rel="noopener">Code ↗</a></p>
+        </article>
+      </div>
+      <p class="more-row reveal"><a class="btn" href="https://github.com/realarmaansidhu?tab=repositories" target="_blank" rel="noopener">Explore all my projects on GitHub ↗</a></p>
+    </section>
+  </div>
+
+  <!-- two beats with nothing in the way: through the sun, then the vault opens -->
+  <div id="beat-sun" class="beat" aria-hidden="true"></div>
+  <div id="beat-vault" class="beat beat-vault" aria-hidden="true"></div>
+
+  <!-- the rest of the page scrolls over the open vault -->
+  <div id="after" class="content">
+    <!-- 04 WRITING -->
+    <section class="sec" id="writing" aria-labelledby="writing-h">
+      <div class="sec-head reveal"><p class="idx">04</p><h2 id="writing-h">Research &amp; writing</h2></div>
+      <h3 class="sub reveal">Publications</h3>
+      <ol class="pubs">
+        <li class="pub card reveal">
+          <p class="mono">PAPER · WCCIT 2023 · BERLIN</p>
+          <h4>AI-Driven Threat Intelligence: Leveraging Machine Learning to Empower Cybersecurity Applications for Enhanced Threat Detection and Response</h4>
+          <p>How machine learning can strengthen threat intelligence, from detection through response. Presented at the World Conference on Computing and IT in Berlin, Germany, on August 12, 2023.</p>
+          <p class="links"><a href="https://zenodo.org/records/8050866" target="_blank" rel="noopener">Read the paper ↗</a></p>
+        </li>
+        <li class="pub card reveal">
+          <p class="mono">PAPER · 16TH SINCONF · JAIPUR</p>
+          <h4>Mitigating Advanced Persistent Threats (APTs) in Cybersecurity Through the Implementation of Distributed Ledger Technology</h4>
+          <p>Proposes distributed ledger technology as a way to counter advanced persistent threats and make systems more resilient to intrusion. Shortlisted for presentation at the 16th SINCONF in Jaipur, India.</p>
+          <p class="links"><a href="https://doi.org/10.6084/m9.figshare.23538504.v1" target="_blank" rel="noopener">Read the paper ↗</a></p>
+        </li>
+        <li class="pub card reveal">
+          <p class="mono">REVIEW PAPER · 2023</p>
+          <h4>Analyzing Modern Cryptography Techniques and Reviewing their Timeline</h4>
+          <p>Traces ciphers in chronological order, from the earliest known cryptography to modern cryptographic systems.</p>
+          <p class="links"><a href="https://doi.org/10.6084/m9.figshare.23541072.v1" target="_blank" rel="noopener">Read the paper ↗</a></p>
+        </li>
+        <li class="pub card reveal">
+          <p class="mono">REVIEW PAPER · 2023</p>
+          <h4>Process Scheduling in Operating Systems and Evolution of Windows</h4>
+          <p>How operating systems schedule processes, with a focus on how Windows implements it.</p>
+          <p class="links"><a href="https://doi.org/10.6084/m9.figshare.23537031.v1" target="_blank" rel="noopener">Read the paper ↗</a></p>
+        </li>
+      </ol>
+      <h3 class="sub reveal">Latest essays</h3>
+      <div class="essays" id="essays" aria-live="polite">
+        <a class="essay card more reveal" href="https://realarmaansidhu.medium.com" target="_blank" rel="noopener"><p class="mono">MEDIUM</p><h4>Essays on security, AI and markets</h4><p class="go">Read on Medium ↗</p></a>
+        <a class="essay card more reveal" href="https://x.com/realarmaansidhu" target="_blank" rel="noopener"><p class="mono">X</p><h4>Shorter takes, as they happen</h4><p class="go">Follow on X ↗</p></a>
+      </div>
+    </section>
+
+    <!-- 05 THE NOVEL -->
+    <section class="sec" id="novel" aria-labelledby="novel-h">
+      <div class="sec-head reveal"><p class="idx">05</p><h2 id="novel-h">One Night in Trombay</h2></div>
+      <div class="book">
+        <figure class="cover reveal"><img src="assets/img/trombay.webp" width="612" height="920" alt="Cover of One Night in Trombay by Armaan Sidhu: a skull wreathed in flame under the title" loading="lazy" decoding="async"></figure>
+        <div class="book-text card reveal">
+          <p class="mono">A DEBUT NOVEL · COMING SOON</p>
+          <p class="lede">A gripping tale of mystery and resilience, set against the vibrant backdrop of Bombay.</p>
+          <p class="quote">“Step into a never-ending chase.”</p>
+          <p class="actions"><a class="btn primary" href="mailto:justarmaansidhu@gmail.com?subject=Notify%20me%3A%20One%20Night%20in%20Trombay">Notify me at launch</a><a class="btn" href="https://x.com/realarmaansidhu" target="_blank" rel="noopener">Follow on X</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 EDUCATION -->
+    <section class="sec" id="education" aria-labelledby="education-h">
+      <div class="sec-head reveal"><p class="idx">06</p><h2 id="education-h">Education</h2></div>
+      <div class="edu">
+        <article class="edu-card card reveal">
+          <img src="assets/img/concordia.webp" width="1100" height="715" alt="Concordia University campus in winter" loading="lazy" decoding="async">
+          <div class="edu-body">
+            <p class="job-meta"><span>SEP 2024 — PRESENT · MONTRÉAL</span><b class="badge">FINAL SEMESTER</b></p>
+            <h3>Concordia University</h3>
+            <p class="role">Master of Engineering, Information Systems Security · Co-op</p>
+            <p class="gpa"><b>3.97</b> / 4.30 GPA</p>
+            <ul class="chips"><li>Foundations of Cryptography</li><li>Operating System Security</li><li>System Physical Security</li><li>Cyber-Physical Systems</li><li>IoT Security</li></ul>
+          </div>
+        </article>
+        <article class="edu-card card reveal">
+          <img src="assets/img/manipal.webp" width="960" height="742" alt="The I love Manipal sign in front of Manipal University Jaipur" loading="lazy" decoding="async">
+          <div class="edu-body">
+            <p class="job-meta"><span>AUG 2020 — JUN 2024 · JAIPUR</span></p>
+            <h3>Manipal University Jaipur</h3>
+            <p class="role">Bachelor of Technology, Computer Science &amp; Engineering</p>
+            <p class="gpa"><b>8.68</b> / 10 CGPA</p>
+            <ul class="chips"><li>Information Coding</li><li>Computer Networks</li><li>Operating Systems</li><li>Data Structures</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 07 RECOGNITION -->
+    <section class="sec" id="recognition" aria-labelledby="recognition-h">
+      <div class="sec-head reveal"><p class="idx">07</p><h2 id="recognition-h">Awards &amp; certifications</h2></div>
+      <div class="awards">
+        <article class="award card feature reveal">
+          <img src="assets/img/athack.webp" width="1100" height="818" alt="Armaan receiving third place in the Interac Challenge at the @Hack 2025 hackathon in Montréal" loading="lazy" decoding="async">
+          <div class="award-body">
+            <p class="mono">MARCH 2025 · @HACK 2025, MONTRÉAL</p>
+            <h3>Third place, Interac Challenge</h3>
+            <p>Third in the Regular Track, with a Hak5 $100 USD gift card.</p>
+          </div>
+        </article>
+        <article class="award card reveal">
+          <p class="mono">TRYHACKME · VERIFIED APRIL 2025</p>
+          <h3>Top 1% of learners worldwide</h3>
+          <p>Ranked around 20,000 globally, with 20+ badges and about 150 rooms completed.</p>
+        </article>
+        <article class="award card reveal">
+          <p class="mono">MANIPAL UNIVERSITY JAIPUR · JUNE 2024</p>
+          <h3>Perfect 10/10 semester</h3>
+          <p>A 10 GPA in the final semester of the B.Tech, awarded after presenting the <a href="https://github.com/realarmaansidhu/major-project-speed-estimation-of-vehicles-using-deep-learning" target="_blank" rel="noopener">vehicle speed detection project</a>.</p>
+        </article>
+        <article class="award card reveal">
+          <p class="mono">MANIPAL UNIVERSITY JAIPUR · MAY 2024</p>
+          <h3>Dean's List for academic excellence</h3>
+          <p>Recognized for semester 7, with the certificate presented by the Dean.</p>
+        </article>
+      </div>
+      <h3 class="sub reveal">Certifications</h3>
+      <ul class="certs">
+        <li class="cert card reveal"><img src="assets/img/cert-thm-sal1.webp" width="800" height="515" alt="TryHackMe Security Analyst Level 1 certificate" loading="lazy" decoding="async"><p class="mono">TRYHACKME · MAR 2025</p><h4>Security Analyst Level 1 (SAL1)</h4></li>
+        <li class="cert card reveal"><img src="assets/img/cert-tcm-porp.webp" width="800" height="618" alt="TCM Security Practical OSINT Research Professional certificate" loading="lazy" decoding="async"><p class="mono">TCM SECURITY · JAN 2025</p><h4>Practical OSINT Research Professional</h4></li>
+        <li class="cert card reveal"><img src="assets/img/cert-cysa.webp" width="800" height="618" alt="CompTIA CySA+ certificate" loading="lazy" decoding="async"><p class="mono">COMPTIA · OCT 2024</p><h4>Cybersecurity Analyst+ (CySA+)</h4></li>
+        <li class="cert card reveal"><img src="assets/img/cert-secplus.webp" width="800" height="592" alt="CompTIA Security+ certificate" loading="lazy" decoding="async"><p class="mono">COMPTIA · JUL 2024</p><h4>Security+ (SY0-701)</h4></li>
+        <li class="cert card reveal"><img src="assets/img/cert-isc2-cc.webp" width="800" height="577" alt="ISC2 Certified in Cybersecurity certificate" loading="lazy" decoding="async"><p class="mono">ISC2 · MAY 2024</p><h4>Certified in Cybersecurity (CC)</h4></li>
+        <li class="cert card reveal"><img src="assets/img/cert-google.webp" width="800" height="582" alt="Google Cybersecurity certificate" loading="lazy" decoding="async"><p class="mono">GOOGLE · APR 2024</p><h4>Google Cybersecurity Certificate</h4></li>
+      </ul>
+    </section>
+
+    <!-- 08 NETWORKING -->
+    <section class="sec" id="networking" aria-labelledby="networking-h">
+      <div class="sec-head reveal"><p class="idx">08</p><h2 id="networking-h">Networking</h2></div>
+      <div class="netgrid">
+        <figure class="pm card reveal">
+          <img src="assets/img/carney.webp" width="1100" height="1197" alt="Armaan with Prime Minister Mark Carney" loading="lazy" decoding="async">
+          <figcaption><p class="mono">PRIME MINISTER OF CANADA</p><h3>With Mark Carney</h3></figcaption>
+        </figure>
+        <figure class="event card reveal">
+          <img src="assets/img/freeland-oath.webp" width="1400" height="737" alt="Armaan with Chrystia Freeland and her team at her swearing-in ceremony in the Parliament of Canada" loading="lazy" decoding="async">
+          <figcaption>
+            <p class="mono">PARLIAMENT OF CANADA · MAY 22, 2025</p>
+            <h3>Chrystia Freeland's swearing-in ceremony</h3>
+            <p>Attended the Honourable Chrystia Freeland's swearing-in as Minister of Transport, inside the Parliament of Canada with her team.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 09 CONTACT -->
+    <section class="sec" id="contact" aria-labelledby="contact-h">
+      <div class="sec-head reveal"><p class="idx">09</p><h2 id="contact-h">Let's talk</h2></div>
+      <div class="contact card reveal">
+        <p class="contact-lede">Have a role, a project or a collaboration in mind? Email is the fastest way to reach me.</p>
+        <p class="mail-row"><a class="mail" href="mailto:justarmaansidhu@gmail.com">justarmaansidhu@gmail.com</a><button class="copy" type="button" data-copy="justarmaansidhu@gmail.com">Copy</button></p>
+        <dl class="facts plain">
+          <div><dt>Phone</dt><dd><a href="tel:+12638816038">+1 (263) 881-6038</a></dd></div>
+          <div><dt>Based in</dt><dd>Montréal, Québec, Canada</dd></div>
+        </dl>
+        <ul class="socials">
+          <li><a href="https://www.linkedin.com/in/realarmaansidhu" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+          <li><a href="https://github.com/realarmaansidhu" target="_blank" rel="noopener">GitHub ↗</a></li>
+          <li><a href="https://tryhackme.com/r/p/armaansidhu" target="_blank" rel="noopener">TryHackMe ↗</a></li>
+          <li><a href="https://realarmaansidhu.medium.com" target="_blank" rel="noopener">Medium ↗</a></li>
+          <li><a href="https://x.com/realarmaansidhu" target="_blank" rel="noopener">X ↗</a></li>
+        </ul>
+        <p class="actions"><a class="btn primary" href="assets/Armaan-Sidhu-Resume.pdf" download>Download resume (PDF)</a></p>
+      </div>
+      <footer class="site-foot">
+        <p><b>Armaan Sidhu</b> · AI Security Engineer · Montréal</p>
+        <p>© <span id="year">2026</span> Armaan Sidhu · <a href="#top" data-go>Back to the top ↑</a></p>
+      </footer>
+    </section>
+  </div>
 </main>
 
 <script type="module" src="js/main.js"></script>

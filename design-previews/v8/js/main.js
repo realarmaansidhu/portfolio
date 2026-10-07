@@ -1,11 +1,12 @@
-// v8 — the conductor. Maps scroll to a five-act flight:
-//   portrait → dive into the eye → tunnel ride → through the sun → the vault
+// v8 — the conductor. Maps scroll to a five-act flight that runs underneath the page:
+//   portrait → dive into the eye → tunnel (under About, Work, Projects) → through the sun → the vault opens → the rest of the page
 // and keeps every screen size, from a phone held upright to a wide desktop, composed.
 import * as THREE from 'three';
 import Lenis from 'lenis';
 import { TUN, pathPos, pathBank } from './path.js';
 import { TIERS, detectDevice, AdaptiveQuality } from './quality.js';
-import { mulberry32, buildMain, buildLaptop } from './build-data.js';
+import { mulberry32, buildMain, buildLaptop, buildGadgets } from './build-data.js';
+import { createGadgets, setGadgetBudget } from './gadgets.js';
 import { createMainSystem, createLaptop, createOccluder } from './particles.js';
 import { Sky } from './sky.js';
 import { Solar } from './solar.js';
@@ -15,6 +16,7 @@ import { Post } from './post.js';
 import { Sound } from './audio.js';
 import { computeLayout } from './layout.js';
 import { PORTRAIT } from './portrait-meta.js';
+import { initSite } from './site.js';
 
 THREE.ColorManagement.enabled = false;
 
@@ -72,7 +74,38 @@ const sound = new Sound();
 // the device lab passes the safe-area insets a real phone would report
 if (EMBED && Q.get('safe')) Q.get('safe').split(',').forEach((v, i) => document.documentElement.style.setProperty(['--safe-t', '--safe-r', '--safe-b', '--safe-l'][i], (+v || 0) + 'px'));
 
-let mainSys = null, laptopSys = null, occluder = null;
+let mainSys = null, laptopSys = null, occluder = null, gadgets = null;
+const GADGETS = ['glasses', 'pocket', 'drone'];
+
+// ---------- scroll → flight: beats anchored to the page, so the words and the flight stay in step ----------
+// [scroll y, flight progress]: the hero holds · dive into the eye · the tunnel runs under About, Work and Projects ·
+// through the sun · the vault opens · then the rest of the page scrolls over the open vault (progress 1, "extra" screens)
+const flightEl = $('flight'), vaultBeat = $('beat-vault'), afterEl = $('after');
+let beats = [[0, 0], [1, 1]];
+const docTop = (el) => el.getBoundingClientRect().top + scrollY;
+function computeBeats() {
+  const vh = innerHeight, fTop = docTop(flightEl), fEnd = fTop + flightEl.offsetHeight;
+  const k = [[0, 0], [0.25 * vh, 0.05], [fTop - 0.62 * vh, 0.22], [fEnd - 0.5 * vh, 0.66], [docTop(vaultBeat) - 0.1 * vh, 0.72], [docTop(afterEl) - 0.82 * vh, 1]];
+  for (let i = 1; i < k.length; i++) k[i][0] = Math.max(k[i][0], k[i - 1][0] + 1);
+  beats = k;
+}
+function progressAt(y) {
+  const last = beats[beats.length - 1];
+  if (y >= last[0]) return { p: 1, ex: (y - last[0]) / innerHeight };
+  for (let i = 1; i < beats.length; i++) {
+    if (y < beats[i][0]) { const [y0, p0] = beats[i - 1], [y1, p1] = beats[i]; return { p: p0 + ((y - y0) / (y1 - y0)) * (p1 - p0), ex: 0 }; }
+  }
+  return { p: 0, ex: 0 };
+}
+function scrollFor(p, ex = 0) {
+  const last = beats[beats.length - 1];
+  if (p >= 1) return last[0] + ex * innerHeight;
+  for (let i = 1; i < beats.length; i++) {
+    if (p <= beats[i][1]) { const [y0, p0] = beats[i - 1], [y1, p1] = beats[i]; return y0 + ((p - p0) / (p1 - p0 || 1)) * (y1 - y0); }
+  }
+  return 0;
+}
+if (window.ResizeObserver) new ResizeObserver(() => computeBeats()).observe(flightEl);
 
 // ---------- sizing: stable on iOS (ignore the address bar sliding in and out) ----------
 const lvh = $('lvh');
@@ -88,9 +121,10 @@ function resize(force) {
   renderer.setSize(W, H, false);
   post.setSize(Math.round(W * dpr), Math.round(H * dpr), tier.bloom);
   camera.aspect = W / H;
-  const eb = heroEl.querySelector('.eyebrow').getBoundingClientRect(), hb = document.querySelector('.chrome').getBoundingClientRect();
+  const eb = heroEl.firstElementChild.getBoundingClientRect(), hb = document.querySelector('.chrome').getBoundingClientRect();
   layout = computeLayout(W, H, S0, vaultCenter, { textTop: eb.top - (parseFloat(heroEl.style.transform.split(',')[1]) || 0), headerBottom: hb.bottom + 8 });
   if (laptopSys) placeLaptop();
+  computeBeats();
 }
 addEventListener('resize', () => resize(false));
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => resize(true));
@@ -108,6 +142,7 @@ function applyTier(t) {
   tier = t;
   if (mainSys) { const n = Math.min(mainSys.total, t.count); mainSys.geometry.setDrawRange(0, n); mainSys.uniforms.uSizeK.value = Math.sqrt(REF_COUNT / n); }
   if (laptopSys) { const n = Math.min(laptopSys.total, t.laptop); laptopSys.geometry.setDrawRange(0, n); laptopSys.uniforms.uSizeK.value = Math.sqrt(26000 / n); }
+  if (gadgets) setGadgetBudget(gadgets, t.name === 'high' ? 1 : t.name === 'med' ? 0.75 : 0.5);
   sky.setDust(Math.min(t.dust, sampleTier.dust));
   fx.setGlyphs(Math.min(t.glyphs, sampleTier.glyphs));
   post.u.uTaps.value = REDUCED ? 0 : t.zoomTaps;
@@ -122,6 +157,13 @@ if (!device.coarse && !REDUCED && !SHOT && !EMBED) {
   lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9 });
   lenis.stop();
 }
+// jumping to a section flies through whatever lies between, at a pace that grows with the distance
+function scrollToTarget(target) {
+  const y = typeof target === 'number' ? target : target.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+  if (lenis) lenis.scrollTo(y, { duration: Math.min(3.4, 1 + (Math.abs(y - scrollY) / innerHeight) * 0.22) });
+  else window.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
+}
+const site = initSite({ scrollTo: scrollToTarget, lockScroll: (on) => { if (lenis) { if (on) lenis.stop(); else lenis.start(); } } });
 
 // ---------- loading: fetch the portrait image with real progress, build in a worker ----------
 const gateFill = $('gate-fill'), gatePct = $('gate-pct');
@@ -147,7 +189,7 @@ async function loadPortrait() {
 
 function buildData(pix) {
   const args = { pixels: pix.pixels, w: pix.w, h: pix.h, meta: PORTRAIT, N: sampleTier.count, NL: sampleTier.laptop, S0, Lt: L, seed: 7 };
-  const inline = () => ({ main: buildMain(args), laptop: buildLaptop({ N: args.NL }) });
+  const inline = () => ({ main: buildMain(args), laptop: buildLaptop({ N: args.NL }), gadgets: buildGadgets({}) });
   if (SHOT || !window.Worker) return Promise.resolve(inline());
   return new Promise((resolve) => {
     let wk;
@@ -170,52 +212,57 @@ let ready = false;
     laptopSys = createLaptop(data.laptop, Math.min(sampleTier.laptop, tier.laptop));
     const tex = new THREE.CanvasTexture(pix.canvas); tex.flipY = false; tex.generateMipmaps = false; tex.minFilter = THREE.LinearFilter;
     occluder = createOccluder(tex, PORTRAIT, S0);
-    scene.add(mainSys.points, laptopSys.group, occluder);
+    gadgets = createGadgets(data.gadgets);
+    scene.add(mainSys.points, laptopSys.group, occluder, ...GADGETS.map((k) => gadgets[k].group));
     placeLaptop();
     mainSys.uniforms.uHaloRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0.42, 0, 0.22)));
     applyTier(tier);
     progress(1);
     ready = true;
-    $('gate-text').textContent = 'CONSTELLATION READY';
     $('gate').classList.add('ready');
-    if (((SHOT || LIVE) && !Q.has('gate')) || EMBED) enter(false);
+    if (SHOT || LIVE || EMBED) { if (!Q.has('gate')) enter(); }
+    else setTimeout(enter, 380);   // let the bar land, then the stars condense into the portrait
   } catch (err) {
     console.error(err);
-    $('gate-text').textContent = 'SIGNAL LOST — REFRESH TO RETRY';
+    $('gate-text').textContent = 'Something went wrong. Refresh to try again.';
+    gatePct.textContent = '';
   }
 })();
 
 // ---------- entering ----------
 let entered = false, introStart = 0, T = 0;
 function enableTilt() {
-  const on = () => addEventListener('deviceorientation', (e) => {
+  // iOS only allows tilt behind a permission prompt; rather than interrupt, those phones get the touch lens alone
+  if (typeof DeviceOrientationEvent === 'undefined' || typeof DeviceOrientationEvent.requestPermission === 'function') return;
+  addEventListener('deviceorientation', (e) => {
     if (e.gamma == null) return;
     tilt.tx = Math.max(-1, Math.min(1, e.gamma / 28));
     tilt.ty = Math.max(-1, Math.min(1, (e.beta - 50) / 28));
   });
-  try {
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().then((r) => { if (r === 'granted') on(); }).catch(() => {});
-    } else on();
-  } catch (e) { /* no tilt */ }
 }
-function enter(withSound) {
+function enter() {
   if (entered || !ready) return;
   entered = true;
   if (device.coarse && !SHOT && !EMBED) enableTilt();
-  if (withSound) sound.start().then((ok) => setSoundUI(ok)); else setSoundUI(false);
   $('gate').classList.add('gone');
   if (SHOT) $('gate').style.display = 'none';
   document.documentElement.classList.remove('locked');
   introStart = EMBED && Q.has('nointro') ? T - 10 : T;
   if (lenis) lenis.start();
+  site.onEnter();
 }
-$('enter-sound').addEventListener('click', () => enter(true));
-$('enter-quiet').addEventListener('click', () => enter(false));
+// Sound is on unless the visitor turned it off before. Browsers only let audio start from a tap, click or key press,
+// so the first one anywhere on the page wakes it.
+let soundWanted = !SHOT && !EMBED && (() => { try { return localStorage.getItem('v8.sound') !== '0'; } catch (e) { return true; } })();
 function setSoundUI(on) { const b = $('sound'); b.dataset.on = on ? '1' : '0'; b.setAttribute('aria-label', on ? 'Mute sound' : 'Turn sound on'); }
-$('sound').addEventListener('click', async () => {
-  if (!sound.on) { const ok = await sound.start(); setSoundUI(ok); return; }
-  sound.setMuted(!sound.muted); setSoundUI(!sound.muted);
+setSoundUI(soundWanted);
+const wakeSound = () => { if (soundWanted) sound.start(); };
+['pointerdown', 'touchstart', 'touchend', 'keydown'].forEach((ev) => addEventListener(ev, wakeSound, { capture: true, passive: true }));
+$('sound').addEventListener('click', () => {
+  soundWanted = !soundWanted;
+  try { localStorage.setItem('v8.sound', soundWanted ? '1' : '0'); } catch (e) { /* private mode */ }
+  setSoundUI(soundWanted);
+  if (soundWanted) { sound.start(); sound.setMuted(false); } else sound.setMuted(true);
 });
 
 // ---------- your touch ----------
@@ -225,7 +272,7 @@ const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
 let interactPlane = 0;
 function setPointer(x, y) { pointer.ndc.set((x / W) * 2 - 1, -((y / H) * 2 - 1)); pointer.has = true; pointer.last = T; }
 function tap(target) {
-  if (!entered || (target && target.closest && target.closest('a,button,#gate,.panel,.card,.shot'))) return;
+  if (!entered || (target && target.closest && target.closest('a,button,#gate,#menu,.content'))) return;
   ripple.world.copy(pointerWorld(new THREE.Vector3()));
   ripple.age = 0;
   sound.blip();
@@ -254,15 +301,12 @@ function pointerWorld(out) {
 }
 
 // ---------- DOM bits ----------
-const hintEl = $('hint'), grantedEl = $('granted');
-const huds = [['hud1', 0.3], ['hud2', 0.44], ['hud3', 0.58]].map(([id, c]) => ({ el: $(id), c }));
-const railDots = [...document.querySelectorAll('#rail [data-at]')].map((el) => ({ el, at: +el.dataset.at }));
-const journeyEl = $('journey');
+const hintEl = $('hint');
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add('in')), { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 
 // ---------- the flight ----------
-let gateFade = SHOT ? 1 : 0, pS = 0, extra = 0, prevCam = new THREE.Vector3(), spd = 0, orbit = 0, shockAge = -1, granted = false;
+let gateFade = SHOT ? 1 : 0, pS = 0, extra = 0, prevCam = new THREE.Vector3(), spd = 0, orbit = 0, shockAge = -1;
 const cues = { chime: false, boom: false, scrape: false, click: false, clunk: false, shock: false };
 const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3(), tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
 const fwd = new THREE.Vector3(), upV = new THREE.Vector3(), par = new THREE.Vector2();
@@ -278,12 +322,28 @@ function frameOf(s, P, N, B) {
   B.crossVectors(N, Tn);
 }
 const _P = new THREE.Vector3(), _N = new THREE.Vector3(), _B = new THREE.Vector3();
+const camR = new THREE.Vector3(), camU = new THREE.Vector3(), camF = new THREE.Vector3();
+
+// After the vault opens, the gadgets and trilliums drift up behind the content at a fraction of the scroll speed,
+// wrapping around, so there is always something passing in the back. x is across the screen, d is depth in front of the camera.
+const FILLERS = [
+  { o: 'drone', x: 0.64, d: 7.5, ph: 0.12, sp: 0.21, size: 0.2 },
+  { o: 'trill0', x: -0.58, d: 11, ph: 0.3, sp: 0.15, size: 0.2 },
+  { o: 'glasses', x: -0.66, d: 6.5, ph: 0.5, sp: 0.24, size: 0.15 },
+  { o: 'trill1', x: 0.6, d: 12, ph: 0.68, sp: 0.13, size: 0.2 },
+  { o: 'pocket', x: 0.7, d: 7, ph: 0.86, sp: 0.2, size: 0.17 },
+  { o: 'trill2', x: -0.45, d: 13, ph: 0.98, sp: 0.12, size: 0.22 },
+];
+function fillerSpot(f, i, out) {
+  const cyc = (((f.ph + extra * f.sp) % 1) + 1) % 1, ny = -1.55 + cyc * 3.1;
+  const tH = Math.tan((camera.fov * Math.PI) / 360), aspect = W / H, nx = f.x * (layout.upright ? 0.8 : 1);
+  out.copy(camera.position).addScaledVector(camF, f.d).addScaledVector(camR, nx * f.d * tH * aspect).addScaledVector(camU, ny * f.d * tH);
+  return { fade: 1 - sm(1.05, 1.5, Math.abs(ny)), world: f.size * f.d * tH * (layout.upright ? 0.85 : 1) };
+}
 
 function update(dt) {
   // --- progress
-  const journeyPx = journeyEl.offsetHeight, vh = innerHeight, span = Math.max(1, journeyPx - vh);
-  const y = window.scrollY;
-  let p = clamp01(y / span), ex = Math.max(0, y - span) / vh;
+  let { p, ex } = progressAt(window.scrollY);
   if (SHOT) { p = shot.p; ex = shot.x; pS = p; extra = ex; }
   else { const k = 1 - Math.exp(-dt * (lenis ? 11 : 7)); pS += (p - pS) * k; extra += (ex - extra) * k; }
   if (!isFinite(pS)) pS = p;
@@ -294,6 +354,7 @@ function update(dt) {
   const rev = seg(pS, 0.72, 0.79), key = seg(pS, 0.79, 0.92), pay = seg(pS, 0.92, 1);
   const lockP = sm(0.795, 0.915, pS);
   const act = pS < 0.22 ? 'hero' : pS < 0.72 ? 'tunnel' : 'vault';
+  const afterK = sm(0, 1, seg(pS, 0.94, 1) * 0.4 + extra * 0.75);   // the open vault bursts into a galaxy as the page carries on
   const tunnelGate = seg(pS, 0.21, 0.25) * (1 - seg(pS, 0.68, 0.72));
 
   // --- pointer & tilt
@@ -336,7 +397,7 @@ function update(dt) {
     fov = 64 + (REDUCED ? 0 : Math.min(9, spd * 6));
     camPos.x += par.x * 0.22 * parK; camPos.y += par.y * 0.14 * parK;
   } else {
-    const VC = layout.vaultCentered, VA = layout.vaultAside;
+    const VC = layout.vaultCentered;
     const startS = L + 26;
     tmp.set(eye.x, eye.y, eye.z - startS);
     camPos.copy(tmp).lerp(VC.pos, easeOut(rev));
@@ -344,8 +405,16 @@ function update(dt) {
     camTgt.copy(tmp2).lerp(VC.target, easeOut(rev));
     fov = lerp(64, layout.fov, ease(rev));
     camPos.z -= 0.7 * ease(key) - 0.5 * ease(pay);
-    const aside = ease(seg(extra, 0, 0.8));
-    if (aside > 0) { tmp.copy(VA.pos); tmp.z -= 0.2; camPos.lerp(tmp, aside); camTgt.lerp(VA.target, aside); }
+    // once it's open: pull back to take in the galaxy, then circle it slowly as the page scrolls on
+    if (afterK > 0) {
+      const back = ease(afterK);
+      tmp.copy(camPos).sub(vaultCenter).multiplyScalar(1 + 0.6 * back);
+      tmp.applyAxisAngle(THREE.Object3D.DEFAULT_UP, (extra * 0.1 + Math.sin(T * 0.06) * 0.05) * back);
+      tmp.y += (1.4 + Math.sin(extra * 0.4) * 1.1) * back;
+      camPos.copy(vaultCenter).add(tmp);
+      tmp2.set(vaultCenter.x, vaultCenter.y + 0.4, vaultCenter.z);
+      camTgt.lerp(tmp2, back);
+    }
     const w = 0.4 * seg(pS, 0.75, 0.8) * parK;
     camPos.x += par.x * w; camPos.y += par.y * w * 0.6;
     if (shockAge >= 0 && shockAge < 0.8 && !REDUCED) {
@@ -375,7 +444,8 @@ function update(dt) {
     const U = mainSys.uniforms;
     U.uTime.value = T; U.uIntro.value = introT; U.uIris.value = dil; U.uT1.value = t1; U.uT2.value = t2; U.uLock.value = lockP;
     gateFade += ((ready ? 1 : 0) - gateFade) * (1 - Math.exp(-dt * 1.5));
-    U.uOp.value = (entered ? 1 : 0.42 * gateFade) * (1 - 0.78 * sm(0.15, 0.8, extra) * (1 - layout.t));
+    U.uOp.value = entered ? 1 : 0.42 * gateFade;
+    U.uAfter.value = afterK; U.uGalRot.value = T * 0.025 + extra * 0.3; U.uLockDim.value = 0.6;
     U.uSpin.value = -T * 0.05;
     const tg = tunnelGate;
     U.uFogNear.value = lerp(40, 16, tg); U.uFogFar.value = lerp(85, 48, tg);
@@ -399,6 +469,32 @@ function update(dt) {
     U.uPxScale.value = pxScale; U.uMaxPt.value = maxPt;
     laptopSys.glowU.uOp.value = U.uOp.value * sm(0.6, 1, introT); laptopSys.glowU.uTime.value = T;
     laptopSys.group.visible = pS < 0.15;
+  }
+  camera.updateMatrixWorld();
+  camR.setFromMatrixColumn(camera.matrixWorld, 0); camU.setFromMatrixColumn(camera.matrixWorld, 1); camF.setFromMatrixColumn(camera.matrixWorld, 2).negate();
+  const fillersOn = pS > 0.99 && afterK > 0.02;
+  if (gadgets) {
+    const heroK = (entered ? 1 : 0) * (1 - seg(pS, 0.05, 0.13));
+    GADGETS.forEach((k, i) => {
+      const g = gadgets[k], gu = g.u;
+      gu.uTime.value = T; gu.uIntro.value = introT; gu.uPxScale.value = pxScale; gu.uMaxPt.value = maxPt;
+      let scale;
+      if (fillersOn) {
+        const f = FILLERS.find((q) => q.o === k), s = fillerSpot(f, i, g.group.position);
+        scale = s.world / g.radius;
+        g.group.rotation.set(0.35 + Math.sin(T * 0.4 + i) * 0.15, T * 0.22 + i * 2 + extra * 0.6, Math.sin(T * 0.3 + i) * 0.1);
+        gu.uOp.value = afterK * s.fade * 0.9;
+      } else {
+        // floating around you on the landing screen: a slow bob and a lazy turn each
+        const c = layout.gadgets[k];
+        scale = c.world / g.radius;
+        g.group.position.copy(c.pos); g.group.position.y += Math.sin(T * 0.8 + i * 2.1) * 0.05 * c.world;
+        g.group.rotation.set(c.rot.x + Math.sin(T * 0.5 + i) * 0.08, c.rot.y + Math.sin(T * 0.3 + i * 1.7) * 0.35, c.rot.z + Math.sin(T * 0.45 + i) * 0.05);
+        gu.uOp.value = heroK;
+      }
+      g.group.scale.setScalar(scale); gu.uObjScale.value = scale;
+      g.group.visible = gu.uOp.value > 0.001;
+    });
   }
   if (occluder) {
     occluder.material.uniforms.uOp.value = 0.9 * sm(0.55, 1, introT) * (1 - seg(pS, 0.09, 0.17));
@@ -448,6 +544,12 @@ function update(dt) {
     tr.u.uBloom.value = sm(40, 12, ahead);
     tr.u.uAsm.value = sm(58, 30, ahead);
     tr.u.uOp.value = tunnelGate * sm(-8, 2, ahead) * (1 - sm(46, 62, ahead));
+    tr.o.scale.setScalar(2.1); tr.u.uObjScale.value = 2.1;
+    if (fillersOn) {
+      const i = fx.trills.indexOf(tr), f = FILLERS.find((q) => q.o === 'trill' + i), s = fillerSpot(f, i, tr.o.position);
+      tr.o.scale.setScalar(s.world); tr.u.uObjScale.value = s.world;
+      tr.u.uBloom.value = 1; tr.u.uAsm.value = 1; tr.u.uOp.value = 0.8 * afterK * s.fade;
+    }
     tr.u.uPxScale.value = pxScale; tr.u.uMaxPt.value = maxPt;
     tr.o.visible = tr.u.uOp.value > 0.001;
   }
@@ -457,8 +559,8 @@ function update(dt) {
   if (lockP > 0.2 && !cues.scrape) { cues.scrape = true; sound.scrape(); }
   if (lockP > 0.68 && !cues.click) { cues.click = true; sound.click(); }
   if (lockP > 0.93 && !cues.clunk) { cues.clunk = true; sound.clunk(); }
-  if (lockP > 0.97 && !cues.shock) { cues.shock = true; shockAge = 0; granted = true; sound.granted(); }
-  if (lockP < 0.15) { cues.scrape = cues.click = cues.clunk = cues.shock = false; granted = false; }
+  if (lockP > 0.97 && !cues.shock) { cues.shock = true; shockAge = 0; sound.granted(); }
+  if (lockP < 0.15) { cues.scrape = cues.click = cues.clunk = cues.shock = false; }
   if (shockAge >= 0) { shockAge += dt; if (shockAge > 3) shockAge = -1; }
   fx.shock.position.set(vaultCenter.x, vaultCenter.y + 0.3, vaultCenter.z + 1.6);
   fx.shockU.uAge.value = shockAge >= 0 && shockAge < 1.6 ? shockAge : 0;
@@ -479,7 +581,7 @@ function update(dt) {
 
   const white = sm(0.687, 0.697, pS) * (1 - sm(0.7, 0.728, pS));
   post.u.uTime.value = T;
-  post.u.uBloom.value = act === 'hero' ? 0.85 : act === 'tunnel' ? 1.0 : 0.95;
+  post.u.uBloom.value = act === 'hero' ? 0.85 : act === 'tunnel' ? 1.0 : 0.95 + 0.1 * afterK;
   post.u.uZoom.value = REDUCED ? 0 : Math.min(0.09, spd * 0.055) * (act === 'vault' ? 0 : 1);
   post.u.uCA.value = REDUCED ? 0 : 0.0016 + Math.min(0.008, spd * 0.004);
   post.u.uWhite.value = white;
@@ -501,16 +603,7 @@ function update(dt) {
   heroEl.style.transform = `translate3d(0,${(-50 * sm(0.02, 0.075, pS)).toFixed(1)}px,0)`;
   heroEl.style.visibility = heroOp > 0.001 ? 'visible' : 'hidden';
   hintEl.style.opacity = (entered ? sm(0.9, 1, introT) * (1 - sm(0.0, 0.02, pS)) : 0).toFixed(3);
-  for (const h of huds) {
-    const q = Math.max(0, 1 - Math.abs(pS - h.c) / 0.05);
-    h.el.style.opacity = (q * q).toFixed(3);
-    h.el.style.transform = `translate3d(0,${((1 - q) * 14).toFixed(1)}px,0)`;
-  }
-  let active = 0;
-  railDots.forEach((d, i) => { if (pS >= d.at - 0.001) active = i; });
-  railDots.forEach((d, i) => d.el.classList.toggle('on', i === active));
-  grantedEl.classList.toggle('show', granted && extra < 0.35 && pS > 0.9);
-  document.documentElement.classList.toggle('in-vault', pS > 0.985 || extra > 0.02);
+  document.documentElement.classList.toggle('reading', pS > 0.19);
 }
 
 // ---------- loop ----------
@@ -531,17 +624,17 @@ function loop(now) {
 requestAnimationFrame(loop);
 if (SHOT) {
   // put the page where the shot is, so the DOM layer matches the 3D layer
-  const place = () => { const span = journeyEl.offsetHeight - innerHeight; window.scrollTo(0, shot.p * span + shot.x * innerHeight); };
+  const place = () => { computeBeats(); window.scrollTo(0, scrollFor(shot.p, shot.x)); };
   if (!Q.has('gate')) document.documentElement.classList.remove('locked');
   addEventListener('load', place); setTimeout(place, 50);
 }
 document.addEventListener('visibilitychange', () => { last = performance.now(); });
 
 // hooks for the device lab: read and set the flight position, pause, and match render resolution to the frame's on-screen size
-function rawProgress() { const span = Math.max(1, journeyEl.offsetHeight - innerHeight); return { p: clamp01(scrollY / span), ex: Math.max(0, scrollY - span) / innerHeight }; }
+function rawProgress() { return progressAt(scrollY); }
 function seek(p, ex = 0) {
-  const span = Math.max(1, journeyEl.offsetHeight - innerHeight), max = document.documentElement.scrollHeight - innerHeight;
-  const y = Math.round(Math.max(0, Math.min(max, p * span + ex * innerHeight)));
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const y = Math.round(Math.max(0, Math.min(max, scrollFor(p, ex))));
   scrollTo(0, y);
   return y;
 }

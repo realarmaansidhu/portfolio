@@ -1,0 +1,93 @@
+// The content layer: the section menu, jump links (which fly you through the scene), the live essay feed,
+// and small conveniences. The 3D conductor hands in how to scroll, so jumps stay smooth with or without Lenis.
+
+const FEED = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://medium.com/feed/@realarmaansidhu');
+
+export function initSite({ scrollTo, lockScroll }) {
+  const root = document.documentElement;
+  const menu = document.getElementById('menu'), btn = document.getElementById('menu-btn');
+
+  const setMenu = (open) => {
+    menu.classList.toggle('open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    btn.setAttribute('aria-expanded', String(open));
+    root.classList.toggle('menu-open', open);
+    lockScroll(open);
+    if (open) menu.querySelector('a').focus({ preventScroll: true });
+  };
+  btn.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+  menu.addEventListener('click', (e) => { if (e.target === menu) setMenu(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) { setMenu(false); btn.focus(); } });
+
+  const go = (id) => {
+    const el = id === 'top' ? null : document.getElementById(id);
+    if (id !== 'top' && !el) return;
+    scrollTo(el ? el : 0);
+    history.replaceState(null, '', id === 'top' ? location.pathname + location.search : '#' + id);
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-go]');
+    if (!a) return;
+    e.preventDefault();
+    if (menu.classList.contains('open')) setMenu(false);
+    go(a.getAttribute('href').slice(1));
+  });
+
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const label = b.textContent;
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; }
+    catch (e) { b.textContent = 'Press and hold to copy'; }
+    setTimeout(() => { b.textContent = label; }, 1600);
+  }));
+
+  const year = document.getElementById('year');
+  if (year) year.textContent = String(new Date().getFullYear());
+
+  loadEssays();
+
+  // a link straight to a section (…/#work) still plays the entrance, then flies there
+  const hash = location.hash.slice(1);
+  return {
+    onEnter() { if (hash && document.getElementById(hash)) setTimeout(() => go(hash), 1400); },
+  };
+}
+
+// Latest posts from Medium. The feed is untrusted text, so it only ever lands in textContent and https links.
+async function loadEssays() {
+  const box = document.getElementById('essays');
+  if (!box) return;
+  let items;
+  try {
+    const res = await fetch(FEED);
+    const data = await res.json();
+    if (data.status !== 'ok' || !Array.isArray(data.items) || !data.items.length) return;
+    items = data.items.slice(0, 5);
+  } catch (e) { return; }
+
+  const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === 'https:' ? x.href : null; } catch (e) { return null; } };
+  const toText = (html) => (new DOMParser().parseFromString(html || '', 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim();
+  // the feed's dates are UTC ("2026-09-25 04:12:00"); Safari only parses them with a T, and they should read as published
+  const fmt = (d) => { const t = new Date(String(d).replace(' ', 'T') + 'Z'); return isNaN(t) ? '' : t.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).toUpperCase(); };
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+  const frag = document.createDocumentFragment();
+  for (const it of items) {
+    const href = safeUrl(it.link);
+    if (!href) continue;
+    const a = el('a', 'essay card in');
+    a.href = href; a.rel = 'noopener';
+    const thumb = safeUrl(it.thumbnail);
+    if (thumb) { const img = el('img', 'thumb'); img.src = thumb; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.width = 600; img.height = 338; a.append(img); }
+    a.append(el('p', 'mono', ['MEDIUM', fmt(it.pubDate)].filter(Boolean).join(' · ')), el('h4', null, toText(it.title) || 'Untitled'));
+    const ex = toText(it.description).slice(0, 180);
+    if (ex) a.append(el('p', 'ex', ex));
+    a.append(el('p', 'go', 'Read on Medium ↗'));
+    frag.append(a);
+  }
+  if (!frag.childNodes.length) return;
+  const more = el('a', 'essay card more in');
+  more.href = 'https://realarmaansidhu.medium.com'; more.rel = 'noopener';
+  more.append(el('p', 'mono', 'ARCHIVE'), el('h4', null, 'Every essay, plus shorter takes on X'), el('p', 'go', 'All posts on Medium ↗'));
+  frag.append(more);
+  box.replaceChildren(frag);
+}
