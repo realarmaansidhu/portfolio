@@ -66,7 +66,7 @@
 <a class="skip" href="#about">Skip to content</a>
 <div id="gate" role="status">
   <div class="gate-inner">
-    <p class="gate-title"><span class="gt gt-a" id="gate-text">Gathering <b id="gate-n">110,000</b> stars</span><span class="gt gt-b" aria-hidden="true">Look closer.</span></p>
+    <p class="gate-title"><span class="gt gt-a" id="gate-text" data-i18n-skip>Gathering <b id="gate-n">110,000</b> stars</span><span class="gt gt-b" aria-hidden="true">Look closer.</span></p>
     <div class="gate-bar" aria-hidden="true"><i id="gate-fill"></i></div>
     <p class="gate-status" aria-hidden="true"><span id="gate-count">0</span><span id="gate-pct">0%</span></p>
   </div>
@@ -75,8 +75,14 @@
 <header class="chrome">
   <a class="brand" href="#top" data-go aria-label="Armaan Sidhu — back to the top"><b>AS</b><span>Armaan Sidhu</span></a>
   <div class="chrome-r">
+    <div class="lang-wrap"><div class="lang" id="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true" lang="en" title="English">EN</button>
+      <button type="button" data-lang="fr" aria-pressed="false" lang="fr" title="Français">FR</button>
+      <button type="button" data-lang="es" aria-pressed="false" lang="es" title="Español">ES</button>
+      <button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hans" title="中文">文</button>
+    </div></div>
     <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><span>Menu</span><i aria-hidden="true"></i></button>
-    <button id="sound" class="sound" type="button" data-on="1" aria-label="Mute sound"><i></i><i></i><i></i><i></i></button>
+    <button id="sound" class="sound" type="button" data-on="1" aria-label="Mute sound" data-i18n-skip><i></i><i></i><i></i><i></i></button>
   </div>
 </header>
 
@@ -101,7 +107,7 @@
   </nav>
 </div>
 
-<div class="hint" id="hint"><span>Scroll to explore</span><i></i></div>
+<div class="hint" id="hint" data-i18n-skip><span>Scroll to explore</span><i></i></div>
 <div id="q" class="q" aria-hidden="true" hidden></div>
 
 <main id="top">
@@ -123,7 +129,7 @@
           <p>I'm in my final semester of a Master of Engineering in Information Systems Security at Concordia University in Montréal, with a 3.97/4.30 GPA, and I'm enthusiastic about generative AI and cybersecurity.</p>
           <p>In fall 2025 I interned as a Junior Security Operations Analyst at TMX Group, the operator of the Toronto Stock Exchange, working with enterprise-grade security tools to monitor, investigate and strengthen the security posture of critical financial market infrastructure.</p>
           <p>I've also interned at American Express twice. In summer 2025 I interned as an Information Security Analyst on the Generative AI Security team, working hands-on with LLMOps, secure AI/ML pipeline integration and risk mitigation across production systems. In summer 2026 I returned to work on identity and access management workflows and build agentic workflows on policy engines, so AI actions stay stable and deterministic.</p>
-          <p>Outside of tech, I love reading and writing books, travelling (India, Canada, the UAE, Mexico and Peru so far) and learning new languages. I'm currently learning Spanish for better mobility. I'm writing my first novel, <a href="#novel" data-go><i>One Night in Trombay</i></a>, and publishing articles on X and Medium.</p>
+          <p data-i18n-html="about-outside">Outside of tech, I love reading and writing books, travelling (India, Canada, the UAE, Mexico and Peru so far) and learning new languages. I'm currently learning Spanish for better mobility. I'm writing my first novel, <a href="#novel" data-go><i>One Night in Trombay</i></a>, and publishing articles on X and Medium.</p>
         </div>
       </div>
       <dl class="facts card reveal">
@@ -338,7 +344,7 @@
         <article class="award card reveal">
           <p class="mono">MANIPAL UNIVERSITY JAIPUR · JUNE 2024</p>
           <h3>Perfect 10/10 semester</h3>
-          <p>A 10 GPA in the final semester of the B.Tech, awarded after presenting the <a href="https://github.com/realarmaansidhu/major-project-speed-estimation-of-vehicles-using-deep-learning" target="_blank" rel="noopener">vehicle speed detection project</a>.</p>
+          <p data-i18n-html="award-perfect">A 10 GPA in the final semester of the B.Tech, awarded after presenting the <a href="https://github.com/realarmaansidhu/major-project-speed-estimation-of-vehicles-using-deep-learning" target="_blank" rel="noopener">vehicle speed detection project</a>.</p>
         </article>
         <article class="award card reveal">
           <p class="mono">MANIPAL UNIVERSITY JAIPUR · MAY 2024</p>
@@ -390,7 +396,7 @@
       <div class="contact card reveal">
         <div class="contact-main">
           <p class="contact-lede">Have a role, a project or a collaboration in mind? Email is the fastest way to reach me.</p>
-          <p class="mail-row"><a class="mail" href="mailto:justarmaansidhu@gmail.com">justarmaansidhu@gmail.com</a><button class="copy" type="button" data-copy="justarmaansidhu@gmail.com">Copy</button></p>
+          <p class="mail-row"><a class="mail" href="mailto:justarmaansidhu@gmail.com">justarmaansidhu@gmail.com</a><button class="copy" type="button" data-copy="justarmaansidhu@gmail.com" data-i18n-skip>Copy</button></p>
           <dl class="facts plain">
             <div><dt>Phone</dt><dd><a href="tel:+12638816038">+1 (263) 881-6038</a></dd></div>
             <div><dt>Based in</dt><dd>Montréal, Québec, Canada</dd></div>
@@ -416,6 +422,7 @@
   </div>
 </main>
 
+<script type="module" src="js/i18n.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

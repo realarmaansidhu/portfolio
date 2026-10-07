@@ -12,6 +12,15 @@
   fonts.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap';
   document.head.appendChild(fonts);
 
+  // A visitor who picked another language last time shouldn't see the English flash past first.
+  try {
+    var lang = (location.search.match(/[?&]lang=([a-z]+)/) || [])[1] || localStorage.getItem('site.lang');
+    if (lang && lang !== 'en') {
+      root.classList.add('i18n-wait');
+      setTimeout(function () { root.classList.remove('i18n-wait'); }, 4000);
+    }
+  } catch (e) { /* storage blocked */ }
+
   var done = false;
   function fallback(why) {
     if (done) return;

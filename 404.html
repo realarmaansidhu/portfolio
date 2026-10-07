@@ -14,7 +14,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
   body {
-    display: grid; place-items: center; padding: 24px; color: #edede9; font-family: 'Space Grotesk', system-ui, sans-serif; text-align: center;
+    display: grid; place-items: center; padding: 24px; color: #edede9; text-align: center;
+    font-family: 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
     background-color: #04060c;
     background-image:
       radial-gradient(1.4px 1.4px at 24px 38px, rgba(255, 255, 255, 0.9), transparent),
@@ -35,10 +36,26 @@
 </head>
 <body>
   <main>
-    <p class="code">ERROR 404</p>
-    <h1>This page drifted out of orbit.</h1>
-    <p>Whatever was here isn't anymore, or never was. The rest of the universe is right where you left it.</p>
-    <a href="/">Take me home</a>
+    <p class="code" id="t-code">ERROR 404</p>
+    <h1 id="t-h">This page drifted out of orbit.</h1>
+    <p id="t-p">Whatever was here isn't anymore, or never was. The rest of the universe is right where you left it.</p>
+    <a href="/" id="t-a">Take me home</a>
   </main>
+  <script>
+    // Same language as the visitor picked on the main page.
+    (function () {
+      var T = {
+        fr: ['html:fr', 'Perdu dans l’espace — Armaan Sidhu', 'ERREUR 404', 'Cette page est sortie de son orbite.', 'Ce qui se trouvait ici n’y est plus, ou n’y a jamais été. Le reste de l’univers est exactement là où vous l’avez laissé.', 'Retour à l’accueil'],
+        es: ['html:es', 'Perdido en el espacio — Armaan Sidhu', 'ERROR 404', 'Esta página se salió de su órbita.', 'Lo que había aquí ya no está, o nunca estuvo. El resto del universo sigue justo donde lo dejaste.', 'Volver al inicio'],
+        zh: ['html:zh-Hans', '迷失在太空 — Armaan Sidhu', '错误 404', '这个页面偏离了轨道。', '这里的内容已经不在了，或者从未存在过。宇宙的其余部分，都还在你离开时的地方。', '返回首页']
+      };
+      var t;
+      try { t = T[localStorage.getItem('site.lang')]; } catch (e) { t = null; }
+      if (!t) return;
+      document.documentElement.lang = t[0].slice(5);
+      document.title = t[1];
+      ['t-code', 't-h', 't-p', 't-a'].forEach(function (id, i) { document.getElementById(id).textContent = t[i + 2]; });
+    })();
+  </script>
 </body>
 </html>

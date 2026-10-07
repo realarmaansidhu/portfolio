@@ -17,6 +17,7 @@ import { Sound } from './audio.js';
 import { computeLayout } from './layout.js';
 import { PORTRAIT } from './portrait-meta.js';
 import { initSite, layoutTop } from './site.js';
+import { t, locale, onLangChange, beforeLangChange } from './i18n.js';
 
 THREE.ColorManagement.enabled = false;
 
@@ -175,8 +176,13 @@ const site = initSite({ scrollTo: scrollToTarget, lockScroll: (on) => { if (leni
 
 // ---------- loading: fetch the portrait image with real progress, build in a worker ----------
 const gateFill = $('gate-fill'), gatePct = $('gate-pct'), gateCount = $('gate-count');
-const STARS = tier.count, fmtN = (n) => n.toLocaleString('en-US');
-$('gate-n').textContent = fmtN(STARS);
+const STARS = tier.count, fmtN = (n) => n.toLocaleString(locale());
+function gateText() {
+  const [a, b = ''] = t('Gathering {n} stars').split('{n}'), n = document.createElement('b');
+  n.id = 'gate-n'; n.textContent = fmtN(STARS);
+  $('gate-text').replaceChildren(a, n, b);
+}
+gateText();
 function progress(f) {
   gateFill.style.transform = `scaleX(${f})`;
   gatePct.textContent = Math.round(f * 100) + '%';
@@ -277,8 +283,9 @@ function setSoundUI(state) {
   soundUI = state;
   const b = $('sound');
   b.dataset.on = state === 'on' ? '1' : state === 'armed' ? 'armed' : '0';
-  b.setAttribute('aria-label', state === 'off' ? 'Turn sound on' : 'Mute sound');
+  soundLabel();
 }
+const soundLabel = () => $('sound').setAttribute('aria-label', t(soundUI === 'off' ? 'Turn sound on' : 'Mute sound'));
 const soundState = () => (!soundWanted ? 'off' : sound.ctx && sound.ctx.state === 'running' && !sound.muted ? 'on' : 'armed');
 setSoundUI(soundState());
 const wakeSound = () => { if (soundWanted) sound.start(); };
@@ -327,7 +334,26 @@ function pointerWorld(out) {
 
 // ---------- DOM bits ----------
 const hintEl = $('hint');
-if (device.coarse) hintEl.firstElementChild.textContent = 'Swipe to explore';
+const hintText = () => { hintEl.firstElementChild.textContent = t(device.coarse ? 'Swipe to explore' : 'Scroll to explore'); };
+hintText();
+
+// Switching language changes how tall the text is, so keep the reader on the same card and re-pin the flight to it.
+let langAnchor = null;
+beforeLangChange(() => {
+  langAnchor = null;
+  if (scrollY < 40) return;
+  const line = scrollY + innerHeight * 0.2;
+  const el = [...document.querySelectorAll('main :is(.sec-head, h3, h4, p, li, figure), .beat')].find((e) => e.offsetHeight && layoutTop(e) + e.offsetHeight > line);
+  if (el) langAnchor = { el, off: layoutTop(el) - scrollY };
+});
+onLangChange(() => {
+  gateText(); hintText(); soundLabel();
+  resize(true);
+  if (!langAnchor) return;
+  const y = Math.max(0, layoutTop(langAnchor.el) - langAnchor.off);
+  if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+  langAnchor = null;
+});
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add('in')), { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
 

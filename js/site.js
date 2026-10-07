@@ -1,5 +1,6 @@
 // The content layer: the section menu, jump links (which fly you through the scene), the live essay feed,
 // and small conveniences. The 3D conductor hands in how to scroll, so jumps stay smooth with or without Lenis.
+import { t, locale, onLangChange } from './i18n.js';
 
 const FEED = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://medium.com/feed/@realarmaansidhu');
 
@@ -34,12 +35,16 @@ export function initSite({ scrollTo, lockScroll }) {
     go(a.getAttribute('href').slice(1));
   });
 
-  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
-    const label = b.textContent;
-    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; }
-    catch (e) { b.textContent = 'Press and hold to copy'; }
-    setTimeout(() => { b.textContent = label; }, 1600);
+  const copies = [...document.querySelectorAll('[data-copy]')];
+  const copyLabel = () => copies.forEach((b) => { if (!b.dataset.busy) b.textContent = t('Copy'); });
+  copies.forEach((b) => b.addEventListener('click', async () => {
+    b.dataset.busy = '1';
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = t('Copied'); }
+    catch (e) { b.textContent = t('Press and hold to copy'); }
+    setTimeout(() => { delete b.dataset.busy; copyLabel(); }, 1600);
   }));
+  copyLabel();
+  onLangChange(copyLabel);
 
   const year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());
@@ -109,6 +114,7 @@ function hello() {
 }
 
 // Latest posts from Medium. The feed is untrusted text, so it only ever lands in textContent and https links.
+// Rendered again in the new language when the visitor switches.
 async function loadEssays() {
   const box = document.getElementById('essays');
   if (!box) return;
@@ -119,11 +125,15 @@ async function loadEssays() {
     if (data.status !== 'ok' || !Array.isArray(data.items) || !data.items.length) return;
     items = data.items.slice(0, 5);
   } catch (e) { return; }
+  renderEssays(box, items);
+  onLangChange(() => renderEssays(box, items));
+}
 
+function renderEssays(box, items) {
   const safeUrl = (u) => { try { const x = new URL(u); return x.protocol === 'https:' ? x.href : null; } catch (e) { return null; } };
   const toText = (html) => (new DOMParser().parseFromString(html || '', 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim();
   // the feed's dates are UTC ("2026-09-25 04:12:00"); Safari only parses them with a T, and they should read as published
-  const fmt = (d) => { const t = new Date(String(d).replace(' ', 'T') + 'Z'); return isNaN(t) ? '' : t.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).toUpperCase(); };
+  const fmt = (d) => { const when = new Date(String(d).replace(' ', 'T') + 'Z'); return isNaN(when) ? '' : when.toLocaleDateString(locale(), { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).toUpperCase(); };
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
   const frag = document.createDocumentFragment();
@@ -134,16 +144,16 @@ async function loadEssays() {
     a.href = href; a.rel = 'noopener';
     const thumb = safeUrl(it.thumbnail);
     if (thumb) { const img = el('img', 'thumb'); img.src = thumb; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.width = 600; img.height = 338; a.append(img); }
-    a.append(el('p', 'mono', ['MEDIUM', fmt(it.pubDate)].filter(Boolean).join(' · ')), el('h4', null, toText(it.title) || 'Untitled'));
+    a.append(el('p', 'mono', ['MEDIUM', fmt(it.pubDate)].filter(Boolean).join(' · ')), el('h4', null, toText(it.title) || t('Untitled')));
     const ex = toText(it.description).slice(0, 180);
     if (ex) a.append(el('p', 'ex', ex));
-    a.append(el('p', 'go', 'Read on Medium ↗'));
+    a.append(el('p', 'go', t('Read on Medium ↗')));
     frag.append(a);
   }
   if (!frag.childNodes.length) return;
   const more = el('a', 'essay card more in');
   more.href = 'https://realarmaansidhu.medium.com'; more.rel = 'noopener';
-  more.append(el('p', 'mono', 'ARCHIVE'), el('h4', null, 'Every essay, plus shorter takes on X'), el('p', 'go', 'All posts on Medium ↗'));
+  more.append(el('p', 'mono', t('ARCHIVE')), el('h4', null, t('Every essay, plus shorter takes on X')), el('p', 'go', t('All posts on Medium ↗')));
   frag.append(more);
   box.replaceChildren(frag);
 }
