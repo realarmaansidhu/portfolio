@@ -1,5 +1,5 @@
-// The flight path through the tunnel. The same curve exists twice — once in JS
-// (camera) and once in GLSL (tunnel particles) — so the two can never drift apart.
+// The flight path through the tunnel. The same curve exists twice, once in JS
+// (camera) and once in GLSL (tunnel particles), so the two can never drift apart.
 import * as THREE from './vendor/three.module.min.js';
 
 export const TUN = {
@@ -22,7 +22,7 @@ export function pathPos(eye, s, out = new THREE.Vector3()) {
 }
 
 const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _c = new THREE.Vector3();
-// Bank angle from the path's sideways acceleration — the camera leans into turns.
+// Bank angle from the path's sideways acceleration: the camera leans into turns.
 export function pathBank(eye, s) {
   pathPos(eye, s - 2, _a); pathPos(eye, s, _b); pathPos(eye, s + 2, _c);
   const ax = (_a.x - 2 * _b.x + _c.x) / 4;

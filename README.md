@@ -16,7 +16,7 @@ No framework and no build step: hand-written HTML, CSS and ES modules on top of 
 - **Built for phones and tablets first.** A layout solver frames the portrait around the real position of the text on each screen, and the number of stars adapts to the device and to measured frame times.
 - **Post-processing:** bloom, a sun streak, zoom blur, colour grading and film grain, in a custom pass.
 - **Sound** is synthesized live with Web Audio. No audio files.
-- **Four languages:** English, French, Spanish and Simplified Chinese, from the switcher in the top bar. Every translation sits beside its English in [`js/i18n.js`](js/i18n.js), the choice is remembered, and the page keeps you on the same paragraph when you switch.
+- **Four languages:** English, French, Spanish and Simplified Chinese. Visitors land in their device's language when it's one of the four (English otherwise) and can switch from the top bar; a choice they make is remembered, and the page keeps them on the same paragraph. Every translation sits beside its English in [`js/i18n.js`](js/i18n.js).
 - **Works without the 3D too.** With no WebGL, an old browser, or JavaScript turned off, the same content shows on a still starfield.
 - **Security headers:** a strict Content Security Policy and friends in [`_headers`](_headers), plus [`/.well-known/security.txt`](.well-known/security.txt).
 

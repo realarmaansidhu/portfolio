@@ -16,7 +16,6 @@ const N = ' ';   // French puts a no-break space before : ? ! and inside « »
 // [English, French, Spanish, Chinese]
 const ROWS = [
   // page
-  ['Armaan Sidhu — AI Security Engineer', 'Armaan Sidhu — Ingénieur en sécurité de l’IA', 'Armaan Sidhu — Ingeniero de seguridad de IA', 'Armaan Sidhu — AI 安全工程师'],
   ['Armaan Sidhu, AI security engineer. Final semester of an M.Eng in Information Systems Security at Concordia University in Montréal, with security internships at American Express and TMX Group, and a debut novel on the way.',
     'Armaan Sidhu, ingénieur en sécurité de l’IA. Dernière session d’une maîtrise en génie en sécurité des systèmes d’information à l’Université Concordia, à Montréal, des stages en sécurité chez American Express et au Groupe TMX, et un premier roman en préparation.',
     'Armaan Sidhu, ingeniero de seguridad de IA. Último semestre de una maestría en Ingeniería en Seguridad de Sistemas de Información en la Universidad Concordia, en Montreal, con prácticas en seguridad en American Express y TMX Group, y una primera novela en camino.',
@@ -29,7 +28,7 @@ const ROWS = [
   ['Mute sound', 'Couper le son', 'Silenciar', '静音'],
   ['Turn sound on', 'Activer le son', 'Activar el sonido', '开启声音'],
   ['Language', 'Langue', 'Idioma', '语言'],
-  ['Armaan Sidhu — back to the top', 'Armaan Sidhu — retour en haut', 'Armaan Sidhu — volver arriba', 'Armaan Sidhu — 回到顶部'],
+  ['Armaan Sidhu, back to the top', 'Armaan Sidhu, retour en haut', 'Armaan Sidhu, volver arriba', 'Armaan Sidhu，回到顶部'],
   ['Sections', 'Sections', 'Secciones', '页面目录'],
   ['Introduction', 'Introduction', 'Introducción', '简介'],
 
@@ -89,8 +88,8 @@ const ROWS = [
   ['Systems', 'Systèmes', 'Sistemas', '操作系统'],
 
   // work
-  ['TORONTO · 2025 — 2026', 'TORONTO · 2025 — 2026', 'TORONTO · 2025 — 2026', '多伦多 · 2025 — 2026'],
-  ['SUMMER 2026 · MAY — AUG', 'ÉTÉ 2026 · MAI — AOÛT', 'VERANO 2026 · MAYO — AGO.', '2026 年夏季 · 5 月至 8 月'],
+  ['TORONTO · 2025 – 2026', 'TORONTO · 2025 – 2026', 'TORONTO · 2025 – 2026', '多伦多 · 2025 – 2026'],
+  ['SUMMER 2026 · MAY – AUG', 'ÉTÉ 2026 · MAI – AOÛT', 'VERANO 2026 · MAYO – AGO.', '2026 年夏季 · 5 月至 8 月'],
   ['Intern I', 'Stagiaire I', 'Practicante I', '实习生 I'],
   ['Studied the company\'s existing identity and access management workflows and documented them for use across the enterprise.',
     'J’ai étudié les flux de gestion des identités et des accès existants de l’entreprise et je les ai documentés pour qu’ils servent dans toute l’organisation.',
@@ -100,7 +99,7 @@ const ROWS = [
     'J’ai analysé des moteurs de politiques et conçu des flux agentiques intégrés à ceux-ci, afin que les actions de l’IA agentique restent stables et déterministes.',
     'Analicé motores de políticas y construí flujos agénticos integrados con ellos, para que las acciones de la IA agéntica sean estables y deterministas.',
     '分析策略引擎，并构建与之集成的智能体工作流，确保智能体 AI 的操作稳定且具有确定性。'],
-  ['SUMMER 2025 · MAY — AUG', 'ÉTÉ 2025 · MAI — AOÛT', 'VERANO 2025 · MAYO — AGO.', '2025 年夏季 · 5 月至 8 月'],
+  ['SUMMER 2025 · MAY – AUG', 'ÉTÉ 2025 · MAI – AOÛT', 'VERANO 2025 · MAYO – AGO.', '2025 年夏季 · 5 月至 8 月'],
   ['Information Security Analyst Intern I', 'Stagiaire analyste en sécurité de l’information I', 'Analista de Seguridad de la Información (Practicante) I', '信息安全分析师实习生 I'],
   ['Worked in the Generative AI Security team on LLMOps, secure AI/ML pipeline integration and risk mitigation across production systems.',
     'J’ai travaillé au sein de l’équipe Sécurité de l’IA générative sur le LLMOps, l’intégration sécurisée de pipelines d’IA et d’apprentissage automatique, et l’atténuation des risques dans des systèmes en production.',
@@ -116,7 +115,7 @@ const ROWS = [
     '牵头开展后量子密码学以及生成式 AI 安全赋能方面的研发工作。'],
   ['TORONTO · FALL 2025', 'TORONTO · AUTOMNE 2025', 'TORONTO · OTOÑO 2025', '多伦多 · 2025 年秋季'],
   ['TMX Group', 'Groupe TMX', 'TMX Group', 'TMX 集团'],
-  ['SEP — DEC 2025 · TORONTO STOCK EXCHANGE', 'SEPT. — DÉC. 2025 · BOURSE DE TORONTO', 'SEP. — DIC. 2025 · BOLSA DE TORONTO', '2025 年 9 月至 12 月 · 多伦多证券交易所'],
+  ['SEP – DEC 2025 · TORONTO STOCK EXCHANGE', 'SEPT. – DÉC. 2025 · BOURSE DE TORONTO', 'SEP. – DIC. 2025 · BOLSA DE TORONTO', '2025 年 9 月至 12 月 · 多伦多证券交易所'],
   ['Jr. Security Operations Analyst Intern', 'Stagiaire analyste junior en opérations de sécurité', 'Analista Junior de Operaciones de Seguridad (Practicante)', '初级安全运营分析师实习生'],
   ['Worked with enterprise-grade security tools to monitor, investigate and strengthen the security posture of critical financial market infrastructure.',
     'J’ai utilisé des outils de sécurité de niveau entreprise pour surveiller, enquêter et renforcer la posture de sécurité d’infrastructures essentielles des marchés financiers.',
@@ -207,7 +206,7 @@ const ROWS = [
   ['Follow on X', 'Suivre sur X', 'Seguir en X', '在 X 上关注'],
 
   // education
-  ['SEP 2024 — PRESENT · MONTRÉAL', 'SEPT. 2024 — AUJOURD’HUI · MONTRÉAL', 'SEP. 2024 — ACTUALIDAD · MONTREAL', '2024 年 9 月至今 · 蒙特利尔'],
+  ['SEP 2024 – PRESENT · MONTRÉAL', 'SEPT. 2024 – AUJOURD’HUI · MONTRÉAL', 'SEP. 2024 – ACTUALIDAD · MONTREAL', '2024 年 9 月至今 · 蒙特利尔'],
   ['FINAL SEMESTER', 'DERNIÈRE SESSION', 'ÚLTIMO SEMESTRE', '最后一学期'],
   ['Concordia University', 'Université Concordia', 'Universidad Concordia', '康考迪亚大学'],
   ['Master of Engineering, Information Systems Security · Co-op', 'Maîtrise en génie, sécurité des systèmes d’information · Régime coopératif', 'Maestría en Ingeniería, Seguridad de Sistemas de Información · Programa cooperativo', '信息系统安全工程硕士 · 带薪实习（Co-op）项目'],
@@ -217,7 +216,7 @@ const ROWS = [
   ['System Physical Security', 'Sécurité physique des systèmes', 'Seguridad física de sistemas', '系统物理安全'],
   ['Cyber-Physical Systems', 'Systèmes cyberphysiques', 'Sistemas ciberfísicos', '信息物理系统'],
   ['IoT Security', 'Sécurité de l’IoT', 'Seguridad IoT', '物联网安全'],
-  ['AUG 2020 — JUN 2024 · JAIPUR', 'AOÛT 2020 — JUIN 2024 · JAIPUR', 'AGO. 2020 — JUN. 2024 · JAIPUR', '2020 年 8 月至 2024 年 6 月 · 斋浦尔'],
+  ['AUG 2020 – JUN 2024 · JAIPUR', 'AOÛT 2020 – JUIN 2024 · JAIPUR', 'AGO. 2020 – JUN. 2024 · JAIPUR', '2020 年 8 月至 2024 年 6 月 · 斋浦尔'],
   ['Manipal University Jaipur', 'Université Manipal de Jaipur', 'Universidad Manipal de Jaipur', '斋浦尔马尼帕尔大学'],
   ['Bachelor of Technology, Computer Science & Engineering', 'Baccalauréat en technologie (B.Tech), informatique et génie informatique', 'Licenciatura en Tecnología (B.Tech), Ciencias de la Computación e Ingeniería', '计算机科学与工程技术学士（B.Tech）'],
   ['/ 10 CGPA', '/ 10 de moyenne cumulative', '/ 10 de promedio acumulado', '/ 10 累计 GPA'],
@@ -371,7 +370,6 @@ function apply(code) {
   for (const x of attrs) x.el.setAttribute(x.a, lang === 'en' ? x.orig : DICT[lang].get(x.key) || x.orig);
   for (const x of nums) x.n.nodeValue = lang === 'fr' ? x.orig.replace(DECIMAL, '$1,$2') : x.orig;
   for (const x of blocks) x.el.innerHTML = lang === 'en' ? x.orig : (BLOCKS[x.key] && BLOCKS[x.key][lang]) || x.orig;
-  document.title = t('Armaan Sidhu — AI Security Engineer');
   const desc = document.querySelector('meta[name="description"]');
   if (desc) { desc.dataset.en = desc.dataset.en || desc.content; desc.content = t(desc.dataset.en); }
   for (const b of document.querySelectorAll('[data-lang]')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
@@ -408,9 +406,7 @@ export function initI18n() {
   ready = true;
   capture();
   wire();
-  let want = new URLSearchParams(location.search).get('lang');
-  if (!want) { try { want = localStorage.getItem(STORE); } catch (e) { want = null; } }
-  apply(want || 'en');
+  apply(window.__siteLang || 'en');   // chosen in boot.js: a ?lang= link, the visitor's last pick, or their device's language
   // for checking coverage: strings on the page that have neither a translation nor a reason to stay the same
   window.__i18n = {
     set: setLang,

@@ -275,7 +275,7 @@ function build({ intro = false } = {}) {
     // a real phone would run its own tier; with many screens sharing one laptop GPU, all of them run light
     const tierForce = many ? 'low' : null;
     const iframe = document.createElement('iframe');
-    iframe.title = `${d.name} — live`;
+    iframe.title = `${d.name}, live`;
     iframe.style.cssText = `top:${g.top}px;width:${g.vw}px;height:${g.vh}px`;
     iframe.src = frameURL(d, g, tierForce, capFor(L.s), !intro && v > 0.01);
     screen.innerHTML = chrome(d, g);

@@ -1,4 +1,4 @@
-// v8 — the conductor. Maps scroll to a five-act flight that runs underneath the page:
+// The conductor. Maps scroll to a five-act flight that runs underneath the page:
 //   portrait → dive into the eye → tunnel (under About, Work, Projects) → through the sun → the vault opens → the rest of the page
 // and keeps every screen size, from a phone held upright to a wide desktop, composed.
 import * as THREE from './vendor/three.module.min.js';

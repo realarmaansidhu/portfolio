@@ -93,7 +93,7 @@ void main(){
     vec3 P, N, B; pathFrame(s, P, N, B);
     vec3 tp = P + (N * cos(th) + B * sin(th)) * r;
     tc = mix(tc, tc * vec3(1.25, .95, .7), smoothstep(uLt * .5, uLt, s) * .55);
-    // in flight, the stars spiral into the pupil like water down a drain — dimmed so they read as streams
+    // in flight, the stars spiral into the pupil like water down a drain, dimmed so they read as streams
     float flight = 4. * u1 * (1. - u1);
     vec3 m = mix(p, tp, u1);
     m.xy = uEye.xy + rot2(flight * 2.4) * (m.xy - uEye.xy);
